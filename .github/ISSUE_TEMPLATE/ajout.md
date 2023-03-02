@@ -1,5 +1,5 @@
 ---
-name: 'Ajout '
+name: Ajout
 about: Ajout d'une feature
 title: "[WORK]"
 labels: feature
