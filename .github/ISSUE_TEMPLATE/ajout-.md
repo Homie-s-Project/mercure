@@ -2,7 +2,7 @@
 name: 'Ajout '
 about: Ajout d'une feature
 title: "[WORK]"
-labels: ''
+labels: feature
 assignees: ''
 
 ---
