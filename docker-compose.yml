@@ -1,0 +1,66 @@
+version: '3.7'
+
+services:
+  mercure-db:
+    image: postgres:latest
+    container_name: mercure-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=mercure
+      - POSTGRES_USER=mercure_user
+      - POSTGRES_PASSWORD=mercure_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - pgconf:/etc/postgresql
+      - pglog:/var/log/postgresql
+
+
+  karios-pgadmin:
+    image: dpage/pgadmin4
+    container_name: mercure-pgadmin4
+    restart: always
+    depends_on:
+      - mercure-db
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: user@mercure.com
+      PGADMIN_DEFAULT_PASSWORD: mercure
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+  mercure-api:
+    image: mercure-api:prod
+    container_name: mercure-api
+    depends_on:
+      - mercure-db
+    build:
+      context: mercure-api
+      dockerfile: ./Dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5000
+    command:  dotnet run --project mercure.API
+      
+  mercure-web:
+    image: mercure-web:prod
+    container_name: mercure-web
+    restart: unless-stopped
+    build:
+      context: mercure-web
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+    ports:
+      - 4200:4200
+
+volumes:
+  pgdata:
+  pgconf:
+  pglog:
+  pgadmin-data:
+
