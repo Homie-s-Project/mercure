@@ -47,6 +47,18 @@ Vous pouvez le lancer en mode de production
 $ docker compose -f "docker-compose.yml" up -d --build
 ```
 
+## Nommage
+Toutes les variables du projet s'écrivent en anglais selon les conventions du langage.
+
+### Branche
+
+Pour les branches, nous avons décidé de les nommer en anglais et ayant 1-3 mots pour décrire ce qui est fait. Les espaces sont remplacés par des "_".
+
+Exemples:
+  * add_logs
+  * add_localisation
+  * edit_controller_auth
+
 ## Image Docker
 Notre projet utilise  [Docker](https://www.docker.com), pour des questions de simplicité et de temps. Grâce à Docker, nous pouvons transférer un environnement simplement et l'installer sur une autre machine grâce à une commande.
 
