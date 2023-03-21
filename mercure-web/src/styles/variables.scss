@@ -1,9 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;500&display=swap');
-$first-color: #eff7f7;
-$second-color: #d7e6eb;
-$third-color: #33576c;
-$fourth-color: #162741;
-$up-rate-color: #527a47;
-$down-rate-color: #9f0600;
-$under-dev-background: #A5A7A8;
-$under-dev-opacity: .4;
+/* Font */
+/*Titillium Web Bold, Titillium Web Bold Italic, & Oswald Regular*/
+// @import url('https://fonts.googleapis.com/css2?family=Oswald&family=Titillium+Web:ital,wght@1,700&display=swap');
+/*Montserrat Bold, Ubuntu Medium and Hind Medium*/
+@import url('https://fonts.googleapis.com/css2?family=Hind:wght@500&family=Montserrat:wght@700&family=Ubuntu:wght@500&display=swap');
+
+/* SCSS HEX */
+$lemon-chiffon: #fff5cdff;
+$bole: #6f3e2dff;
+$moss-green: #86965cff;
+$dark-moss-green: #5d6c3bff;
+$cal-poly-green: #314d2dff;
+$dark-green: #1a2c16ff;
