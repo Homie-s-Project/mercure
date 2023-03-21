@@ -1,30 +1,32 @@
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgChartsModule } from 'ng2-charts';
-import { CookieService } from 'ngx-cookie-service';
-import { ShareButtonModule } from 'ngx-sharebuttons/button';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { HomeComponent } from './components/home/home.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { OrdersPanelComponent } from './components/orders-panel/orders-panel.component';
+import { OrderItemComponent } from './components/order-item/order-item.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    NavbarComponent,
+    HomeComponent,
+    ProfileComponent,
+    OrdersPanelComponent,
+    OrderItemComponent,
+    FooterComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    ShareButtonModule,
-    FontAwesomeModule,
-    NgChartsModule,
-    FormsModule,
-    ReactiveFormsModule,
+    FontAwesomeModule
   ],
-  providers: [CookieService],
-  bootstrap: [AppComponent],
+  providers: [],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,0 +1,56 @@
+@use '/src/styles/variables.scss' as vars;
+
+nav {
+    height: 78px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 45px 9px 45px;
+    color: vars.$lemon-chiffon;
+    background: linear-gradient(160deg, vars.$dark-moss-green, vars.$cal-poly-green);
+    gap: 30px;
+    .search-bar-container {
+        width: 70%;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        padding: 0 9px 0 9px;
+        border-radius: 5px;
+        background-color: vars.$lemon-chiffon;
+        gap: 5px;
+        .search-input {
+            width: 100%;
+            font-size: 18px;
+            padding: 5px;
+            border-style: none;
+            color: vars.$dark-green;
+            background-color: transparent;
+            &:focus {
+                outline: none;
+            }
+        }
+        .search-button {
+            font-size: 18px;
+            border-style: none;
+            color: vars.$dark-green;
+            background-color: transparent;
+        }
+    }
+    .nav-button-container {
+        min-width: 75px;
+        display: flex;
+        justify-content: space-between;
+        .nav-button {
+            font-size: 24px;
+        }
+    }
+    h1 {
+        color: vars.$lemon-chiffon;
+        //font-family: 'Montserrat', 'sans-serif';
+        font-size: 42px;
+    }
+    a {
+        color: vars.$lemon-chiffon;
+        text-decoration: none;
+    }
+}
