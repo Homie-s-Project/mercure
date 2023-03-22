@@ -7,19 +7,25 @@
     font-family: 'Hind', 'Sans-serif';
 }
 
-body {
-    color: vars.$cal-poly-green;
-    background-color: vars.$lemon-chiffon;
-    h1 {
-        font-family: 'Montserrat', 'Sans-serif';
-    }
-    h2, h3, h4 {
-        font-family: 'Ubuntu', 'Sans-serif';
-    }
-    h1 {
-        color: vars.$bole;
-    }
-    h2 {
-        color: vars.$bole;
+html {
+    width: 100%;
+    height: 100%;   
+    body {
+        width: 100%;
+        height: 100%;
+        color: vars.$cal-poly-green;
+        background-color: vars.$lemon-chiffon;
+        h1 {
+            font-family: 'Montserrat', 'Sans-serif';
+        }
+        h2, h3, h4 {
+            font-family: 'Ubuntu', 'Sans-serif';
+        }
+        h1 {
+            color: vars.$bole;
+        }
+        h2 {
+            color: vars.$bole;
+        }
     }
 }
