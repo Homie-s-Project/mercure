@@ -31,4 +31,10 @@ public class User
     [Required] public string Email { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime LastUpdatedAt { get; set; }
+    
+    [ForeignKey("Role")] public int RoleId { get; set; }
+    public virtual Role Role { get; set; }
+    
+    public ICollection<Order> Orders { get; set; }
+    
 }
