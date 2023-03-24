@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Mercure.API.Models;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,15 @@ public class MercureContext : DbContext
                 .AddJsonFile("appsettings.json")
                 .Build();
             
-            options.UseNpgsql(configuration.GetConnectionString("MercureDb"));
+            string isRunningInDockerEnv = Environment.GetEnvironmentVariable("RUN_IN_DOCKER");
+            Boolean.TryParse(isRunningInDockerEnv, out bool isRunningInDockerEnvBoolean);
+
+            var connectionString = isRunningInDockerEnvBoolean
+                ? configuration.GetConnectionString("MercureDb")
+                : configuration.GetConnectionString("MercureDbNoDocker");
+            
+            Console.WriteLine("Configuration de connexion à la base de données : " + (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
+            options.UseNpgsql(connectionString);
         }
     }
 
@@ -29,6 +38,14 @@ public class MercureContext : DbContext
     {
     }
 
-    public DbSet<User> Users { get; set; }
+    public DbSet<Animal> Animals { get; set; }
+    public DbSet<Category> Categories { get; set; }
     public DbSet<OAuth2Credentials> OAuth2Credentials { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderProduct> OrderProducts { get; set; }
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<Species> Speciess { get; set; }
+    public DbSet<Stock> Stocks { get; set; }
+    public DbSet<User> Users { get; set; }
 }
