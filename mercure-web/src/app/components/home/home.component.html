@@ -4,4 +4,10 @@
         <!-- <div class="line"></div> -->
         <h2 class="slogan">l'excellence pour vos compagnons fidèles</h2>
     </section>
+    <section class="items-cards-section">
+        <h2 class="items-title">Meilleures ventes</h2>
+        <div class="cards-container">
+            <app-item-card *ngFor="let card of [].constructor(4)"></app-item-card>
+        </div>
+    </section>
 </div>

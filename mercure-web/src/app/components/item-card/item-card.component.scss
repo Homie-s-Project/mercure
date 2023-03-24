@@ -1,0 +1,24 @@
+@use '/src/styles/variables.scss' as vars;
+
+.card-container {
+    width: 270px;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    border: 1px solid vars.$bole;
+    // border-radius: 15px;
+    .item-image {
+        width: 210px;
+        height: 210px;
+        margin-bottom: 15px;
+    }
+    .card-content {
+        .brand {
+            font-size: 21px;
+            margin-bottom: 15px;
+        }
+        .description {
+            margin-bottom: 15px;
+        }
+    }
+}
