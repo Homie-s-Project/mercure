@@ -1,9 +1,10 @@
 @use '/src/styles/variables.scss' as vars;
 
-.card-container {
+:host {
     width: 270px;
     display: flex;
     flex-direction: column;
+    margin: 15px;
     padding: 30px;
     border: 1px solid vars.$bole;
     // border-radius: 15px;

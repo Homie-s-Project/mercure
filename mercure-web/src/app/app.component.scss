@@ -1,1 +1,12 @@
 @use '/src/styles/variables.scss' as vars;
+
+footer {
+    height: 210px;
+    display: flex;
+    align-items: center;
+    padding: 9px 120px 9px 120px;
+    border-top: solid 1px vars.$bole;
+    h1 {
+        font-size: 21px;
+    }
+}

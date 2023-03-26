@@ -9,7 +9,6 @@ import { HomeComponent } from './components/home/home.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { OrdersPanelComponent } from './components/orders-panel/orders-panel.component';
 import { OrderItemComponent } from './components/order-item/order-item.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { ItemCardComponent } from './components/item-card/item-card.component';
 
 @NgModule({
@@ -20,7 +19,6 @@ import { ItemCardComponent } from './components/item-card/item-card.component';
     ProfileComponent,
     OrdersPanelComponent,
     OrderItemComponent,
-    FooterComponent,
     ItemCardComponent
   ],
   imports: [
