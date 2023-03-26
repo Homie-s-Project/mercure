@@ -1,33 +1,45 @@
 @use '/src/styles/variables.scss' as vars;
 
-.home-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
+:host {
     .home-title-section {
-        width: 50%;
-        height: 180px;
+        height: 210px;
         display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
+        justify-content: center;
+        align-content: center;
         text-align: center;
         margin: 30px;
-        padding: 30px;
-        background: linear-gradient(160deg, vars.$dark-moss-green, vars.$cal-poly-green);
-        .home-title{
-            font-size: 60px;
-            color: vars.$lemon-chiffon;
+        .home-title-background {
+            width: 50%;
+            padding: 30px;
+            background: linear-gradient(160deg, vars.$dark-moss-green, vars.$cal-poly-green);
+            .home-title{
+                font-size: 60px;
+                color: vars.$lemon-chiffon;
+            }
+            .line {
+                height: 9px;
+                background-color: vars.$lemon-chiffon;
+            }
+            .slogan {
+                font-family: 'Montserrat', 'Sans-serif';
+                font-size: 30px;
+                color: vars.$lemon-chiffon;
+            }
         }
-        .line {
-            height: 9px;
-            background-color: vars.$lemon-chiffon;
-        }
-        .slogan {
-            font-family: 'Montserrat', 'Sans-serif';
+    }
+    .items-cards-section {
+        width: 100%;
+        padding: 30px 150px 30px 150px;
+        .items-title {
+            width: auto;
+            margin: 0 0 30px 15px;
             font-size: 30px;
-            color: vars.$lemon-chiffon;
+        }
+        .cards-container {
+            width: auto;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: start;
         }
     }
 }
