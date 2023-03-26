@@ -97,7 +97,7 @@ namespace Mercure.API
                 opts.UseNpgsql(connectionString);
             });
             
-            _logger.LogInformation("Méthode de connexion à la base de données : " + (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
+            Logger.LogInfo("Méthode de connexion à la base de données : " + (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
 
             // Ajout la gestion d'un cache en mémoire
             services.AddMemoryCache();
@@ -160,16 +160,16 @@ namespace Mercure.API
                 context.Database.Migrate();
                 
                 var hasAlreadyRoles = context.Roles.Any();
-                _logger.LogInformation("La table Roles contient déjà des données : " + hasAlreadyRoles);
+                Logger.LogInfo("La table Roles contient déjà des données : " + hasAlreadyRoles);
                 
                 if (hasAlreadyRoles)
                 {
-                    _logger.LogInformation("Suppression des données de la table Roles");
+                    Logger.LogInfo("Suppression des données de la table Roles");
                     context.Database.ExecuteSqlRaw("TRUNCATE TABLE Roles CASCADE");
                 }
                 else
                 {
-                    _logger.LogInformation("Création des données de la table Roles");
+                    Logger.LogInfo("Création des données de la table Roles");
                     var roles = new List<Role>
                     {
                         new Role {RoleName = "Admin", RoleNumber = 100},
