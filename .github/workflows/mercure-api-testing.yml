@@ -1,4 +1,4 @@
-name: Mercure API Tesing
+name: Mercure API Testing
 
 on: [push]
 
