@@ -16,6 +16,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+// ReSharper disable All
 
 namespace Mercure.API.Controllers;
 
@@ -40,7 +41,7 @@ public class Authentification : BaseController
     private readonly string _googleClientSecret;
     private readonly string _googleRedirectUri;
     private readonly string _googleRedirectFront;
-
+    
     public Authentification(ILogger<Authentification> logger, MercureContext context, IMemoryCache memoryCache,
         IConfiguration config, IWebHostEnvironment env)
     {
@@ -215,6 +216,14 @@ public class Authentification : BaseController
         // On crée un utilisateur
         var newUser = new User(client.Id, client.GivenName, client.Surname, new DateTime(), client.Mail,
             DateTime.UtcNow);
+        
+        var hasRoleInDb = await _context.Roles.AnyAsync(r => r.RoleNumber == 1);
+        if (!hasRoleInDb)
+        {
+            return BadRequest(new ErrorMessage("Can't find the role in the database, please contact the admin.", StatusCodes.Status500InternalServerError));
+        }
+        
+        var roleUser = await _context.Roles.FirstOrDefaultAsync(r => r.RoleNumber == 1);
 
         var tokenString = "";
 
@@ -224,6 +233,7 @@ public class Authentification : BaseController
         {
             // S'il n'existe pas on l'ajoute dans la base de donnée
             _context.Users.Add(newUser);
+            newUser.Role = roleUser;
             await _context.SaveChangesAsync();
 
             var newOAuth2Credentials =
@@ -264,17 +274,24 @@ public class Authentification : BaseController
                 await _context.SaveChangesAsync();
             }
         }
-
-        // Ajout du jwt dans les cookies de l'utilisateur
-        Response.Cookies.Append("jwt", tokenString);
-
+        
         // Si l'environement est sur développement on affiche le token dans la console, pour le développement
         if (_env.IsDevelopment())
         {
             _logger.LogInformation("New JWT token generated: {TokenString}", tokenString);
         }
+        
+        // Création d'un cache pour directement refusé les connexions qui durent plus de 5 minutes
+        var cacheEntryOption = new MemoryCacheEntryOptions()
+            .SetSlidingExpiration(TimeSpan.FromMinutes(1));
 
-        return Redirect(_microsoftRedirectFront);
+        // On supprime l'entrée dans le cache
+        _memoryCache.Remove(state);
+        
+        // On ajoute l'entrée dans le cache
+        _memoryCache.Set(state, tokenString, cacheEntryOption);
+        
+        return Ok(new ErrorMessage("/auth/logged?state=" + state, StatusCodes.Status200OK));
     }
 
     /// <summary>
@@ -356,7 +373,7 @@ public class Authentification : BaseController
         var googleEmail = client.EmailAddresses.First();
         var birthdays = client.Birthdays.First();
         var googleBirthday = birthdays != null ? new DateTime(birthdays.Date.Year == 0 ? DateTime.UtcNow.Year : birthdays.Date.Year, birthdays.Date.Month, birthdays.Date.Day) : (DateTime?) null;
-        
+
         // Si le compte google n'a qu'un pseudo
         if (googleName.FamilyName == null)
         {
@@ -372,9 +389,17 @@ public class Authentification : BaseController
 
         // On check si l'utilisateur existe déjà
         var findUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == newUser.Email);
+        var hasRoleInDb = await _context.Roles.AnyAsync(r => r.RoleNumber == 1);
+        if (!hasRoleInDb)
+        {
+            return BadRequest(new ErrorMessage("Can't find the role in the database, please contact the admin.", StatusCodes.Status500InternalServerError));
+        }
+        
+        var roleUser = await _context.Roles.FirstOrDefaultAsync(r => r.RoleNumber == 1);
         if (findUser == null)
         {
             _context.Users.Add(newUser);
+            newUser.RoleId = roleUser.RoleId;
             await _context.SaveChangesAsync();
 
             var newOAuth2Credentials =
@@ -417,15 +442,61 @@ public class Authentification : BaseController
             }
         }
 
-        // Ajout du jwt dans les cookies de l'utilisateur
-        Response.Cookies.Append("jwt", tokenString);
-
         if (_env.IsDevelopment())
         {
             _logger.LogInformation("New JWT token generated: {TokenString}", tokenString);
         }
+        
+        // Création d'un cache pour directement refusé les connexions qui durent plus de 5 minutes
+        var cacheEntryOption = new MemoryCacheEntryOptions()
+            .SetSlidingExpiration(TimeSpan.FromMinutes(1));
 
-        // On redirige l'utilisateur vers la page d'accueil
-        return Redirect(_googleRedirectFront);
+        // On supprime l'entrée dans le cache
+        _memoryCache.Remove(state);
+        
+        // On ajoute l'entrée dans le cache
+        _memoryCache.Set(state, tokenString, cacheEntryOption);
+        
+        return Ok(new ErrorMessage("/auth/logged?state=" + state, StatusCodes.Status200OK));
+    }
+    
+    [HttpGet("logged")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    public async Task<IActionResult> GetLoggedUser(string state)
+    {
+        if (state == null)
+        {
+            return NotFound(new ErrorMessage("No state parameter to connect to your account found.", StatusCodes.Status404NotFound));
+        }
+        
+        if (!_memoryCache.TryGetValue(state, out string outToken))
+        {
+            return Unauthorized(new ErrorMessage("Your connection is too old, please try again.", StatusCodes.Status401Unauthorized));
+        }
+
+        return Ok(new TokenDto(outToken));
+    }
+
+    /// <summary>
+    /// Return the current user
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("current-user")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var userContext = (User) HttpContext.Items["User"];
+
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userContext.UserId);
+        if (user == null)
+        {
+            return NotFound(new ErrorMessage("Can't find your account.", StatusCodes.Status404NotFound));
+        }
+
+        return Ok(new UserDto(user));
     }
 }
