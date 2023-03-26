@@ -10,6 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { OrdersPanelComponent } from './components/orders-panel/orders-panel.component';
 import { OrderItemComponent } from './components/order-item/order-item.component';
 import { ItemCardComponent } from './components/item-card/item-card.component';
+import { LandingComponent } from './components/landing/landing.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ItemCardComponent } from './components/item-card/item-card.component';
     ProfileComponent,
     OrdersPanelComponent,
     OrderItemComponent,
-    ItemCardComponent
+    ItemCardComponent,
+    LandingComponent
   ],
   imports: [
     BrowserModule,
