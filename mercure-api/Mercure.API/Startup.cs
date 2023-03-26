@@ -6,10 +6,10 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Mercure.API.Models;
-using Mercure.API.Utils;
 using Mercure.API.Context;
 using Mercure.API.Middleware;
+using Mercure.API.Utils.Logger;
+using Mercure.API.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +19,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using LogLevel = Mercure.API.Utils.Logger.LogLevel;
 
 namespace Mercure.API
 {
@@ -26,17 +27,12 @@ namespace Mercure.API
     {
         public IConfiguration Configuration { get; }
         public static IConfiguration StaticConfig { get; private set; }
-        private readonly ILogger<Startup> _logger;
         private readonly DbContextOptions<MercureContext> _contextOptions;
-        private readonly IServiceProvider _serviceProvider;
         private const string PolicyName = "CorsPolicy";
 
-        public Startup(IConfiguration configuration, IServiceProvider serviceProvider, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration)
         {
-            _logger = logger;
-
             _contextOptions = new DbContextOptions<MercureContext>();
-            _serviceProvider = serviceProvider;
 
             Configuration = configuration;
             StaticConfig = configuration;
@@ -91,8 +87,19 @@ namespace Mercure.API
                 c.IncludeXmlComments(xmlPath);
             });
             
-            var connectionString = Configuration.GetConnectionString("MercureDb");
-            services.AddDbContext<MercureContext>(opts => opts.UseNpgsql(connectionString));
+            string isRunningInDockerEnv = Environment.GetEnvironmentVariable("RUN_IN_DOCKER");
+            Boolean.TryParse(isRunningInDockerEnv, out bool isRunningInDockerEnvBoolean);
+
+            var connectionString = isRunningInDockerEnvBoolean
+                ? Configuration.GetConnectionString("MercureDb")
+                : Configuration.GetConnectionString("MercureDbNoDocker");
+
+            services.AddDbContext<MercureContext>(opts =>
+            {
+                opts.UseNpgsql(connectionString);
+            });
+            
+            Logger.LogInfo("Méthode de connexion à la base de données : " + (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
 
             // Ajout la gestion d'un cache en mémoire
             services.AddMemoryCache();
@@ -138,7 +145,7 @@ namespace Mercure.API
 
             // Normale qu'il n'y aille pas de await
 #pragma warning disable CS4014
-            CreateSeed(_serviceProvider, env);
+            CreateSeed();
 #pragma warning restore CS4014
         }
 
@@ -147,41 +154,38 @@ namespace Mercure.API
         /// </summary>
         /// <param name="serviceProvider"></param>
         /// <param name="env"></param>
-        private async Task CreateSeed(IServiceProvider serviceProvider, IWebHostEnvironment env)
+        private async Task CreateSeed()
         {
             using (var context = new MercureContext(_contextOptions))
             {
-                _logger.LogInformation("Migration de la base de données si nécessaire");
+                Logger.Log(LogLevel.Info, LogTarget.EventLog, "Migration de la base de données si nécessaire");
                 context.Database.Migrate();
-
-                var serviceIdDev = "serviceIdDev";
-                var emailDev = "dev@mercure.com";
-
-                if (env.IsDevelopment())
+                
+                var hasAlreadyRoles = context.Roles.Any();
+                Logger.LogInfo("La table Roles contient déjà des données : " + hasAlreadyRoles);
+                
+                if (hasAlreadyRoles)
                 {
-                    
-                    // var generateJsonWebToken = JwtUtils.GenerateJsonWebToken(devUser);
-                    // _logger.LogInformation("New DevUser (id:{}) created with the JWT: \n\n{}\n\n",devUser.UserId,  generateJsonWebToken);
-                    //
-                    // // Essaye de lancer le navigateur par défaut
-                    // var linkSwagger = "http://localhost:5000/swagger/index.html?token="+generateJsonWebToken;
-                    // OpenBrowser(linkSwagger);
+                    Logger.LogInfo("Suppression des données de la table Roles");
+                    context.Database.ExecuteSqlRaw("TRUNCATE TABLE Roles CASCADE");
+                }
+                else
+                {
+                    Logger.LogInfo("Création des données de la table Roles");
+                    var roles = new List<Role>
+                    {
+                        new Role {RoleName = "Admin", RoleNumber = 100},
+                        new Role {RoleName = "User", RoleNumber = 1},
+                        new Role {RoleName = "Visitor", RoleNumber = 0},
+                    };
+
+                    roles.ForEach((r) => { context.Roles.Add(r); });
+
+                    await context.SaveChangesAsync();
                 }
             }
         }
 
-        private string GenerateTimeStudiesInSeconds(int minutesDepart, int minutesFin)
-        {
-            Random random = new Random();
-            return (random.Next(minutesDepart, minutesFin) * 60).ToString();
-        }
-        
-        private int GenerateNumberBetweenValues(int min, int max)
-        {
-            Random random = new Random();
-            return random.Next(min, max);
-        }
-        
         private static void OpenBrowser(string url)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -198,7 +202,7 @@ namespace Mercure.API
             }
             else
             {
-                Console.WriteLine("Le navigateur par défaut n'a pas pu être ouvert");
+                Logger.LogInfo("Le navigateur par défaut n'a pas pu être ouvert");
             }
         }
     }

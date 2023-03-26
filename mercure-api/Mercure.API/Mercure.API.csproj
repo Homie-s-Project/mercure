@@ -5,6 +5,7 @@
     <Authors>Mercure Inc.</Authors>
     <GenerateProgramFile>false</GenerateProgramFile>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <NeutralLanguage>fr-CH</NeutralLanguage>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
