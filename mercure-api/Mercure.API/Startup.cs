@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Mercure.API.Context;
@@ -80,9 +82,9 @@ namespace Mercure.API
                     }
                 });
 
-                /*var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);*/
+                c.IncludeXmlComments(xmlPath);
             });
             
             string isRunningInDockerEnv = Environment.GetEnvironmentVariable("RUN_IN_DOCKER");
