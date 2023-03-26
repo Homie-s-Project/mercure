@@ -17,15 +17,11 @@ html {
         background-color: vars.$lemon-chiffon;
         h1 {
             font-family: 'Montserrat', 'Sans-serif';
+            color: vars.$bole;
         }
         h2, h3, h4 {
             font-family: 'Ubuntu', 'Sans-serif';
-        }
-        h1 {
-            color: vars.$bole;
-        }
-        h2 {
-            color: vars.$bole;
+            //color: vars.$bole;
         }
     }
 }
