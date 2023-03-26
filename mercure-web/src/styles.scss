@@ -29,3 +29,16 @@ html {
         }
     }
 }
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing-background {
+    background-image: url('./assets/img/Mock-up_4K_V2.png');
+    background-size: cover;
+    background-repeat:no-repeat;
+    background-position:center center;
+}

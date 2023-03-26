@@ -11,6 +11,7 @@ import { OrdersPanelComponent } from './components/orders-panel/orders-panel.com
 import { OrderItemComponent } from './components/order-item/order-item.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ItemCardComponent } from './components/item-card/item-card.component';
+import { LandingComponent } from './components/landing/landing.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ItemCardComponent } from './components/item-card/item-card.component';
     OrdersPanelComponent,
     OrderItemComponent,
     FooterComponent,
-    ItemCardComponent
+    ItemCardComponent,
+    LandingComponent
   ],
   imports: [
     BrowserModule,
