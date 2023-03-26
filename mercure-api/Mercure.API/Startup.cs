@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Mercure.API.Context;
 using Mercure.API.Middleware;
+using Mercure.API.Utils.Logger;
 using Mercure.API.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using LogLevel = Mercure.API.Utils.Logger.LogLevel;
 
 namespace Mercure.API
 {
@@ -23,14 +25,11 @@ namespace Mercure.API
     {
         public IConfiguration Configuration { get; }
         public static IConfiguration StaticConfig { get; private set; }
-        private readonly ILogger<Startup> _logger;
         private readonly DbContextOptions<MercureContext> _contextOptions;
         private const string PolicyName = "CorsPolicy";
 
-        public Startup(IConfiguration configuration, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration)
         {
-            _logger = logger;
-
             _contextOptions = new DbContextOptions<MercureContext>();
 
             Configuration = configuration;
@@ -157,7 +156,7 @@ namespace Mercure.API
         {
             using (var context = new MercureContext(_contextOptions))
             {
-                _logger.LogInformation("Migration de la base de données si nécessaire");
+                Logger.Log(LogLevel.Info, LogTarget.EventLog, "Migration de la base de données si nécessaire");
                 context.Database.Migrate();
                 
                 var hasAlreadyRoles = context.Roles.Any();
@@ -201,7 +200,7 @@ namespace Mercure.API
             }
             else
             {
-                Console.WriteLine("Le navigateur par défaut n'a pas pu être ouvert");
+                Logger.LogInfo("Le navigateur par défaut n'a pas pu être ouvert");
             }
         }
     }
