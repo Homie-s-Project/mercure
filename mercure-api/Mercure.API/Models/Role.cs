@@ -3,8 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mercure.API.Models;
 
+[Table("UserRole")]
 public class Role
 {
+    public Role()
+    {
+    }
+
     public Role(string roleName, int roleNumber)
     {
         RoleName = roleName;
