@@ -1,9 +1,6 @@
 name: Test Docker Compose Debug 
 
-on: 
-  push:
-    branches:
-      - main
+on: [pull_request]
 
 jobs:
   docker:
