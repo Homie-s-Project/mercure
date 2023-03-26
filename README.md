@@ -1,5 +1,9 @@
 # Mercure
 
+![Docker Debug](https://github.com/Homie-s-Project/mercure/actions/workflows/docker-compose-debug.yml/badge.svg)
+![Docker Production](https://github.com/Homie-s-Project/mercure/actions/workflows/docker-compose-prod.yml/badge.svg)
+
+
 Mercure la plateforme de e-commerce qui va vous changer votre façon de penser aux animaux. 
 
 Vous pouvez adopter ou même acheter des aliments pour votre meilleur ami. 
