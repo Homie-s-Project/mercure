@@ -6,9 +6,10 @@ namespace Mercure.API.Models;
 
 public class OrderProduct
 {
-    public OrderProduct(int productId, int quantity, bool shipped)
+    public OrderProduct(int productId, int orderId, int quantity, bool shipped)
     {
         ProductId = productId;
+        OrderId = orderId;
         Quantity = quantity;
         Shipped = shipped;
     }
@@ -19,6 +20,10 @@ public class OrderProduct
     
     [ForeignKey("Product")] public int ProductId { get; set; }
     public virtual Product Product { get; set; }
+    
+    [ForeignKey("Order")] public int OrderId { get; set; }
+    public virtual Order Order { get; set; }
+    
     public int Quantity { get; set; }
     // True = livré, False = non livré
     public Boolean Shipped { get; set; }
