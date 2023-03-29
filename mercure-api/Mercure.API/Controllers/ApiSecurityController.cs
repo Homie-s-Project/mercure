@@ -1,0 +1,12 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Mercure.API.Controllers;
+
+/// <summary>
+/// All the routes for the api that need to be secured
+/// </summary>
+[Route("api/[controller]")]
+public class ApiSecurityController : SecurityController
+{
+    
+}

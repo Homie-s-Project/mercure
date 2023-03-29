@@ -8,18 +8,16 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Mercure.API.Context;
 using Mercure.API.Middleware;
-using Mercure.API.Utils.Logger;
 using Mercure.API.Models;
+using Mercure.API.Utils.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using LogLevel = Mercure.API.Utils.Logger.LogLevel;
 
 namespace Mercure.API
 {
@@ -37,7 +35,7 @@ namespace Mercure.API
             Configuration = configuration;
             StaticConfig = configuration;
         }
-        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -54,7 +52,12 @@ namespace Mercure.API
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "Mercure API", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Mercure API",
+                    Version = "v1",
+                    Description = "Mercure API Documentation",
+                });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {
@@ -86,7 +89,7 @@ namespace Mercure.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-            
+
             string isRunningInDockerEnv = Environment.GetEnvironmentVariable("RUN_IN_DOCKER");
             Boolean.TryParse(isRunningInDockerEnv, out bool isRunningInDockerEnvBoolean);
 
@@ -94,12 +97,10 @@ namespace Mercure.API
                 ? Configuration.GetConnectionString("MercureDb")
                 : Configuration.GetConnectionString("MercureDbNoDocker");
 
-            services.AddDbContext<MercureContext>(opts =>
-            {
-                opts.UseNpgsql(connectionString);
-            });
-            
-            Logger.LogInfo("Méthode de connexion à la base de données : " + (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
+            services.AddDbContext<MercureContext>(opts => { opts.UseNpgsql(connectionString); });
+
+            Logger.LogInfo("Méthode de connexion à la base de données : " +
+                           (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
 
             // Ajout la gestion d'un cache en mémoire
             services.AddMemoryCache();
@@ -118,7 +119,7 @@ namespace Mercure.API
              *   InvalidCastException: Cannot write DateTime with kind 
              */
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            
+
             if (env.IsDevelopment())
             {
                 app.UseStaticFiles();
@@ -160,26 +161,26 @@ namespace Mercure.API
             {
                 Logger.Log(LogLevel.Info, LogTarget.EventLog, "Migration de la base de données si nécessaire");
                 context.Database.Migrate();
-                
+
                 var hasAlreadyRoles = context.Roles.Any();
-                Logger.LogInfo("La table Roles contient déjà des données : " + hasAlreadyRoles);
+                Logger.LogInfo("La table UserRole contient déjà des données : " + hasAlreadyRoles);
                 
-                if (hasAlreadyRoles)
-                {
-                    Logger.LogInfo("Suppression des données de la table Roles");
-                    context.Database.ExecuteSqlRaw("TRUNCATE TABLE Roles CASCADE");
-                }
-                else
+                if (!hasAlreadyRoles)
                 {
                     Logger.LogInfo("Création des données de la table Roles");
-                    var roles = new List<Role>
+                    var roles = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>();
+                    foreach (RoleEnum roleEnum in roles)
                     {
-                        new Role {RoleName = "Admin", RoleNumber = 100},
-                        new Role {RoleName = "User", RoleNumber = 1},
-                        new Role {RoleName = "Visitor", RoleNumber = 0},
-                    };
-
-                    roles.ForEach((r) => { context.Roles.Add(r); });
+                        Role newRole = new Role
+                        {
+                            RoleNumber = (int) roleEnum,
+                            RoleName = roleEnum.ToString()
+                        };
+                        
+                        Logger.LogInfo("Le rôle " + newRole.RoleName + " a été ajouté avec le numéro " + newRole.RoleNumber);
+                        
+                        context.Roles.Add(newRole);
+                    }
 
                     await context.SaveChangesAsync();
                 }
@@ -190,7 +191,7 @@ namespace Mercure.API
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                Process.Start(new ProcessStartInfo(url) {UseShellExecute = true});
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
