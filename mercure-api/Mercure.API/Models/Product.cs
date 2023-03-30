@@ -21,6 +21,10 @@ public class Product
         StockId = stockId;
     }
 
+    public Product()
+    {
+    }
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ProductId { get; set; }
@@ -34,6 +38,6 @@ public class Product
     [ForeignKey("Stock")] public int StockId { get; set; }
     public virtual Stock Stock { get; set; }
     
-    public virtual ICollection<Category> Categoriess { get; set; }
+    public virtual ICollection<Category> Categories { get; set; }
     
 }
