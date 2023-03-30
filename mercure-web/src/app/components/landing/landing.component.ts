@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 import { AppComponent } from 'src/app/app.component';
 
@@ -8,7 +8,7 @@ import { AppComponent } from 'src/app/app.component';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent implements OnInit, AfterViewInit, OnDestroy{
+export class LandingComponent implements OnInit, OnDestroy{
   faGoogle = faGoogle;
   faMicrosoft = faMicrosoft;
 
@@ -17,17 +17,12 @@ export class LandingComponent implements OnInit, AfterViewInit, OnDestroy{
   subTitle: string = "L'excellence pour vos compagnons fidèles";
   
   constructor(private renderer: Renderer2, private appComponent: AppComponent) { 
-    
+    this.renderer.addClass(document.body, 'landing-background');
   }
 
   ngOnInit(): void {
     this.appComponent.showNavbar = false;
     this.appComponent.showFooter = false;
-  }
-
-  ngAfterViewInit(): void{
-    this.renderer.addClass(document.body, 'landing-background');
-    this.renderer.addClass(document.getElementById('app-container'), 'centered');
   }
 
   ngOnDestroy(): void {
