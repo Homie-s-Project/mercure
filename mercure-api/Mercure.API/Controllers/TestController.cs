@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Mercure.API.Controllers;
 
+/// <summary>
+/// Controller for test
+/// </summary>
 [TypeFilter(typeof(DevOnlyActionFilter))]
 public class TestController : BaseController
 {
@@ -17,7 +20,7 @@ public class TestController : BaseController
     }
     
     /// <summary>
-    /// 
+    /// Route for test if user is connected
     /// </summary>
     /// <returns></returns>
     [HttpGet("/test-connected")]

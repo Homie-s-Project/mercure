@@ -5,6 +5,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mercure.API.Models;
 
+/// <summary>
+/// Product model
+/// </summary>
 public class Product
 {
     public Product(string productBrandName, string productName, string productDescription, int productPrice, DateTime productCreationDate, DateTime productLastUpdate, int stockId)

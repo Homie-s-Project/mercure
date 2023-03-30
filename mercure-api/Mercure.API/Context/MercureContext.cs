@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Mercure.API.Models;
+using Mercure.API.Utils.Logger;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -29,7 +30,7 @@ public class MercureContext : DbContext
                 ? configuration.GetConnectionString("MercureDb")
                 : configuration.GetConnectionString("MercureDbNoDocker");
             
-            Console.WriteLine("Configuration de connexion à la base de données : " + (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
+            Logger.LogInfo("Configuration de connexion à la base de données : " + (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
             options.UseNpgsql(connectionString);
         }
     }
