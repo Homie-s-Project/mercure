@@ -14,7 +14,6 @@ export class LandingComponent implements OnInit, OnDestroy{
 
 
   title: string = 'MERCURE';
-  subTitle: string = "L'excellence pour vos compagnons fidèles";
   
   constructor(private renderer: Renderer2, private appComponent: AppComponent) { 
     this.renderer.addClass(document.body, 'landing-background');
