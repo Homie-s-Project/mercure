@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 import { AppComponent } from 'src/app/app.component';
 
@@ -8,7 +8,7 @@ import { AppComponent } from 'src/app/app.component';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent implements OnInit{
+export class LandingComponent implements OnInit, OnDestroy{
   faGoogle = faGoogle;
   faMicrosoft = faMicrosoft;
 
@@ -24,17 +24,10 @@ export class LandingComponent implements OnInit{
   ngOnInit(): void {
     this.appComponent.showNavbar = false;
     this.appComponent.showFooter = false;
-    let textDiv = document.getElementById("title-container");
-    let buttonDiv = document.getElementById("auth-container");
+  }
 
-    if(textDiv) {
-      textDiv.style.animationPlayState = "running";
-      textDiv.classList.remove("hide");
-    }
-  
-    if(buttonDiv) {
-      buttonDiv.style.animationPlayState = "running";
-      buttonDiv.classList.remove("hide");
-    }
+  ngOnDestroy(): void {
+    this.renderer.removeClass(document.body, 'landing-background');
+    this.renderer.removeClass(document.getElementById('app-container'), 'centered');
   }
 }
