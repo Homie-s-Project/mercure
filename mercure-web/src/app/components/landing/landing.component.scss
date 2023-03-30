@@ -1,21 +1,20 @@
 @use '/src/styles/variables.scss' as vars;
 
 .landing-container {
-    display: flex;
+    display: block;
     justify-content: center;
     vertical-align: middle;
     align-items: center;
     text-align: center;
     width: 100%;
     height: 100%;
-    padding: 15px;
     border-radius: 15px;
     color: vars.$bole;
     #title-container {
         border-radius: 5%;
         .app-title {
             font-size: 88px;
-            letter-spacing: 20px;
+            letter-spacing: 15px;
         }
         .app-subtitle {
             font-size: 28px;
@@ -27,7 +26,7 @@
         align-items: center;
         flex-direction: column;
         justify-content: space-between;
-        margin: 15px;
+        margin: 10px;
         .auth-button {
             width: 100%;
             height: 42px;
