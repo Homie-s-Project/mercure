@@ -27,6 +27,5 @@ export class LandingComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.renderer.removeClass(document.body, 'landing-background');
-    this.renderer.removeClass(document.getElementById('app-container'), 'centered');
   }
 }
