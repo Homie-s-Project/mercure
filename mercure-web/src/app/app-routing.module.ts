@@ -16,7 +16,7 @@ const routes: Routes = [
     component: ProfileComponent
   },
   {
-    path: 'landing',
+    path: 'login',
     component: LandingComponent
   }
 ];
