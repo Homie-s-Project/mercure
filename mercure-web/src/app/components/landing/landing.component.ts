@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
 import { AppComponent } from 'src/app/app.component';
 
@@ -16,7 +16,10 @@ export class LandingComponent implements OnInit{
   title: string = 'MERCURE';
   subTitle: string = "L'excellence pour vos compagnons fidèles";
   
-  constructor(private appComponent: AppComponent) { }
+  constructor(private renderer: Renderer2, private appComponent: AppComponent) { 
+    this.renderer.addClass(document.body, 'landing-background');
+    this.renderer.addClass(document.getElementById('app-container'), 'centered');
+  }
 
   ngOnInit(): void {
     this.appComponent.showNavbar = false;
