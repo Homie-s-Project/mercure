@@ -32,6 +32,10 @@ const routes: Routes = [
   {
     path: '**',
     redirectTo: ""
+  },
+  {
+    path: 'product/:productId',
+    component: ProductComponent
   }
 ];
 
