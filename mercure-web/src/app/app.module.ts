@@ -20,6 +20,7 @@ import {UserService} from "./services/user/user.service";
 import {
   JwtTokenHeaderRequestInterceptor
 } from "./interceptors/jwtTokenRequest/jwt-token-header-request-interceptor.service";
+import { ProductComponent } from './components/product/product.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import {
     OrderItemComponent,
     ItemCardComponent,
     LandingComponent,
-    LoadingComponent
+    LoadingComponent,
+    ProductComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,15 @@
+@use '/src/styles/variables.scss' as vars;
+
+.product-container {
+    padding: 30px 210px 30px 210px;
+    display: flex;
+    .product-images{
+        width: 75%;
+        height: 150px;
+        background-color: vars.$bole;
+    }
+    .product-data {
+        width: 25%;
+        padding: 30px;
+    }
+}
