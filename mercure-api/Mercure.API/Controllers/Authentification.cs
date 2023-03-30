@@ -291,7 +291,7 @@ public class Authentification : BaseController
         // On ajoute l'entrée dans le cache
         _memoryCache.Set(state, tokenString, cacheEntryOption);
         
-        return Ok(new ErrorMessage("/auth/logged?state=" + state, StatusCodes.Status200OK));
+        return Redirect(_microsoftRedirectFront + "?state=" + state);
     }
 
     /// <summary>
@@ -300,7 +300,6 @@ public class Authentification : BaseController
     /// <param name="code">Le code de microsoft concernant la connexion</param>
     /// <param name="state">Le code qu'on à générer qui permet de protéger contre les Man In The Middle</param>
     /// <param name="error">Le code erreur s'il y en a une</param>
-    /// <param name="errorDescription">La description de l'erreur</param>
     /// <response code="200">Returns the token information</response>
     /// <response code="404">Can't found your account</response>
     /// <response code="401">You are not authorize</response>
@@ -457,7 +456,7 @@ public class Authentification : BaseController
         // On ajoute l'entrée dans le cache
         _memoryCache.Set(state, tokenString, cacheEntryOption);
         
-        return Ok(new ErrorMessage("/auth/logged?state=" + state, StatusCodes.Status200OK));
+        return Redirect(_googleRedirectFront + "?state=" + state);
     }
     
     [HttpGet("logged")]
@@ -484,12 +483,15 @@ public class Authentification : BaseController
     /// </summary>
     /// <returns></returns>
     [HttpGet("current-user")]
-    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> GetCurrentUser()
     {
         var userContext = (User) HttpContext.Items["User"];
+        if (userContext == null)
+        {
+            return NotFound(new ErrorMessage("You don't seem to be connected", StatusCodes.Status404NotFound));
+        }
 
         var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userContext.UserId);
         if (user == null)
