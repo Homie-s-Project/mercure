@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Mercure.API.Context;
 using Mercure.API.Middleware;
 using Mercure.API.Models;
+using Mercure.API.Utils;
 using Mercure.API.Utils.Logger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -180,34 +181,6 @@ namespace Mercure.API
                 // EN MODE DEV => Docker Débug ou lancer depuis l'IDE
                 if (env.IsDevelopment())
                 {
-                    var hasAlreadyDevUsers =
-                        context.Users.FirstOrDefaultAsync(u => u.Role.RoleNumber == (int) RoleEnum.Dev).Result != null;
-                    if (!hasAlreadyDevUsers)
-                    {
-                        User userDev = new User
-                        {
-                            ServiceId = "DEV:DEV:RandomDevServiceId",
-                            LastName = "LastNameDev",
-                            FirstName = "FirstNameDev",
-                            Email = "dev@mercure.com",
-                            CreatedAt = DateTime.Now,
-                            LastUpdatedAt = DateTime.Now
-                        };
-                        userDev.Role = await context.Roles.FirstOrDefaultAsync(r => r.RoleNumber == (int) RoleEnum.Dev);
-
-                        Logger.LogInfo("Création d'un utilisateur de dev...");
-                        context.Users.Add(userDev);
-                        await context.SaveChangesAsync();
-
-                        Logger.LogInfo("Utilisateur de dev créé avec l'id " + userDev.UserId);
-                    }
-                    else
-                    {
-                        var userDev = context.Users.FirstOrDefaultAsync(u => u.Role.RoleNumber == (int) RoleEnum.Dev).Result;
-                        Logger.LogInfo("L'utilisateur de dev est déjà présent dans la base de données, il a l'id : " +
-                                       userDev.UserId);
-                    }
-                    
                     // Utilisateurs de tests
                     var devTestUser = context.Users.Where(u => u.ServiceId.StartsWith("DEV"));
                     if (devTestUser.Count() > 0)
@@ -236,6 +209,11 @@ namespace Mercure.API
                         context.Users.Add(userRoleTest);
                     });
                     await context.SaveChangesAsync();
+                    
+                    // Token Dev User
+                    var devUser = context.Users.FirstOrDefault(u => u.ServiceId.StartsWith("DEV") && u.Role.RoleNumber == (int) RoleEnum.Dev);
+                    var tokenDevUser = JwtUtils.GenerateJsonWebToken(devUser);
+                    Logger.LogInfo("Token de l'utilisateur de dev : " + tokenDevUser);
 
                     // DEV STOCK
                     var devStock = context.Stocks.Where(s => s.StockQuantityAvailable > 999_999_999).ToList();
