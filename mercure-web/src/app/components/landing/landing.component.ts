@@ -17,11 +17,12 @@ export class LandingComponent implements OnInit, OnDestroy{
   subTitle: string = "L'excellence pour vos compagnons fidèles";
   
   constructor(private renderer: Renderer2, private appComponent: AppComponent) { 
-    this.renderer.addClass(document.body, 'landing-background');
-    this.renderer.addClass(document.getElementById('app-container'), 'centered');
+    
   }
 
   ngOnInit(): void {
+    this.renderer.addClass(document.body, 'landing-background');
+    this.renderer.addClass(document.getElementById('app-container'), 'centered');
     this.appComponent.showNavbar = false;
     this.appComponent.showFooter = false;
   }
