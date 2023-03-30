@@ -1,3 +1,4 @@
+import { Renderer2 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AppComponent } from 'src/app/app.component';
@@ -10,7 +11,7 @@ describe('LandingComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ LandingComponent ],
-      providers: [AppComponent]
+      providers: [AppComponent, Renderer2]
     })
     .compileComponents();
 
