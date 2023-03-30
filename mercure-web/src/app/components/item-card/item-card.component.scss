@@ -7,19 +7,39 @@
     margin: 15px;
     padding: 30px;
     border: 1px solid vars.$bole;
+    border-radius: 15px;
     // border-radius: 15px;
     .item-image {
         width: 210px;
         height: 210px;
-        margin-bottom: 15px;
+        margin-bottom: 24px;
     }
     .card-content {
         .brand {
-            font-size: 21px;
+            font-size: 24px;
             margin-bottom: 15px;
         }
-        .description {
+        // .description {
+        //     margin-bottom: 15px;
+        // }
+    }
+    .card-data {
+        .price{
+            font-size: 21px;
+            font-weight: bold;
             margin-bottom: 15px;
+        }
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            .tag {
+                width: auto;
+                padding: 5px;
+                color: vars.$bole;
+                border: 1px solid vars.$bole;
+                border-radius: 5px;
+            }
         }
     }
 }
