@@ -23,6 +23,11 @@ public class ProductController : ApiSecurityController
         _context = context;
     }
 
+    /// <summary>
+    /// Get the product for the given idq
+    /// </summary>
+    /// <param name="productId"></param>
+    /// <returns></returns>
     [HttpGet("{productId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
@@ -59,6 +64,16 @@ public class ProductController : ApiSecurityController
         return Ok(new ProductDto(productDb, true));
     }
 
+    /// <summary>
+    /// Creates a new product.
+    /// </summary>
+    /// <param name="productName">The name of the product.</param>
+    /// <param name="productBrandName">The name of the product's brand.</param>
+    /// <param name="productDescription">The description of the product.</param>
+    /// <param name="productPrice">The price of the product.</param>
+    /// <param name="stockId">The identifier of the stock.</param>
+    /// <param name="categories">The categories of the product.</param>
+    /// <returns>Returns a ProductDto object that represents the created product.</returns>
     [HttpPost("/create")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
@@ -139,6 +154,17 @@ public class ProductController : ApiSecurityController
         return Ok(new ProductDto(product, true));
     }
     
+    /// <summary>
+    /// Updates an existing product.
+    /// </summary>
+    /// <param name="productId">The identifier of the product to update.</param>
+    /// <param name="productName">The updated name of the product.</param>
+    /// <param name="productBrandName">The updated name of the product's brand.</param>
+    /// <param name="productDescription">The updated description of the product.</param>
+    /// <param name="productPrice">The updated price of the product.</param>
+    /// <param name="stockId">The updated identifier of the stock.</param>
+    /// <param name="categories">The updated categories of the product.</param>
+    /// <returns>Returns a ProductDto object that represents the updated product.</returns>
     [HttpPut("/update/{productId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]

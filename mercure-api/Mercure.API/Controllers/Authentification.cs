@@ -459,6 +459,11 @@ public class Authentification : BaseController
         return Redirect(_googleRedirectFront + "?state=" + state);
     }
     
+    /// <summary>
+    /// Return the token for the user saved in the cache with the state
+    /// </summary>
+    /// <param name="state">the state code generated when the user logged</param>
+    /// <returns></returns>
     [HttpGet("logged")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
@@ -479,7 +484,7 @@ public class Authentification : BaseController
     }
 
     /// <summary>
-    /// Return the current user
+    /// Return the current user connected
     /// </summary>
     /// <returns></returns>
     [HttpGet("current-user")]
