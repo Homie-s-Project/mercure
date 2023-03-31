@@ -1,5 +1,12 @@
 @use '/src/styles/variables.scss' as vars;
 
-// :host {
-//     margin: 50px;
-// }
+:host {
+    display: flex;
+    flex-direction: row;
+}
+.sideBar{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-right: 10px;
+}
