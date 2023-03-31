@@ -20,6 +20,10 @@ public class User
         LastUpdatedAt = lastUpdatedAt;
     }
 
+    public User()
+    {
+    }
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int UserId { get; set; }

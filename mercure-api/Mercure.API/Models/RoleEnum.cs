@@ -6,6 +6,7 @@
 public enum RoleEnum
 {
     Admin = 100,
+    Dev = 5,
     User = 1,
     Visitor = 0
 }

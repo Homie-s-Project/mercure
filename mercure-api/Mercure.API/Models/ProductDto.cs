@@ -31,9 +31,9 @@ public class ProductDto
 
         if (loadMore)
         {
-            if (product.Categoriess != null)
+            if (product.Categories != null)
             {
-                Categoriess = product.Categoriess.Select(c => new CategoryDto(c)).ToList();
+                Categoriess = product.Categories.Select(c => new CategoryDto(c)).ToList();
             }                
         }
     }

@@ -48,7 +48,7 @@ public class ProductController : ApiSecurityController
         
         var productDb = await _context.Products
             .Include(p => p.Stock)
-            .Include(p => p.Categoriess)
+            .Include(p => p.Categories)
             .FirstOrDefaultAsync(p => p.ProductId== id);
         
         if (productDb == null)
@@ -109,7 +109,7 @@ public class ProductController : ApiSecurityController
         }
         
         var product = new Product(productBrandName, productName, productDescription, productPrice, DateTime.Now, DateTime.Now, stockId);
-        product.Categoriess = new List<Category>();
+        product.Categories = new List<Category>();
         
         if (!string.IsNullOrEmpty(categories))
         {
@@ -129,7 +129,7 @@ public class ProductController : ApiSecurityController
                     return BadRequest(new ErrorMessage("We cannot found the category with this id: " + categoryId, StatusCodes.Status400BadRequest));
                 }
                 
-                product.Categoriess.Add(categoryDb);
+                product.Categories.Add(categoryDb);
             }
         }
         
@@ -203,7 +203,7 @@ public class ProductController : ApiSecurityController
         
         if (!string.IsNullOrEmpty(categories))
         {
-            productUpdatedWanted.Categoriess = new List<Category>();
+            productUpdatedWanted.Categories = new List<Category>();
             var categoriesList = categories.Split(",");
             
             foreach (var category in categoriesList)
@@ -220,7 +220,7 @@ public class ProductController : ApiSecurityController
                     return BadRequest(new ErrorMessage("We cannot found the category with this id: " + categoryId, StatusCodes.Status400BadRequest));
                 }
                 
-                productUpdatedWanted.Categoriess.Add(categoryDb);
+                productUpdatedWanted.Categories.Add(categoryDb);
             }
         }
 

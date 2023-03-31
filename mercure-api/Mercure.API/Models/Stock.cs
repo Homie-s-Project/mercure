@@ -10,6 +10,10 @@ public class Stock
         StockQuantityAvailable = stockQuantityAvailable;
     }
 
+    public Stock()
+    {
+    }
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int StockId { get; set; }
