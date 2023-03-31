@@ -1,8 +1,7 @@
 @use '/src/styles/variables.scss' as vars;
 
-.orders-panel-container {
+:host {
     width: 100%;
-    padding: 30px 240px 30px 240px;
     .orders-panel-title {
         margin: 0 0 21px 21px;
     }
