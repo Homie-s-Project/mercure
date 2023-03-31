@@ -1,21 +1,19 @@
-<div class="orders-panel-container">
-    <h1 class="orders-panel-title">Commandes</h1>
-    <div class="orders-panel">
-        <div class="order-container" *ngFor="let i of [].constructor(5)">
-            <header class="order-header">
-                <h2 class="order-title">Commande 12345678 du 16.03.2023</h2>
-                <div class="order-details">
-                    <div class="order-detail order-status">
-                        Status de paiement <span class="status">payé</span>
-                    </div>
-                    <div class="order-detail order-total">
-                        Montant total de <span class="total">CHF 100.00</span>
-                    </div>
+<h1 class="orders-panel-title">Commandes</h1>
+<div class="orders-panel">
+    <div class="order-container" *ngFor="let i of [].constructor(5)">
+        <header class="order-header">
+            <h2 class="order-title">Commande 12345678 du 16.03.2023</h2>
+            <div class="order-details">
+                <div class="order-detail order-status">
+                    Status de paiement <span class="status">payé</span>
                 </div>
-            </header>
-            <div class="order-items">
-                <app-order-item *ngFor="let i of [].constructor(3)"></app-order-item>
+                <div class="order-detail order-total">
+                    Montant total de <span class="total">CHF 100.00</span>
+                </div>
             </div>
+        </header>
+        <div class="order-items">
+            <app-order-item *ngFor="let i of [].constructor(3)"></app-order-item>
         </div>
     </div>
 </div>
