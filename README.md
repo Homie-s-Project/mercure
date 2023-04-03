@@ -12,7 +12,7 @@ Mercure la plateforme de e-commerce qui va vous changer votre façon de penser a
 Vous pouvez adopter ou même acheter des aliments pour votre meilleur ami. 
 
 
-Les labradors les plus choux de votre région sont sur votre plateforme, et vous attendent pour vivre une merveilleuse vie.
+Les labradors les plus choux de votre région sont sur notre plateforme, et vous attendent pour vivre une merveilleuse vie.
 
 ## Installation
 
