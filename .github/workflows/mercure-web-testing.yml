@@ -17,6 +17,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: mercure-web/npm-shrinkwrap.json
 
       - run: npm ci
         working-directory: ./mercure-web
