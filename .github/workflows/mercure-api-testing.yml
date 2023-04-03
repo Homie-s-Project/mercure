@@ -31,6 +31,13 @@ jobs:
         run: dotnet build --configuration Release --no-restore
         working-directory: ./mercure-api
 
+      - name: Upload Artifcat
+        uses: actions/upload-artifact@v3
+        with:
+          name: mercure-api-build
+          path: ./mercure-api
+          if-no-files-found: error 
+
   test:
     name: Test Mercure API
     runs-on: ubuntu-latest
@@ -39,6 +46,11 @@ jobs:
     needs: [build]
 
     steps:
+      - name: Downloading Artifcat 
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+
       - name: Test API
         run: dotnet test --no-restore --verbosity normal
         working-directory: ./mercure-api
