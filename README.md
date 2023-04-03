@@ -137,3 +137,4 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 -   [Romain Antunes](https://github.com/Flasssh)
 -   [Alexandre Botta](https://github.com/bottaalexandre)
 -   [William Pasquier](https://github.com/WilliamDevv)
+-   [Simão Romano Schindler](https://github.com/SchindlerSimao)
