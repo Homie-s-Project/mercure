@@ -3,6 +3,7 @@ using System;
 using Mercure.API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mercure.API.Migrations
 {
     [DbContext(typeof(MercureContext))]
-    partial class MercureContextModelSnapshot : ModelSnapshot
+    [Migration("20230329174544_OrderProductsFix")]
+    partial class OrderProductsFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,13 +26,13 @@ namespace Mercure.API.Migrations
 
             modelBuilder.Entity("CategoryProduct", b =>
                 {
-                    b.Property<int>("CategoriesCategoryId")
+                    b.Property<int>("CategoriessCategoryId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ProductsProductId")
                         .HasColumnType("integer");
 
-                    b.HasKey("CategoriesCategoryId", "ProductsProductId");
+                    b.HasKey("CategoriessCategoryId", "ProductsProductId");
 
                     b.HasIndex("ProductsProductId");
 
@@ -309,7 +311,7 @@ namespace Mercure.API.Migrations
                 {
                     b.HasOne("Mercure.API.Models.Category", null)
                         .WithMany()
-                        .HasForeignKey("CategoriesCategoryId")
+                        .HasForeignKey("CategoriessCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

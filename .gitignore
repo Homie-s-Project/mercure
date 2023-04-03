@@ -783,4 +783,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+./mercure-api/Mercure.API.sln.DotSettings.user
+
 # End of https://www.toptal.com/developers/gitignore/api/csharp,rider,webstorm,angular,node,macos,windows
