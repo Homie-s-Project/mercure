@@ -16,8 +16,17 @@ services:
       - pgconf:/etc/postgresql
       - pglog:/var/log/postgresql
 
+  mercure-cache:
+    container_name: mercure-cache
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - cache:/data
 
-  karios-pgadmin:
+  mercure-pgadmin:
     image: dpage/pgadmin4
     container_name: mercure-pgadmin4
     restart: always
@@ -36,6 +45,7 @@ services:
     container_name: mercure-api
     depends_on:
       - mercure-db
+      - mercure-cache
     build:
       context: mercure-api
       dockerfile: ./Dockerfile
@@ -64,4 +74,5 @@ volumes:
   pgconf:
   pglog:
   pgadmin-data:
-
+  cache:
+      driver: local

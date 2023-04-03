@@ -15,7 +15,11 @@ public class ProductDto
         ProductPrice = product.ProductPrice;
         ProductCreationDate = product.ProductCreationDate;
         ProductLastUpdate = product.ProductLastUpdate;
-        Stock = new StockDto(product.Stock);
+        
+        if (product.Stock != null)
+        {
+            Stock = new StockDto(product.Stock);
+        }
     }
     
     public ProductDto(Product product, bool loadMore)

@@ -75,12 +75,13 @@ Nous utilisons **4** images dans notre projet avec chacune des images une partic
 | ------------------    | --------------- | ----------------|
 | `mercure-api`*         | Cette image contient le code utile pour notre API. |[http://localhost:5001/swagger/index.html](http://localhost:5001/swagger/index.html) |
 | `mercure-web`*     	  | Dans cette image, il se trouve tout notre code nécessaire pour avoir l'interface frontend avec Angular. | [http://localhost:4200/](http://localhost:4200/)
-| [postgres](https://hub.docker.com/_/postgres)| Postgres est l'image docker de notre base de données. | -** |
+| [redis](https://hub.docker.com/_/redis)| Redis est l'image qui permet de gérer le cache de notre application.. | localhost:6379** |
+| [postgres](https://hub.docker.com/_/postgres)| Postgres est l'image docker de notre base de données. | localhost:5432** |
 | [dpage/pgadmin4](https://hub.docker.com/r/dpage/pgadmin4) 	| Cette image permet d'avoir une interface d'utilisation de notre base de données.|  [http://localhost:5050/](http://localhost:5050/) |
 
 \* C'est des images non-publiques nous appartenant.
 
-\**Aucun lien URL pour notre base de données.
+\**Ces URL ne peuvent pas être accédé depuis un navigateur web, ne sont pas utilisables à travers le protocole http.
 
 *Les connexions pour la base de données, si elles n'ont pas été modifiées dans les variables d'environnement reste celle par défaut.*
 
