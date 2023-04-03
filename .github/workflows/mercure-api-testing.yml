@@ -1,31 +1,44 @@
 name: Mercure API Testing
 
-on: [pull_request]
+on: 
+  pull_request:
+  release:
+    types: [published]
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  build:
+    name: Build Mercure API
+    runs-on: ubuntu-latest
 
-        strategy:
-            matrix:
-                dotnet-version: ["6.0.x"]
+    strategy:
+      matrix:
+        dotnet-version: ["6.0.x"]
 
-        steps:
-            - uses: actions/checkout@v3
+    steps:
+      - name: Checkout Mercure
+        uses: actions/checkout@v3
+        
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+            dotnet-version: ${{ matrix.dotnet-version }}
+            
+      - name: Install dependencies API
+        run: dotnet restore
+        working-directory: ./mercure-api
+        
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+        working-directory: ./mercure-api
 
-            - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-              uses: actions/setup-dotnet@v3
-              with:
-                  dotnet-version: ${{ matrix.dotnet-version }}
+  test:
+    name: Test Mercure API
+    runs-on: ubuntu-latest
 
-            - name: Install dependencies
-              run: dotnet restore
-              working-directory: ./mercure-api
+    if: ${{ always() }}
+    needs: [build]
 
-            - name: Build
-              run: dotnet build --configuration Release --no-restore
-              working-directory: ./mercure-api
-
-            - name: Test
-              run: dotnet test --no-restore --verbosity normal
-              working-directory: ./mercure-api
+    steps:
+      - name: Test API
+        run: dotnet test --no-restore --verbosity normal
+        working-directory: ./mercure-api
