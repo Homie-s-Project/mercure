@@ -52,5 +52,5 @@ jobs:
           name: mercure-api-build
 
       - name: Test API
-        run: dotnet test --no-restore --verbosity normal
+        run: dotnet test --no-restore --verbosity normal --project Mercure.API
         working-directory: ./mercure-api
