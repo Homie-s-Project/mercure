@@ -129,7 +129,7 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 | Couleur avec propriété non définie* | ![#314d2d](https://via.placeholder.com/15/314d2d/314d2d.png) #314d2d |
 | Couleur avec propriété non définie* | ![#1a2c16](https://via.placeholder.com/15/1a2c16/1a2c16.png) #1a2c16 |
 
-\* Les couleurs n'ont pas une utilisation précise définie.
+\* Les couleurs n'ont pas une utilisation définient.
 
 ## Authors
 
