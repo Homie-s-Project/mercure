@@ -19,6 +19,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using StackExchange.Redis;
+using Role = Mercure.API.Models.Role;
 
 namespace Mercure.API
 {
@@ -97,7 +99,32 @@ namespace Mercure.API
 
             Logger.LogInfo("Méthode de connexion à la base de données : " +
                            (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
+            
+            // Connexion à Redis
+            Logger.LogInfo("Connexion à Redis");
+            services.AddStackExchangeRedisCache(options =>
+            {
+                var redis = Configuration.GetSection("Redis");
+                var redisUrl = redis["RedisCacheURl"];
+                var redisPort = int.Parse(redis["RedisCachePort"]);
+                var redisPassword = redis["RedisCachePassword"];
 
+                var configurationOptions = new ConfigurationOptions
+                {
+                    EndPoints =
+                    {
+                        {
+                            redisUrl, redisPort
+                        }
+                    },
+                    Password = redisPassword,
+                    Ssl = false,
+                    AbortOnConnectFail = true
+                };
+                options.Configuration = configurationOptions.ToString();
+                options.InstanceName = "Mercure_";
+            });
+            
             // Ajout la gestion d'un cache en mémoire
             services.AddMemoryCache();
 
@@ -214,6 +241,9 @@ namespace Mercure.API
                     var devUser = context.Users.FirstOrDefault(u => u.ServiceId.StartsWith("DEV") && u.Role.RoleNumber == (int) RoleEnum.Dev);
                     var tokenDevUser = JwtUtils.GenerateJsonWebToken(devUser);
                     Logger.LogInfo("Token de l'utilisateur de dev : " + tokenDevUser);
+                    
+                    var linkSwagger = "http://localhost:5000/swagger/index.html?token="+tokenDevUser;
+                    OpenBrowser(linkSwagger);
 
                     // DEV STOCK
                     var devStock = context.Stocks.Where(s => s.StockQuantityAvailable > 999_999_999).ToList();
