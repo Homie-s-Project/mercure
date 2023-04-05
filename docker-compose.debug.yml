@@ -25,6 +25,8 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    environment:
+        - REDIS_HOST_PASSWORD=eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     volumes:
       - cache:/data
@@ -81,10 +83,28 @@ services:
       - 4200:4200
       - 49153:49153
 
+  mercure-grafana:
+      container_name: mercure-grafana
+      restart: unless-stopped
+      build:
+        context: mercure-grafana
+        dockerfile: ./Dockerfile
+      ports:
+        - 9000:3000
+      environment:
+        - GF_DEFAULT_INSTANCE_NAME=Mercure Dashboard
+        - GF_SECURITY_ADMIN_USER=mercure
+        - GF_SECURITY_ADMIN_PASSWORD=mercure_password
+        - GF_AUTH_ANONYMOUS_ENABLED=true
+      volumes:
+        - grafana-storage:/var/lib/grafana
+
 volumes:
   pgdata:
   pgconf:
   pglog:
   pgadmin-data:
   cache:
+      driver: local
+  grafana-storage:
       driver: local
