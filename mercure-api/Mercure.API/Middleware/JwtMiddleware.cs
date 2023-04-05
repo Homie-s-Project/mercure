@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Mercure.API.Context;
 using Mercure.API.Utils;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mercure.API.Middleware;
 
@@ -24,7 +25,7 @@ public class JwtMiddleware
         string token = context.Request.Headers.Authorization;
 
         // Si le token n'est pas null et qu'il commence par "Bearer "
-        if (token != null && token.Contains(bearer))
+        if (token != null && token.StartsWith(bearer))
         {
             // On récupère le token sans le "Bearer "
             token = token.Remove(0, bearer.Length + 1);
@@ -38,7 +39,9 @@ public class JwtMiddleware
         {
             // On récupère l'utilisateur dans le token.
             var userId = informationsJwt.Value;
-            context.Items["User"] = mercureContext.Users.First(u => u.UserId == userId);
+            context.Items["User"] = mercureContext.Users
+                .Include(u => u.Role)
+                .First(u => u.UserId == userId);
         }
 
         await _next(context);

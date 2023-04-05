@@ -74,7 +74,7 @@ public class ProductController : ApiSecurityController
     /// <param name="stockId">The identifier of the stock.</param>
     /// <param name="categories">The categories of the product.</param>
     /// <returns>Returns a ProductDto object that represents the created product.</returns>
-    [HttpPost("/create")]
+    [HttpPost("create")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
@@ -165,7 +165,7 @@ public class ProductController : ApiSecurityController
     /// <param name="stockId">The updated identifier of the stock.</param>
     /// <param name="categories">The updated categories of the product.</param>
     /// <returns>Returns a ProductDto object that represents the updated product.</returns>
-    [HttpPut("/update/{productId}")]
+    [HttpPut("update/{productId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
@@ -256,7 +256,7 @@ public class ProductController : ApiSecurityController
         return Ok(new ProductDto(productUpdatedWanted, true));
     }
 
-    [HttpDelete("/delete/{productId}")]
+    [HttpDelete("delete/{productId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
