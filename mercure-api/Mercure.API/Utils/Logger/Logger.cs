@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
@@ -97,7 +99,20 @@ public class Logger
         else
         {
             Console.WriteLine(logText);
-
+        }
+        
+        // Ajout du log dans le fichier de log
+        var folderExist = Directory.Exists("logs");
+        if (folderExist)
+        {
+            var processStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
+            var logFileName = $"log-{processStarted.ToString("yyyy-MM-dd")}.txt";
+            var logFilePath = Path.Combine("logs", logFileName);
+            File.AppendAllText(logFilePath, logText + Environment.NewLine);
+        }
+        else
+        {
+            Directory.CreateDirectory("logs");
         }
     }
 
