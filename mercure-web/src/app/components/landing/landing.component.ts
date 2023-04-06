@@ -8,20 +8,18 @@ import { AppComponent } from 'src/app/app.component';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent implements OnInit, OnDestroy{
+export class LandingComponent implements OnDestroy{
   faGoogle = faGoogle;
   faMicrosoft = faMicrosoft;
 
 
   title: string = 'MERCURE';
-  
-  constructor(private renderer: Renderer2, private appComponent: AppComponent) { 
-    this.renderer.addClass(document.body, 'landing-background');
-  }
 
-  ngOnInit(): void {
+  constructor(private renderer: Renderer2, private appComponent: AppComponent) {
     this.appComponent.showNavbar = false;
     this.appComponent.showFooter = false;
+
+    this.renderer.addClass(document.body, 'landing-background');
   }
 
   ngOnDestroy(): void {
