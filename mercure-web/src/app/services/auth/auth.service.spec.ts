@@ -1,8 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable } from 'rxjs';
-import { UserModel } from 'src/app/models/UserModel';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { AuthService } from './auth.service';
 
@@ -12,7 +10,8 @@ describe('AuthService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ AuthService ],
-      providers: [HttpClient, HttpHeaders, HttpResponse, CookieService, Observable, UserModel]
+      providers: [CookieService],
+      imports: [ HttpClientTestingModule ]
     })
     .compileComponents();
     service = TestBed.inject(AuthService);
