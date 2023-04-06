@@ -193,6 +193,14 @@ namespace Mercure.API
                 var roleEnum = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>().ToList();
                 if (!hasAlreadyRoles || countRoles != roleEnum.Count())
                 {
+                    // Suppression des rôles
+                    if (hasAlreadyRoles)
+                    {
+                        Logger.LogInfo("Suppression des rôles de la table Roles");
+                        context.Roles.ToList().ForEach(r => context.Remove(r));
+                        await context.SaveChangesAsync();
+                    }
+                    
                     roleEnum.ToList().ForEach(role =>
                     {
                         Logger.LogInfo("Création du rôle " + role + " avec le numéro " + (int) role);
