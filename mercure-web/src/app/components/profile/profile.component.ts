@@ -11,10 +11,10 @@ export class ProfileComponent {
   currentUser?: UserModel;
   orderIsShow = false;
 
-  constructor(
-    private auth: AuthService,
-  ) {
-    auth.getProfile().subscribe(resp => {
+  constructor(private auth: AuthService  ) {}
+  
+  ngOnInit(): void {
+    this.auth.getProfile().subscribe(resp => {
       if (resp.status != 200) {
         console.log(resp.statusText);
       }
