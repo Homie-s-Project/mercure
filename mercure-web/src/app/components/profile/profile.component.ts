@@ -12,14 +12,14 @@ export class ProfileComponent {
   orderIsShow = false;
 
   constructor(private auth: AuthService  ) {}
-  
+
   ngOnInit(): void {
     this.auth.getProfile().subscribe(resp => {
       if (resp.status != 200) {
         console.log(resp.statusText);
       }
 
-      this.currentUser = new UserModel(resp.body);
+      // this.currentUser = new UserModel(resp.body);
     })
   }
   profilShow(){

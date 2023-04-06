@@ -12,6 +12,9 @@
         flex-direction: column;
         padding-right: 10px;
     }
+    & a {
+      cursor: pointer;
+    }
     .profile{
         width: 100%;
         display: inline-block;
@@ -28,7 +31,7 @@
                 outline: solid 1px vars.$bole;
                 border-radius: 3px;
             }
-        }    
+        }
     }
     .profile-title {
         margin-bottom: 21px;

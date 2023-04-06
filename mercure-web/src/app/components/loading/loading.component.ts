@@ -1,19 +1,18 @@
-import { Component } from '@angular/core';
-import { AppComponent } from '../app.component';
-import { AuthService } from '../services/auth/auth.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Subscription } from 'rxjs';
+import {Component, OnInit} from '@angular/core';
+import {AppComponent} from '../../app.component';
+import {ActivatedRoute, ParamMap} from '@angular/router';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-loading',
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss']
 })
-export class LoadingComponent {
+export class LoadingComponent implements OnInit {
   state?: number;
   subscriptions: Subscription[] = []
 
-  constructor(private appComponent: AppComponent, public auth: AuthService, private route: ActivatedRoute){}
+  constructor(private appComponent: AppComponent, private route: ActivatedRoute){}
 
   ngOnInit(): void {
     this.appComponent.showNavbar = false;

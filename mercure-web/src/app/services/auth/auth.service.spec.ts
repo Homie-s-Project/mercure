@@ -9,7 +9,6 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ AuthService ],
       providers: [CookieService],
       imports: [ HttpClientTestingModule ]
     })
