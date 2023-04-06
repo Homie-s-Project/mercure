@@ -11,6 +11,8 @@ import { OrdersPanelComponent } from './components/orders-panel/orders-panel.com
 import { OrderItemComponent } from './components/order-item/order-item.component';
 import { ItemCardComponent } from './components/item-card/item-card.component';
 import { LandingComponent } from './components/landing/landing.component';
+import { LoadingComponent } from './loading/loading.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -21,11 +23,13 @@ import { LandingComponent } from './components/landing/landing.component';
     OrdersPanelComponent,
     OrderItemComponent,
     ItemCardComponent,
-    LandingComponent
+    LandingComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     FontAwesomeModule
   ],
   providers: [],
