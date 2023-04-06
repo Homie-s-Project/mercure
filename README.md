@@ -73,7 +73,7 @@ Nous utilisons **4** images dans notre projet avec chacune des images une partic
 
 | Image Docker   	| Description         |  URL |
 | ------------------    | --------------- | ----------------|
-| `mercure-api`*         | Cette image contient le code utile pour notre API. |[http://localhost:5001/swagger/index.html](http://localhost:5001/swagger/index.html) |
+| `mercure-api`*         | Cette image contient le code utile pour notre API. |[http://localhost:5001/swagger/index.html](http://localhost:5000/swagger/index.html) |
 | `mercure-web`*     	  | Dans cette image, il se trouve tout notre code nécessaire pour avoir l'interface frontend avec Angular. | [http://localhost:4200/](http://localhost:4200/)
 | [redis](https://hub.docker.com/_/redis)| Redis est l'image qui permet de gérer le cache de notre application.. | localhost:6379** |
 | [postgres](https://hub.docker.com/_/postgres)| Postgres est l'image docker de notre base de données. | localhost:5432** |
@@ -111,7 +111,7 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 | Environement name        | default       |
 | ------------------------ | ------------- |
 | `ASPNETCORE_ENVIRONMENT` | Development   |
-| `ASPNETCORE_URLS`        | http://+:5001 |
+| `ASPNETCORE_URLS`        | http://+:5000 |
 
 **mercure-web**
 
