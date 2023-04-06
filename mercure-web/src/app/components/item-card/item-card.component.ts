@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { faTag } from '@fortawesome/free-solid-svg-icons';
+import { Component, Input, OnInit } from '@angular/core';
+import { faTag, faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import { IProductModel } from 'src/app/models/IProductModel';
 
 @Component({
   selector: 'app-item-card',
@@ -8,6 +9,9 @@ import { faTag } from '@fortawesome/free-solid-svg-icons';
 })
 export class ItemCardComponent implements OnInit {
   faTag = faTag;
+  faCartPlus = faCartPlus;
+
+  @Input() product?: IProductModel;
 
   constructor() { }
 

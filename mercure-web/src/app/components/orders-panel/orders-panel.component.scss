@@ -28,6 +28,14 @@
                     margin-bottom: 21px;
                     .order-detail {
                         margin: 0 21px 0 21px;
+                        .status {
+                            color: vars.$moss-green;
+                            font-weight: bold;
+                        }
+                        .total{
+                            color: vars.$moss-green;
+                            font-weight: bold;
+                        }
                     }
                 }
             }

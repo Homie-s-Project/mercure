@@ -1,13 +1,13 @@
-<img src="../../../assets/img/image.png" class="item-image">    
-<div class="line"></div>
-<div class="card-content">
-    <h3 class="brand">Mercure Felina</h3>
-    <!-- <p class="description">Les croquettes pour chat Mercure Felina sont riches en nutriments essentiels</p> -->
-    <div class="card-data">
-        <p class="price">12.50 CHF</p>
-        <div class="tags">
-            <p class="tag"><fa-icon [icon]="faTag"></fa-icon> Nourriture</p>
-            <p class="tag"><fa-icon [icon]="faTag"></fa-icon> Chat</p>
+<a [routerLink]="['/product', product?.Id]">
+    <img src="../../../assets/img/image.png" class="item-image">    
+    <div class="card-content">
+        <h3 class="brand">{{product?.Brand}}</h3>
+        <div class="card-data">
+            <p class="price">{{product?.Price}} CHF</p>
+            <div class="tags">
+                <p class="tag" *ngFor="let tag of product?.Tags"><fa-icon [icon]="faTag"></fa-icon> {{tag}}</p>
+            </div>
         </div>
     </div>
-</div>
+</a>
+<button class="add-to-cart"><fa-icon [icon]="faCartPlus"></fa-icon></button>

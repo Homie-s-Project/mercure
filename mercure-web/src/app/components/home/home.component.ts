@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {AppComponent} from "../../app.component";
+import { ProductService } from 'src/app/services/product/product.service';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,7 @@ import {AppComponent} from "../../app.component";
 })
 export class HomeComponent {
 
-  constructor(appComponent: AppComponent) {
+  constructor(appComponent: AppComponent, public product: ProductService) {
     appComponent.showNavbar = true;
     appComponent.showFooter = true;
   }
