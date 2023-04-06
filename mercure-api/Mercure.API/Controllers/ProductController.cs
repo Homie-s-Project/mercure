@@ -39,12 +39,6 @@ public class ProductController : ApiSecurityController
             return BadRequest(new ErrorMessage("Product Id is required", StatusCodes.Status400BadRequest));
         }
         
-        var userContext = (User) HttpContext.Items["User"];
-        if (userContext == null)
-        {
-            return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
-        }
-        
         bool isParsed = int.TryParse(productId, out int id);
         if (!isParsed)
         {
