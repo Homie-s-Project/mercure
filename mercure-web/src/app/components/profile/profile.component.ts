@@ -29,5 +29,7 @@ export class ProfileComponent {
     this.orderIsShow = true;
   }
 
+      //this.currentUser = new UserModel(resp.body);
 }
+
 
