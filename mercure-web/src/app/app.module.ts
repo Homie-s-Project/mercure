@@ -21,8 +21,10 @@ import {UserService} from "./services/user/user.service";
 import {
   JwtTokenHeaderRequestInterceptor
 } from "./interceptors/jwtTokenRequest/jwt-token-header-request-interceptor.service";
-import { ProductComponent } from './components/product/product.component';
-import { TagsComponent } from './components/tags/tags.component';
+import {ProductComponent} from './components/product/product.component';
+import {TagsComponent} from './components/tags/tags.component';
+import {ProductCartComponent} from "./components/product-cart/product-cart.component";
+import {ItemCartComponent} from "./components/item-cart/item-cart.component";
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import { TagsComponent } from './components/tags/tags.component';
     LandingComponent,
     LoadingComponent,
     ProductComponent,
-    TagsComponent
+    TagsComponent,
+    ProductCartComponent,
+    ItemCartComponent
   ],
   imports: [
     BrowserModule,
