@@ -1,10 +1,27 @@
+<!-- vscode-markdown-toc -->
+- [Mercure](#mercure)
+  - [Installation](#installation)
+  - [Deployment](#deployment)
+  - [API Docs Tests](#api-docs-tests)
+  - [Nommage](#nommage)
+    - [Branche](#branche)
+  - [Image Docker](#image-docker)
+  - [Environment Variables](#environment-variables)
+  - [Color Reference](#color-reference)
+  - [Authors](#authors)
+
+<!-- vscode-markdown-toc-config
+	numbering=false
+	autoSave=true
+	/vscode-markdown-toc-config -->
+<!-- /vscode-markdown-toc -->
+
 # Mercure
 
 ![Docker Debug](https://github.com/Homie-s-Project/mercure/actions/workflows/docker-compose-debug.yml/badge.svg)
 ![Docker Production](https://github.com/Homie-s-Project/mercure/actions/workflows/docker-compose-prod.yml/badge.svg)
 ![Mercure API Testing](https://github.com/Homie-s-Project/mercure/actions/workflows/mercure-api-testing.yml/badge.svg)
 ![Mercure WEB Testing](https://github.com/Homie-s-Project/mercure/actions/workflows/mercure-web-testing.yml/badge.svg)
-
 
 
 Mercure la plateforme de e-commerce qui va vous changer votre façon de penser aux animaux. 
@@ -14,7 +31,7 @@ Vous pouvez adopter ou même acheter des aliments pour votre meilleur ami.
 
 Les labradors les plus choux de votre région sont sur notre plateforme, et vous attendent pour vivre une merveilleuse vie.
 
-## Installation
+## <a name='Installation'></a>Installation
 
 Se projet est fait pour fonctionner avec [Docker](https://www.docker.com).
 
@@ -34,7 +51,7 @@ Vous pouvez le lancer en mode debug (Mode de développement)
 $ docker compose -f "docker-compose.debug.yml" up -d --build
 ```
 
-## Deployment
+## <a name='Deployment'></a>Deployment
 
 Se projet est fait pour fonctionner avec [Docker](https://www.docker.com).
 
@@ -54,10 +71,14 @@ Vous pouvez le lancer en mode de production
 $ docker compose -f "docker-compose.yml" up -d --build
 ```
 
-## Nommage
+## API Docs Tests
+
+Il vous faudra vous rendre sur ce fichier, où les explications y sont. --> [ICI](TEST_BACK.md) <--
+
+## <a name='Nommage'></a>Nommage
 Toutes les variables du projet s'écrivent en anglais selon les conventions du langage.
 
-### Branche
+### <a name='Branche'></a>Branche
 
 Pour les branches, nous avons décidé de les nommer en anglais et ayant 1-3 mots pour décrire ce qui est fait. Les espaces sont remplacés par des "_".
 
@@ -66,14 +87,14 @@ Exemples:
   * add_localisation
   * edit_controller_auth
 
-## Image Docker
+## <a name='ImageDocker'></a>Image Docker
 Notre projet utilise  [Docker](https://www.docker.com), pour des questions de simplicité et de temps. Grâce à Docker, nous pouvons transférer un environnement simplement et l'installer sur une autre machine grâce à une commande.
 
 Nous utilisons **4** images dans notre projet avec chacune des images une particularité.
 
 | Image Docker   	| Description         |  URL |
 | ------------------    | --------------- | ----------------|
-| `mercure-api`*         | Cette image contient le code utile pour notre API. |[http://localhost:5001/swagger/index.html](http://localhost:5000/swagger/index.html) |
+| `mercure-api`*         | Cette image contient le code utile pour notre API. |[http://localhost:5000/swagger/index.html](http://localhost:5000/swagger/index.html) |
 | `mercure-web`*     	  | Dans cette image, il se trouve tout notre code nécessaire pour avoir l'interface frontend avec Angular. | [http://localhost:4200/](http://localhost:4200/)
 | [redis](https://hub.docker.com/_/redis)| Redis est l'image qui permet de gérer le cache de notre application.. | localhost:6379** |
 | [postgres](https://hub.docker.com/_/postgres)| Postgres est l'image docker de notre base de données. | localhost:5432** |
@@ -85,7 +106,7 @@ Nous utilisons **4** images dans notre projet avec chacune des images une partic
 
 *Les connexions pour la base de données, si elles n'ont pas été modifiées dans les variables d'environnement reste celle par défaut.*
 
-## Environment Variables
+## <a name='EnvironmentVariables'></a>Environment Variables
 
 Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suivantes à votre fichier .env\*
 
@@ -119,7 +140,7 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 | ------------------------ | ------------- |
 | `NODE_ENV` | development   |
 
-## Color Reference
+## <a name='ColorReference'></a>Color Reference
 
 | Couleur             | Hex                                                                |
 | ----------------- | ------------------------------------------------------------------ |
@@ -132,7 +153,7 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 
 \* Les couleurs n'ont pas une utilisation définient.
 
-## Authors
+## <a name='Authors'></a>Authors
 
 -   [Christopher Andrade](https://github.com/Chriss052)
 -   [Romain Antunes](https://github.com/Flasssh)
