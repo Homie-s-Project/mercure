@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Prometheus;
 using StackExchange.Redis;
 using Role = Mercure.API.Models.Role;
 
@@ -97,17 +98,21 @@ namespace Mercure.API
 
             services.AddDbContext<MercureContext>(opts => { opts.UseNpgsql(connectionString); });
 
-            Logger.LogInfo("Méthode de connexion à la base de données : " +
-                           (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
+            Logger.LogInfo(LogTarget.Database, "Méthode de connexion à la base de données : " +
+                                                  (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
             
             // Connexion à Redis
-            Logger.LogInfo("Connexion à Redis");
             services.AddStackExchangeRedisCache(options =>
             {
                 var redis = Configuration.GetSection("Redis");
-                var redisUrl = redis["RedisCacheURl"];
+                var redisUrl = isRunningInDockerEnvBoolean
+                    ? redis["RedisCacheURlDocker"]
+                    : redis["RedisCacheURl"];
                 var redisPort = int.Parse(redis["RedisCachePort"]);
                 var redisPassword = redis["RedisCachePassword"];
+                
+                Logger.LogInfo(LogTarget.Database, "Méthode de connexion à Redis : " +
+                                                      (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
 
                 var configurationOptions = new ConfigurationOptions
                 {
@@ -159,13 +164,18 @@ namespace Mercure.API
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseHttpMetrics();
 
             // Config CORS
             app.UseCors(PolicyName);
 
             app.UseAuthorization();
             app.UseMiddleware<JwtMiddleware>();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapMetrics();
+            });
 
             // Normale qu'il n'y aille pas de await
 #pragma warning disable CS4014

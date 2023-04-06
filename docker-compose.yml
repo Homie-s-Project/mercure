@@ -15,6 +15,8 @@ services:
       - pgdata:/var/lib/postgresql/data
       - pgconf:/etc/postgresql
       - pglog:/var/log/postgresql
+    networks:
+      - postgres-prometheus
 
   mercure-cache:
     container_name: mercure-cache
@@ -69,6 +71,52 @@ services:
     ports:
       - 4200:4200
 
+  mercure-grafana:
+      container_name: mercure-grafana
+      restart: unless-stopped
+      depends_on: 
+        - mercure-prometheus
+        - mercure-cache
+        - mercure-postgres-exporter
+      build:
+        context: mercure-grafana
+        dockerfile: ./Dockerfile
+      ports:
+        - 30091:3000
+      environment:
+        - GF_DEFAULT_INSTANCE_NAME=mercure-dashboard
+        - GF_SECURITY_ADMIN_USER=mercure
+        - GF_SECURITY_ADMIN_PASSWORD=mercure_password
+        - GF_AUTH_ANONYMOUS_ENABLED=true
+        - GF_INSTALL_PLUGINS=redis-datasource
+      volumes:
+        - grafana-storage:/var/lib/grafana
+
+  mercure-prometheus:
+    image: ubuntu/prometheus
+    container_name: mercure-prometheus
+    ports:
+      - "30090:9090"
+    environment:
+      - TZ=UTC+2
+    volumes:
+      - ./mercure-grafana/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    
+  mercure-postgres-exporter:
+    image: wrouesnel/postgres_exporter:latest
+    container_name: mercure-postgres-exporter
+    depends_on:
+      - mercure-db
+      - mercure-prometheus
+    ports:
+      - 9187:9187
+    environment:
+      - DATA_SOURCE_NAME=postgresql://mercure_user:mercure_password@host.docker.internal:5432/postgres?sslmode=disable
+      - DATA_SOURCE_USER=mercure_user
+      - DATA_SOURCE_PASS=mercure_password
+    networks:
+      - postgres-prometheus
+
 volumes:
   pgdata:
   pgconf:
@@ -76,3 +124,8 @@ volumes:
   pgadmin-data:
   cache:
       driver: local
+  grafana-storage:
+      driver: local
+
+networks:
+  postgres-prometheus:
