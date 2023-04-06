@@ -5,6 +5,7 @@
     flex-direction: column;
     justify-content: center;
     text-align: center;
+    position: absolute;
     width: 100%;
     height: 100%;
     color: vars.$bole;
@@ -32,10 +33,10 @@
             background-color: vars.$dark-moss-green;
             &:active {
                 transform: scale(0.95);
-                background-color: darken(vars.$bole, 7%);
+                background-color: darken(vars.$dark-moss-green, 7%);
             }
             &:disabled {
-                background-color: darken(vars.$bole, 7%);
+                background-color: darken(vars.$dark-moss-green, 7%);
             }
             fa-icon {
                 vertical-align: middle;

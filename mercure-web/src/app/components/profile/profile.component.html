@@ -1,2 +1,33 @@
-<!-- <p>profile works!</p> -->
-<app-orders-panel></app-orders-panel>
+<div class="sideBar">
+    <a class="" (click)="profilShow()">Profil</a>
+    <a class="" (click)="orderShow()">Historique de commandes</a>
+</div>
+<div class="profile">
+    <div class="profile-content" *ngIf = "!orderIsShow">
+      <h1 class="profile-title">Profil</h1>
+      <div>
+        <h3 class="profile-label">Prenom:</h3>
+        <p>Romuald</p>
+      </div>
+      <div>
+        <h3 class="profile-label">Nom:</h3>
+        <p>Ichweissesnicht</p>
+      </div>
+      <div>
+        <h3 class="profile-label">Mail:</h3>
+        <p>romu@gmail.com</p>
+      </div>
+      <div>
+        <h3 class="profile-label">Date de naissance:</h3>
+        <p>01.01.2001</p>
+      </div>
+      <div>
+        <h3 for="roles" class="profile-label">Role:</h3>
+        <select class="role-select" name="roles" id="roles">
+          <option value="user">Utilisateur</option>
+          <option value="admin">Administrateur</option>
+        </select>
+      </div>
+    </div>
+    <app-orders-panel *ngIf = "orderIsShow"></app-orders-panel>
+</div>
