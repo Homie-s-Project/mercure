@@ -1,8 +1,8 @@
-import { TestBed } from '@angular/core/testing';
-import { CookieService } from 'ngx-cookie-service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {TestBed} from '@angular/core/testing';
+import {CookieService} from 'ngx-cookie-service';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 
-import { AuthService } from './auth.service';
+import {AuthService} from './auth.service';
 
 describe('AuthService', () => {
   let service: AuthService;

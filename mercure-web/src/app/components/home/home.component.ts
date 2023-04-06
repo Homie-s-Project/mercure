@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {AppComponent} from "../../app.component";
 
 @Component({
   selector: 'app-home',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
 
+  constructor(appComponent: AppComponent) {
+    appComponent.showNavbar = true;
+    appComponent.showFooter = true;
+  }
 }
