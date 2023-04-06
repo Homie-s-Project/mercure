@@ -10,7 +10,7 @@ public class Logger
 {
     public static void Log(LogLevel logLevel, LogTarget logTarget, string message)
     {
-        string logText = $"[{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] ";
+        string logText = $"[{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}] ";
         switch (logLevel)
         {
             case LogLevel.Trace:
@@ -106,7 +106,7 @@ public class Logger
         if (folderExist)
         {
             var processStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
-            var logFileName = $"log-{processStarted.ToString("yyyy-MM-dd")}.txt";
+            var logFileName = $"log-{processStarted.ToString("dd-MM-yyyy")}.txt";
             var logFilePath = Path.Combine("logs", logFileName);
             File.AppendAllText(logFilePath, logText + Environment.NewLine);
         }
