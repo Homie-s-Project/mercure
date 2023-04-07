@@ -3,23 +3,21 @@
     <a class="" (click)="orderShow()">Historique de commandes</a>
 </div>
 <div class="profile">
-    <div class="profile-content" *ngIf = "!orderIsShow">
+    <div class="profile-content" *ngIf = "!orderIsShow && !isUserLoading">
       <h1 class="profile-title">Profil</h1>
       <div>
         <h3 class="profile-label">Prenom:</h3>
-        <p>Romuald</p>
+        <p *ngIf="isUserLoading">Loading...</p>
+        <p *ngIf="!isUserLoading">{{currentUser.firstName}}</p>
       </div>
       <div>
         <h3 class="profile-label">Nom:</h3>
-        <p>Ichweissesnicht</p>
+        <p *ngIf="!isUserLoading">{{currentUser.lastName}}</p>
       </div>
       <div>
         <h3 class="profile-label">Mail:</h3>
-        <p>romu@gmail.com</p>
-      </div>
-      <div>
-        <h3 class="profile-label">Date de naissance:</h3>
-        <p>01.01.2001</p>
+        <p *ngIf="isUserLoading">Loading...</p>
+        <p *ngIf="!isUserLoading">{{currentUser.email}}</p>
       </div>
       <div>
         <h3 for="roles" class="profile-label">Role:</h3>

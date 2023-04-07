@@ -11,10 +11,15 @@ import {OrdersPanelComponent} from './components/orders-panel/orders-panel.compo
 import {OrderItemComponent} from './components/order-item/order-item.component';
 import {ItemCardComponent} from './components/item-card/item-card.component';
 import {LandingComponent} from './components/landing/landing.component';
-import {LoadingComponent} from './components/loading/loading.component';
-import {HttpClientModule} from '@angular/common/http';
 import {AuthService} from "./services/auth/auth.service";
 import {ShareModule} from "ngx-sharebuttons";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {LoadingComponent} from "./components/loading/loading.component";
+import {JwtTokenResponseHeaderInterceptor} from "./interceptors/jwtTokenResponse/jwt-token-response-header.interceptor";
+import {UserService} from "./services/user/user.service";
+import {
+  JwtTokenHeaderRequestInterceptor
+} from "./interceptors/jwtTokenRequest/jwt-token-header-request-interceptor.service";
 
 @NgModule({
   declarations: [
@@ -36,7 +41,14 @@ import {ShareModule} from "ngx-sharebuttons";
     ShareModule
   ],
   providers: [
-    AuthService
+    AuthService,
+    UserService,
+    {
+      provide: HTTP_INTERCEPTORS, useClass: JwtTokenHeaderRequestInterceptor, multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS, useClass: JwtTokenResponseHeaderInterceptor, multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
