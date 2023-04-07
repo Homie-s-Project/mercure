@@ -37,7 +37,7 @@ public class ProductDto
         {
             if (product.Categories != null)
             {
-                Categoriess = product.Categories.Select(c => new CategoryDto(c)).ToList();
+                Categories = product.Categories.Select(c => new CategoryDto(c)).ToList();
             }                
         }
     }
@@ -51,5 +51,5 @@ public class ProductDto
     public DateTime ProductLastUpdate { get; set; }
     
     public StockDto Stock { get; set; }
-    public List<CategoryDto> Categoriess { get; set; }
+    public List<CategoryDto> Categories { get; set; }
 }

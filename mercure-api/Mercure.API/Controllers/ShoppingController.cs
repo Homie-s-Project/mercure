@@ -102,7 +102,9 @@ public class ShoppingController : ApiNoSecurityController
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public IActionResult Search(string search, string brand, string category, string minPrice, string maxPrice)
     {
-        var products = _context.Products.Where(p => 
+        var products = _context.Products
+            .Include(p => p.Categories)
+            .Where(p => 
             p.ProductName.ToLower().Contains(search.ToLower()) || 
             p.ProductDescription.ToLower().Contains(search.ToLower()) || 
             p.ProductBrandName.ToLower().Contains(search.ToLower()));
@@ -141,7 +143,7 @@ public class ShoppingController : ApiNoSecurityController
         
         if (products.Any())
         {
-            return Ok(products.Take(30).Include(p => p.Categories));
+            return Ok(products.Take(30));
         }
         
         return NotFound(new ErrorMessage("No product found.", StatusCodes.Status404NotFound));
