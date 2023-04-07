@@ -1,27 +1,20 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { UserModel } from 'src/app/models/UserModel';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import {UserService} from "../../services/user/user.service";
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent {
-  currentUser?: UserModel;
+export class ProfileComponent implements OnInit {
+  currentUser: UserModel = {userId: 0, firstName: 'Loading...', lastName: 'Loading...', email: 'Loading...'};
+  isUserLoading: boolean = true;
   orderIsShow = false;
 
-  constructor(private auth: AuthService  ) {}
+  constructor(private userService: UserService  ) {}
 
-  ngOnInit(): void {
-    this.auth.getProfile().subscribe(resp => {
-      if (resp.status != 200) {
-        console.log(resp.statusText);
-      }
-
-      // this.currentUser = new UserModel(resp.body);
-    })
-  }
   profilShow(){
     this.orderIsShow = false;
   }
@@ -29,7 +22,11 @@ export class ProfileComponent {
     this.orderIsShow = true;
   }
 
-      //this.currentUser = new UserModel(resp.body);
+  ngOnInit(): void {
+    this.userService.getUser()
+      .then(u => this.currentUser = u)
+      .finally(() => this.isUserLoading = false);
+  }
 }
 
 

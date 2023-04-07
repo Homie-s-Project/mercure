@@ -1,1 +1,8 @@
-<h1>Chargement...</h1>
+<div>
+  <h1>Loading...</h1>
+  <p *ngIf="hasError">
+    {{errorMessage}} <br />
+    Automatically redirect in {{secondBeforeRedirect}} second<span *ngIf="secondBeforeRedirect>0">s</span> <br />
+    or <a [routerLink]="'/login'">manually</a>
+  </p>
+</div>

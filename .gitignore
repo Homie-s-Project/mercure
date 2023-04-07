@@ -785,4 +785,7 @@ $RECYCLE.BIN/
 
 ./mercure-api/Mercure.API.sln.DotSettings.user
 
+./logs/**
+./logs
+
 # End of https://www.toptal.com/developers/gitignore/api/csharp,rider,webstorm,angular,node,macos,windows

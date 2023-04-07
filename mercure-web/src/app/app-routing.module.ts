@@ -21,8 +21,12 @@ const routes: Routes = [
     component: LandingComponent
   },
   {
-    path: 'loading/:state',
+    path: 'loading',
     component: LoadingComponent
+  },
+  {
+    path: '**',
+    redirectTo: ""
   }
 ];
 

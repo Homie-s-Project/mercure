@@ -1,32 +1,48 @@
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {Injectable, OnInit} from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { Observable } from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import { UserModel } from 'src/app/models/UserModel';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
-  private token: string;
+export class AuthService implements OnInit {
 
-  constructor(private http: HttpClient,
-    private cookie: CookieService) {
-    this.token = this.cookie.get('jwt');
+  private token?: string;
+
+  constructor(private http: HttpClient) {
    }
 
-  // Récupèration de l'user selon le Token JWT
-  getProfile(): Observable<HttpResponse<UserModel>> {
-    const header = new HttpHeaders ({
-      "Content-Type": "application/json",
-      "Authorization": `${this.getToken()}`
-    });
-
-    return this.http.get<UserModel>('http://localhost:5000/auth/currentUser', {headers: header, observe: 'response'});
+  ngOnInit(): void {
+    let token = sessionStorage.getItem("token");
+    if (token && token.length > 1) {
+      this.token = token;
+    }
   }
 
-  // Retourne Bearer Token
-  getToken() :string {
-    return `Bearer ${this.token}`;
-}
+  isLogged(): boolean{
+    return sessionStorage.getItem("token") !== null;
+  }
+
+  getSessionToken(): string | null {
+    return sessionStorage.getItem("token");
+  }
+
+  getUserToken(state: string): Promise<{token: string}> {
+    return new Promise((resolve, reject) => {
+      this.http.get<{token: string}>(environment.apiUrl + "/auth/logged?state="+state)
+        .pipe(
+          catchError((error) => {
+            reject(error);
+            return throwError(error);
+          })
+        )
+        .subscribe((data) => {
+          resolve(data);
+          return data;
+        })
+    });
+  }
 }
