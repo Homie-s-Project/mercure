@@ -109,6 +109,7 @@ services:
   mercure-prometheus:
     image: ubuntu/prometheus
     container_name: mercure-prometheus
+    restart: unless-stopped
     ports:
       - "30090:9090"
     environment:
@@ -119,6 +120,7 @@ services:
   mercure-postgres-exporter:
     image: wrouesnel/postgres_exporter:latest
     container_name: mercure-postgres-exporter
+    restart: unless-stopped
     depends_on:
       - mercure-db
       - mercure-prometheus

@@ -11,18 +11,18 @@ alerting:
     - targets: []
       
 scrape_configs:
-- job_name: TrackMercureAPIUsage  
+- job_name: TrackMercureAPIUsage
   scrape_interval: 10s  
-  scrape_timeout: 15s  
+  scrape_timeout: 5s
   metrics_path: /metrics  
   scheme: http  
   static_configs:  
   - targets:  
     - host.docker.internal:5000
   
-- job_name: TrackPostgresUsage  
+- job_name: TrackPostgresUsage
   scrape_interval: 10s  
-  scrape_timeout: 15s  
+  scrape_timeout: 5s  
   metrics_path: /metrics  
   scheme: http  
   static_configs:  
