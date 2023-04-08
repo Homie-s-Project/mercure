@@ -22,6 +22,7 @@ import {
   JwtTokenHeaderRequestInterceptor
 } from "./interceptors/jwtTokenRequest/jwt-token-header-request-interceptor.service";
 import { ProductComponent } from './components/product/product.component';
+import { TagsComponent } from './components/tags/tags.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { ProductComponent } from './components/product/product.component';
     ItemCardComponent,
     LandingComponent,
     LoadingComponent,
-    ProductComponent
+    ProductComponent,
+    TagsComponent
   ],
   imports: [
     BrowserModule,

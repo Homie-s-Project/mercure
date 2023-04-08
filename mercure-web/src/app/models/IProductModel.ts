@@ -4,6 +4,6 @@ export interface IProductModel {
     Type: string;
     Description: string;
     Price: number;
-    Quantity: number;
+    Info: string;
     Tags: string[];
 }
