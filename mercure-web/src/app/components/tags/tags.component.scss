@@ -1,0 +1,15 @@
+@use '/src/styles/variables.scss' as vars;
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 15px 0 15px 0;
+    gap: 6px;
+    .tag {
+        width: auto;
+        padding: 5px;
+        color: vars.$bole;
+        border: 1px solid vars.$bole;
+        border-radius: 5px;
+    }
+}

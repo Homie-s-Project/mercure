@@ -1,6 +1,7 @@
 import { Component, NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
+import { ProductComponent } from './components/product/product.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { LoadingComponent } from './components/loading/loading.component';
@@ -17,12 +18,20 @@ const routes: Routes = [
     component: ProfileComponent
   },
   {
+    path: 'product/:productId',
+    component: ProductComponent
+  },
+  {
     path: 'login',
     component: LandingComponent
   },
   {
     path: 'loading',
     component: LoadingComponent
+  },
+  {
+    path: 'product/:productId',
+    component: ProductComponent
   },
   {
     path: '**',

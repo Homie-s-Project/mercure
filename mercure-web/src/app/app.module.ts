@@ -1,5 +1,6 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -20,6 +21,8 @@ import {UserService} from "./services/user/user.service";
 import {
   JwtTokenHeaderRequestInterceptor
 } from "./interceptors/jwtTokenRequest/jwt-token-header-request-interceptor.service";
+import { ProductComponent } from './components/product/product.component';
+import { TagsComponent } from './components/tags/tags.component';
 
 @NgModule({
   declarations: [
@@ -31,10 +34,13 @@ import {
     OrderItemComponent,
     ItemCardComponent,
     LandingComponent,
-    LoadingComponent
+    LoadingComponent,
+    ProductComponent,
+    TagsComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
     FontAwesomeModule,

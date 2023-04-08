@@ -8,6 +8,6 @@
 <div class="items-cards-section">
     <h2 class="items-title">Meilleures ventes</h2>
     <div class="cards-container">
-        <app-item-card *ngFor="let card of [].constructor(5)"></app-item-card>
+        <app-item-card *ngFor="let product of products" [product]="product"></app-item-card>
     </div>
 </div>

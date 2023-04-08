@@ -1,0 +1,43 @@
+<div class="product-container" *ngIf="currentProduct != undefined else notFound">
+    <div class="data">
+        <div class="product-images">
+            <div class="image-menu">
+                <button class="change-image"><fa-icon [icon]="faChevronUp"></fa-icon></button>
+                <button class="change-image"><fa-icon [icon]="faChevronDown"></fa-icon></button>
+            </div>
+            <div class="display-image">
+                <img src="../../../assets/img/image.png" class="product-image">
+            </div>
+        </div>
+        <div class="product">
+            <div class="product-data">
+                <h2 class="product-name">{{currentProduct.Brand}}</h2>
+                <p class="product-type">{{currentProduct.Type}}</p>
+                <p class="product-quantity">{{currentProduct.Info}}</p>
+            </div>
+            <div class="price-data">
+                <app-tags [tags]="currentProduct.Tags"></app-tags>
+                <div class="price-container">
+                    <p class="price">{{currentProduct.Price}} CHF</p>
+                    <div class="quantity-container">
+                        <label for="order-quantity">Quantité : </label>
+                        <input id="order-quantity" type="number" class="quantity" min="1" max="10" value="1"/>
+                    </div>
+                </div>
+                <button class="add-to-cart">Ajouter au panier <fa-icon [icon]="faCartPlus"></fa-icon></button>
+            </div>
+        </div>
+    </div>
+    <div class="description-container">
+        <button class="collapse-button" (click)="toggleCollapse()"><fa-icon [icon]="faCaret"></fa-icon> Description</button>
+        <div class="description" [@collapse]="collapsed">
+            <p>{{currentProduct.Description}}</p>
+        </div>
+    </div>
+</div>
+<ng-template #notFound>
+    <div class="not-found">
+        <h1 class="error-title">Erreur 404 <fa-icon [icon]="faFaceFrown"></fa-icon></h1>
+        <p>Ce que vous cherchez n'existe pas ou ne se trouve pas ici</p>
+    </div>
+</ng-template>

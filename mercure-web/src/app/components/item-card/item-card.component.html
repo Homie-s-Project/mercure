@@ -1,6 +1,11 @@
-<img src="../../../assets/img/image.png" class="item-image">    
-<div class="line"></div>
-<div class="card-content">
-    <h3 class="brand">Mercure Felina</h3>
-    <p class="description">Les croquettes pour chat Mercure Felina sont riches en nutriments essentiels</p>
-</div>
+<a [routerLink]="['/product', product?.Id]">
+    <img src="../../../assets/img/image.png" class="item-image">    
+    <div class="card-content">
+        <h3 class="brand">{{product?.Brand}}</h3>
+        <div class="card-data">
+            <p class="price">{{product?.Price}} CHF</p>
+        </div>
+    </div>
+</a>
+<app-tags [tags]="product?.Tags"></app-tags>
+<button class="add-to-cart"><fa-icon [icon]="faCartPlus"></fa-icon></button>

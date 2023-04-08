@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { faTag, faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import { IProductModel } from 'src/app/models/IProductModel';
 
 @Component({
   selector: 'app-item-card',
@@ -6,6 +8,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./item-card.component.scss']
 })
 export class ItemCardComponent implements OnInit {
+  faTag = faTag;
+  faCartPlus = faCartPlus;
+
+  @Input() product?: IProductModel;
 
   constructor() { }
 
