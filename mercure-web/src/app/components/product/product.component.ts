@@ -1,6 +1,6 @@
 import { animate, AUTO_STYLE, state, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { faCartPlus, faCaretRight, faCaretDown, faChevronUp, faChevronDown, faFaceFrown } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { IProductModel } from 'src/app/models/IProductModel';
@@ -19,7 +19,7 @@ import { ProductService } from 'src/app/services/product/product.service';
     ])
   ]
 })
-export class ProductComponent implements OnInit, OnDestroy {
+export class ProductComponent implements OnInit {
   // Variable Fontawesome
   faCartPlus = faCartPlus;
   faCaret = faCaretDown;
@@ -35,28 +35,22 @@ export class ProductComponent implements OnInit, OnDestroy {
   constructor (public product: ProductService, private route: ActivatedRoute) { }
   
   ngOnInit(): void {
-    this.subscriptions.push(
-      this.route.paramMap.subscribe((map: ParamMap) => {
-        this.currentId = parseInt(map.get('productId') || '');
-      })
-    );
+    // this.subscriptions.push(
+    //   this.route.paramMap.subscribe((map: ParamMap) => {
+    //     this.currentId = parseInt(map.get('productId') || '');
+    //   })
+    // );
 
-    console.log(this.currentId);
+    var productRoute = this.route.snapshot.paramMap.get('productId');
 
-    if (this.currentId == undefined) {
+    if (productRoute == undefined || null) {
       this.currentProduct = undefined;
       return;
+    } else {
+      this.currentId = +productRoute;
     }
 
     this.currentProduct = this.product.getProductById(this.currentId);
-
-    console.log(this.currentProduct)
-  }
-
-  ngOnDestroy(): void {
-    for (let subscription of this.subscriptions) {
-      subscription.unsubscribe();
-    }
   }
 
   toggleCollapse() {
