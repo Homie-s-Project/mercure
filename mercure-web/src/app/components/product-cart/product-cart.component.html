@@ -1,13 +1,9 @@
 <div class="product-cart-container" >
   <div class="title-product-cart">
     <h2>Aperçu du panier</h2>
-    <button><fa-icon [icon]="faXmark"></fa-icon></button>
+    <button class="close-button"><fa-icon [icon]="faXmark"></fa-icon></button>
   </div>
   <app-item-cart *ngFor="let card of [].constructor(3)"></app-item-cart>
-  <div class="shipping-cost-product-cart">
-  <p>Expédition</p>
-  <p>5,00 Fr</p>
-  </div>
   <div class="totalprice-product-cart">
     <p>Total :</p>
     <p>35,00 Fr</p>
