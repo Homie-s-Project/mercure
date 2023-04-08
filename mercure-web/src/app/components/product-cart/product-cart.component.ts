@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {faCircleXmark, faSquareXmark, faTrash, faXmark} from "@fortawesome/free-solid-svg-icons";
+import {faCreditCard, faTrash, faXmark} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-product-cart',
@@ -9,5 +9,5 @@ import {faCircleXmark, faSquareXmark, faTrash, faXmark} from "@fortawesome/free-
 export class ProductCartComponent {
   faXmark = faXmark;
   faTrash = faTrash;
-
+  faCreditCard = faCreditCard;
 }

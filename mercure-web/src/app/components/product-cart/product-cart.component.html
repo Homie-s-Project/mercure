@@ -1,14 +1,18 @@
 <div class="product-cart-container" >
-  <div class="title-product-cart">
-    <h2>Aperçu du panier</h2>
-    <button class="close-button"><fa-icon [icon]="faXmark"></fa-icon></button>
+  <div class="cart-content">
+    <div class="title-product-cart">
+      <h2>Aperçu du panier</h2>
+      <button class="close-button"><fa-icon [icon]="faXmark"></fa-icon></button>
+    </div>
+    <app-item-cart *ngFor="let card of [].constructor(3)"></app-item-cart>
   </div>
-  <app-item-cart *ngFor="let card of [].constructor(3)"></app-item-cart>
-  <div class="totalprice-product-cart">
-    <p>Total :</p>
-    <p>35,00 Fr</p>
-  </div>
-  <div class="button-product-cart">
-    <button>Aller dans le panier</button>
+  <div class="total">
+    <div class="total-price">
+      <p>Total :</p>
+      <p>35,00 Fr</p>
+    </div>
+    <div class="buy-cart">
+      <button><fa-icon [icon]="faCreditCard"></fa-icon></button>
+    </div>
   </div>
 </div>
