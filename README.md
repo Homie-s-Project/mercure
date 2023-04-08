@@ -99,6 +99,9 @@ Nous utilisons **4** images dans notre projet avec chacune des images une partic
 | [redis](https://hub.docker.com/_/redis)| Redis est l'image qui permet de gérer le cache de notre application.. | localhost:6379** |
 | [postgres](https://hub.docker.com/_/postgres)| Postgres est l'image docker de notre base de données. | localhost:5432** |
 | [dpage/pgadmin4](https://hub.docker.com/r/dpage/pgadmin4) 	| Cette image permet d'avoir une interface d'utilisation de notre base de données.|  [http://localhost:5050/](http://localhost:5050/) |
+| [grafana/grafana](https://hub.docker.com/r/grafana/grafana) 	| Ce container permet d'avoir une page de dashboard de nos services.|  [http://localhost:30091/](http://localhost:30091/) |
+| [ubuntu/prometheus](https://hub.docker.com/r/ubuntu/prometheus) 	| Ce container permet de récupérer les informations d'un service.|  [http://localhost:30090/](http://localhost:30090/) |
+| [wrouesnel/postgres_exporter](https://hub.docker.com/r/wrouesnel/postgres_exporter) 	| Ce container permet de récupérer les informations de PostgreSQL et de le convertirr pour l'utiliser avec Prometheus.|  [http://localhost:9187/](http://localhost:9187/) |
 
 \* C'est des images non-publiques nous appartenant.
 
@@ -139,6 +142,13 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 | Environement name        | default       |
 | ------------------------ | ------------- |
 | `NODE_ENV` | development   |
+
+**mercure-grafana**
+
+| Environement name        | default       |
+| ------------------------ | ------------- |
+| `GF_SECURITY_ADMIN_USER` | mercure   |
+| `GF_SECURITY_ADMIN_PASSWORD` | mercure_password   |
 
 ## <a name='ColorReference'></a>Color Reference
 
