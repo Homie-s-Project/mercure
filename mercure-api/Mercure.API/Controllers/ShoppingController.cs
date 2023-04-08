@@ -25,6 +25,31 @@ public class ShoppingController : ApiNoSecurityController
     }
     
     /// <summary>
+    /// Get random products for the home page
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Product>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    public async Task<IActionResult> GetProducts()
+    {
+        var products = await _context.Products
+            .OrderBy(p => Guid.NewGuid())
+            .Take(30)
+            .Include(p => p.Categories)
+            .Select(p => new ProductDto(p, true))
+            .ToListAsync();
+        
+        if (!products.Any())
+        {
+            Logger.LogError("No products found, that should not happen or the database is empty");
+            return NotFound(new ErrorMessage("No products found", StatusCodes.Status404NotFound));
+        }
+
+        return Ok(products);
+    }
+    
+    /// <summary>
     /// Get the best seller products
     /// </summary>
     /// <returns></returns>
@@ -102,7 +127,8 @@ public class ShoppingController : ApiNoSecurityController
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public IActionResult Search(string search, string brand, string category, string minPrice, string maxPrice)
     {
-        var products = _context.Products.Where(p => 
+        var products = _context.Products
+            .Where(p => 
             p.ProductName.ToLower().Contains(search.ToLower()) || 
             p.ProductDescription.ToLower().Contains(search.ToLower()) || 
             p.ProductBrandName.ToLower().Contains(search.ToLower()));
@@ -141,7 +167,13 @@ public class ShoppingController : ApiNoSecurityController
         
         if (products.Any())
         {
-            return Ok(products.Take(30).Include(p => p.Categories));
+            var responseProduct = products
+                .Include(p => p.Categories)
+                .Take(30)
+                .Select(p => new ProductDto(p, true))
+                .ToList();
+            
+            return Ok(responseProduct);
         }
         
         return NotFound(new ErrorMessage("No product found.", StatusCodes.Status404NotFound));

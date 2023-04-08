@@ -31,13 +31,17 @@ public class ProductDto
         ProductPrice = product.ProductPrice;
         ProductCreationDate = product.ProductCreationDate;
         ProductLastUpdate = product.ProductLastUpdate;
-        Stock = new StockDto(product.Stock);
+        
+        if (product.Stock != null)
+        {
+            Stock = new StockDto(product.Stock);
+        }
 
         if (loadMore)
         {
             if (product.Categories != null)
             {
-                Categoriess = product.Categories.Select(c => new CategoryDto(c)).ToList();
+                Categories = product.Categories.Select(c => new CategoryDto(c)).ToList();
             }                
         }
     }
@@ -51,5 +55,5 @@ public class ProductDto
     public DateTime ProductLastUpdate { get; set; }
     
     public StockDto Stock { get; set; }
-    public List<CategoryDto> Categoriess { get; set; }
+    public List<CategoryDto> Categories { get; set; }
 }
