@@ -30,17 +30,10 @@ export class ProductComponent implements OnInit {
   collapsed: Boolean = false;
   currentId?: number; 
   currentProduct?: IProductModel;
-  subscriptions: Subscription[] = []
 
-  constructor (public product: ProductService, private route: ActivatedRoute) { }
+  constructor (public productService: ProductService, private route: ActivatedRoute) { }
   
   ngOnInit(): void {
-    // this.subscriptions.push(
-    //   this.route.paramMap.subscribe((map: ParamMap) => {
-    //     this.currentId = parseInt(map.get('productId') || '');
-    //   })
-    // );
-
     var productRoute = this.route.snapshot.paramMap.get('productId');
 
     if (productRoute == undefined || null) {
@@ -50,7 +43,7 @@ export class ProductComponent implements OnInit {
       this.currentId = +productRoute;
     }
 
-    this.currentProduct = this.product.getProductById(this.currentId);
+    this.currentProduct = this.productService.getProductById(this.currentId);
   }
 
   toggleCollapse() {
