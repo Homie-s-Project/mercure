@@ -30,12 +30,12 @@ const routes: Routes = [
     component: LoadingComponent
   },
   {
-    path: '**',
-    redirectTo: ""
-  },
-  {
     path: 'product/:productId',
     component: ProductComponent
+  },
+  {
+    path: '**',
+    redirectTo: ""
   }
 ];
 
