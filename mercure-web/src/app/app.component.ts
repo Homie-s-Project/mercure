@@ -8,4 +8,10 @@ import { Component } from '@angular/core';
 export class AppComponent {
   showNavbar: boolean = true;
   showFooter: boolean = true;
+  showHide = true;
+
+
+  hideCart(isHide) {
+    // ton code
+  }
 }

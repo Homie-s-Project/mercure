@@ -16,9 +16,7 @@
     </button>
   </div>
   <div class="nav-button-container">
-    <a class="nav-button" [routerLink]="['/']">
-      <fa-icon class="navbar-icon" [icon]="faCartShopping"></fa-icon>
-    </a>
+    <button class="nav-button"(hideShow)=hideCart($event) (click)="toggleshowHide()"><fa-icon class="navbar-icon" [icon]="faCartShopping"></fa-icon></button>
     <a class="nav-button" [routerLink]="['/profile']">
       <fa-icon class="navbar-icon" [icon]="faUser"></fa-icon>
     </a>

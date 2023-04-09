@@ -1,4 +1,4 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {Component, EventEmitter, AfterViewInit, Output} from '@angular/core';
 import {faCartShopping, faGlobe, faMagnifyingGlass, faUser} from '@fortawesome/free-solid-svg-icons';
 import {SearchService} from "../../services/search/search.service";
 import {debounceTime, Subject, Subscription} from "rxjs";
@@ -15,6 +15,8 @@ export class NavbarComponent implements AfterViewInit {
   faGlobe = faGlobe;
   faUser = faUser;
   faMagnifyingGlass = faMagnifyingGlass;
+  @Output() hideShow = new EventEmitter<{ showHide: boolean }>();
+  showHide = true;
 
   searchValueChanged: Subject<string> = new Subject<string>();
   autocompleteSuggestions: string[] = [];
@@ -65,6 +67,9 @@ export class NavbarComponent implements AfterViewInit {
       .subscribe((res) => {
         this.autocompleteSuggestions = res;
       });
+  }
+
+  toggleshowHide() {
   }
 
   goToSearch() {
