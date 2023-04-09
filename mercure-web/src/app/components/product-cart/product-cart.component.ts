@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {faCreditCard, faTrash, faXmark} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
@@ -7,6 +7,7 @@ import {faCreditCard, faTrash, faXmark} from "@fortawesome/free-solid-svg-icons"
   styleUrls: ['./product-cart.component.scss']
 })
 export class ProductCartComponent {
+  // Variable icon FontAwesome
   faXmark = faXmark;
   faTrash = faTrash;
   faCreditCard = faCreditCard;
