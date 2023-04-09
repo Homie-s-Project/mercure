@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { faCartShopping, faGlobe, faUser, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import {AppComponent} from "../../app.component";
 
 @Component({
   selector: 'app-navbar',
@@ -11,10 +12,14 @@ export class NavbarComponent implements OnInit {
   faGlobe = faGlobe;
   faUser = faUser;
   faMagnifyingGlass = faMagnifyingGlass;
+  @Output() hideShow = new EventEmitter<{ showHide: boolean }>();
+  showHide = true;
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  toggleshowHide() {
+  }
 }
