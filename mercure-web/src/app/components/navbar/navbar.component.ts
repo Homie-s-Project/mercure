@@ -15,7 +15,8 @@ export class NavbarComponent implements AfterViewInit {
   faGlobe = faGlobe;
   faUser = faUser;
   faMagnifyingGlass = faMagnifyingGlass;
-  @Output() hideShow = new EventEmitter<{ showHide: boolean }>();
+  @Output() hide = new EventEmitter<{ showHide: boolean }>();
+  @Output() show = new EventEmitter<{ showHide: boolean }>();
   showHide = true;
 
   searchValueChanged: Subject<string> = new Subject<string>();
@@ -70,6 +71,12 @@ export class NavbarComponent implements AfterViewInit {
   }
 
   toggleshowHide() {
+
+    if (this.showHide === true) {
+      this.show.emit({showHide: false});
+    } else {
+      this.hide.emit({showHide: true});
+    }
   }
 
   goToSearch() {
