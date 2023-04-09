@@ -2,14 +2,22 @@
 
 namespace Mercure.API.Models;
 
+/// <summary>
+/// Cart of the user
+/// </summary>
 public class Cart
 {
-    public Cart(int userId)
+    public Cart(string userId)
     {
         UserId = userId;
         Products = new List<CartProduct>();
     }
 
+    /// <summary>
+    /// Add a product to the cart
+    /// </summary>
+    /// <param name="product"></param>
+    /// <param name="quantity"></param>
     public void AddProduct(Product product, int quantity=1)
     {
         var cartProduct = Products.Find(p => p.Product.ProductId == product.ProductId);
@@ -24,6 +32,10 @@ public class Cart
 
     }
 
+    /// <summary>
+    /// Remove a product from the cart
+    /// </summary>
+    /// <param name="product"></param>
     public void RemoveProduct(Product product)
     {
         var cartProduct = Products.Find(p => p.Product.ProductId == product.ProductId);
@@ -43,7 +55,7 @@ public class Cart
         Products.Remove(cartProduct);
     }
 
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public List<CartProduct> Products { get; set; }
 }
 
