@@ -48,11 +48,12 @@ nav {
     }
     h1 {
         color: vars.$lemon-chiffon;
-        //font-family: 'Montserrat', 'sans-serif';
         font-size: 42px;
     }
-    a {
+    fa-icon {
         color: vars.$lemon-chiffon;
+    }
+    a {
         text-decoration: none;
     }
 }

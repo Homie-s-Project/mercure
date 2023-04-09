@@ -1,32 +1,22 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import { faCartShopping, faGlobe, faUser, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
-import {AppComponent} from "../../app.component";
+import {Component, EventEmitter, Output} from '@angular/core';
+import { faCartShopping, faUser, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   faCartShopping = faCartShopping
-  faGlobe = faGlobe;
   faUser = faUser;
   faMagnifyingGlass = faMagnifyingGlass;
-  @Output() hide = new EventEmitter<{ showHide: boolean }>();
-  @Output() show = new EventEmitter<{ showHide: boolean }>();
-  showHide = true;
+  @Output() toggleHide = new EventEmitter<boolean>();
+  hideCart: boolean = true
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
-  toggleshowHide() {
-
-    if (this.showHide === true) {
-      this.show.emit({showHide: false});
-    } else {
-      this.hide.emit({showHide: true});
-    }
+  toggleShowHide() {
+    this.hideCart = !this.hideCart;
+    this.toggleHide.emit(this.hideCart);
   }
 }
