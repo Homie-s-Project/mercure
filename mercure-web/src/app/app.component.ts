@@ -10,8 +10,11 @@ export class AppComponent {
   showFooter: boolean = true;
   showHide = true;
 
+  onHide(event: boolean) {
+  this.showHide = true;
+  }
 
-  hideCart(isHide) {
-    // ton code
+  onShow(event: boolean) {
+    this.showHide = false;
   }
 }

@@ -12,7 +12,8 @@ export class NavbarComponent implements OnInit {
   faGlobe = faGlobe;
   faUser = faUser;
   faMagnifyingGlass = faMagnifyingGlass;
-  @Output() hideShow = new EventEmitter<{ showHide: boolean }>();
+  @Output() hide = new EventEmitter<{ showHide: boolean }>();
+  @Output() show = new EventEmitter<{ showHide: boolean }>();
   showHide = true;
 
   constructor() { }
@@ -21,5 +22,11 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleshowHide() {
+
+    if (this.showHide === true) {
+      this.show.emit({showHide: false});
+    } else {
+      this.hide.emit({showHide: true});
+    }
   }
 }
