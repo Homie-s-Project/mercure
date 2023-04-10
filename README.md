@@ -5,6 +5,7 @@
   - [API Docs Tests](#api-docs-tests)
   - [Nommage](#nommage)
     - [Branche](#branche)
+  - [Routes](#routes)
   - [Image Docker](#image-docker)
   - [Environment Variables](#environment-variables)
   - [Color Reference](#color-reference)
@@ -23,11 +24,9 @@
 ![Mercure API Testing](https://github.com/Homie-s-Project/mercure/actions/workflows/mercure-api-testing.yml/badge.svg)
 ![Mercure WEB Testing](https://github.com/Homie-s-Project/mercure/actions/workflows/mercure-web-testing.yml/badge.svg)
 
+Mercure la plateforme de e-commerce qui va vous changer votre façon de penser aux animaux.
 
-Mercure la plateforme de e-commerce qui va vous changer votre façon de penser aux animaux. 
-
-Vous pouvez adopter ou même acheter des aliments pour votre meilleur ami. 
-
+Vous pouvez adopter ou même acheter des aliments pour votre meilleur ami.
 
 Les labradors les plus choux de votre région sont sur notre plateforme, et vous attendent pour vivre une merveilleuse vie.
 
@@ -38,7 +37,7 @@ Se projet est fait pour fonctionner avec [Docker](https://www.docker.com).
 Une fois docker installer est fonctionnel, il faudra clonner ce répository.
 
 ```bash
-$ git clone https://github.com/Homie-s-Project/mercure.git
+git clone https://github.com/Homie-s-Project/mercure.git
 ```
 
 Une fois le répository clonner il faudra lancer docker pour qu'il installer tous les modules/packages nécessaires.
@@ -48,7 +47,7 @@ Avant de pouvoir lancer les commandes docker, il vous faut vous assurer que vous
 Vous pouvez le lancer en mode debug (Mode de développement)
 
 ```bash
-$ docker compose -f "docker-compose.debug.yml" up -d --build
+docker compose -f "docker-compose.debug.yml" up -d --build
 ```
 
 ## <a name='Deployment'></a>Deployment
@@ -58,7 +57,7 @@ Se projet est fait pour fonctionner avec [Docker](https://www.docker.com).
 Une fois docker installer est fonctionnel, il faudra clonner ce répository.
 
 ```bash
-$ git clone https://github.com/Homie-s-Project/mercure.git
+git clone https://github.com/Homie-s-Project/mercure.git
 ```
 
 Une fois le répository clonner il faudra lancer docker pour qu'il installer tous les modules/packages nécessaires.
@@ -68,14 +67,15 @@ Avant de pouvoir lancer les commandes docker, il vous faut vous assurer que vous
 Vous pouvez le lancer en mode de production
 
 ```bash
-$ docker compose -f "docker-compose.yml" up -d --build
+docker compose -f "docker-compose.yml" up -d --build
 ```
 
-## API Docs Tests
+## <a name='APIDocsTests'></a>API Docs Tests
 
 Il vous faudra vous rendre sur ce fichier, où les explications y sont. --> [ICI](TEST_BACK.md) <--
 
 ## <a name='Nommage'></a>Nommage
+
 Toutes les variables du projet s'écrivent en anglais selon les conventions du langage.
 
 ### <a name='Branche'></a>Branche
@@ -83,25 +83,31 @@ Toutes les variables du projet s'écrivent en anglais selon les conventions du l
 Pour les branches, nous avons décidé de les nommer en anglais et ayant 1-3 mots pour décrire ce qui est fait. Les espaces sont remplacés par des "_".
 
 Exemples:
-  * add_logs
-  * add_localisation
-  * edit_controller_auth
+
+- add_logs
+- add_localisation
+- edit_controller_auth
+
+## <a name='Routes'></a>Routes
+
+Les url et information comme les paramètres des routes sont disponible en consultant le fichier [ROUTES.md](ROUTES.md), les données ont été extraite grâce à [Widdershins](https://github.com/Mermade/widdershins).
 
 ## <a name='ImageDocker'></a>Image Docker
+
 Notre projet utilise  [Docker](https://www.docker.com), pour des questions de simplicité et de temps. Grâce à Docker, nous pouvons transférer un environnement simplement et l'installer sur une autre machine grâce à une commande.
 
 Nous utilisons **4** images dans notre projet avec chacune des images une particularité.
 
-| Image Docker   	| Description         |  URL |
+| Image Docker    | Description         |  URL |
 | ------------------    | --------------- | ----------------|
 | `mercure-api`*         | Cette image contient le code utile pour notre API. |[http://localhost:5000/swagger/index.html](http://localhost:5000/swagger/index.html) |
-| `mercure-web`*     	  | Dans cette image, il se trouve tout notre code nécessaire pour avoir l'interface frontend avec Angular. | [http://localhost:4200/](http://localhost:4200/)
+| `mercure-web`*        | Dans cette image, il se trouve tout notre code nécessaire pour avoir l'interface frontend avec Angular. | [http://localhost:4200/](http://localhost:4200/)
 | [redis](https://hub.docker.com/_/redis)| Redis est l'image qui permet de gérer le cache de notre application.. | localhost:6379** |
 | [postgres](https://hub.docker.com/_/postgres)| Postgres est l'image docker de notre base de données. | localhost:5432** |
-| [dpage/pgadmin4](https://hub.docker.com/r/dpage/pgadmin4) 	| Cette image permet d'avoir une interface d'utilisation de notre base de données.|  [http://localhost:5050/](http://localhost:5050/) |
-| [grafana/grafana](https://hub.docker.com/r/grafana/grafana) 	| Ce container permet d'avoir une page de dashboard de nos services.|  [http://localhost:30091/](http://localhost:30091/) |
-| [ubuntu/prometheus](https://hub.docker.com/r/ubuntu/prometheus) 	| Ce container permet de récupérer les informations d'un service.|  [http://localhost:30090/](http://localhost:30090/) |
-| [wrouesnel/postgres_exporter](https://hub.docker.com/r/wrouesnel/postgres_exporter) 	| Ce container permet de récupérer les informations de PostgreSQL et de le convertirr pour l'utiliser avec Prometheus.|  [http://localhost:9187/](http://localhost:9187/) |
+| [dpage/pgadmin4](https://hub.docker.com/r/dpage/pgadmin4)  | Cette image permet d'avoir une interface d'utilisation de notre base de données.|  [http://localhost:5050/](http://localhost:5050/) |
+| [grafana/grafana](https://hub.docker.com/r/grafana/grafana)  | Ce container permet d'avoir une page de dashboard de nos services.|  [http://localhost:30091/](http://localhost:30091/) |
+| [ubuntu/prometheus](https://hub.docker.com/r/ubuntu/prometheus)  | Ce container permet de récupérer les informations d'un service.|  [http://localhost:30090/](http://localhost:30090/) |
+| [wrouesnel/postgres_exporter](https://hub.docker.com/r/wrouesnel/postgres_exporter)  | Ce container permet de récupérer les informations de PostgreSQL et de le convertirr pour l'utiliser avec Prometheus.|  [http://localhost:9187/](http://localhost:9187/) |
 
 \* C'est des images non-publiques nous appartenant.
 
@@ -135,7 +141,7 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 | Environement name        | default       |
 | ------------------------ | ------------- |
 | `ASPNETCORE_ENVIRONMENT` | Development   |
-| `ASPNETCORE_URLS`        | http://+:5000 |
+| `ASPNETCORE_URLS`        | <http://+:5000> |
 
 **mercure-web**
 
@@ -165,8 +171,8 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 
 ## <a name='Authors'></a>Authors
 
--   [Christopher Andrade](https://github.com/Chriss052)
--   [Romain Antunes](https://github.com/Flasssh)
--   [Alexandre Botta](https://github.com/bottaalexandre)
--   [William Pasquier](https://github.com/WilliamDevv)
--   [Simão Romano Schindler](https://github.com/SchindlerSimao)
+- [Christopher Andrade](https://github.com/Chriss052)
+- [Romain Antunes](https://github.com/Flasssh)
+- [Alexandre Botta](https://github.com/bottaalexandre)
+- [William Pasquier](https://github.com/WilliamDevv)
+- [Simão Romano Schindler](https://github.com/SchindlerSimao)
