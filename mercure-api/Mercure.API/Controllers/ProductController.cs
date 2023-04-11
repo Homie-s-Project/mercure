@@ -250,6 +250,11 @@ public class ProductController : ApiSecurityController
         return Ok(new ProductDto(productUpdatedWanted, true));
     }
 
+    /// <summary>
+    /// Deletes an existing product.
+    /// </summary>
+    /// <param name="productId"></param>
+    /// <returns></returns>
     [HttpDelete("delete/{productId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]

@@ -21,6 +21,8 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Prometheus;
 using StackExchange.Redis;
+using Stripe;
+using Product = Mercure.API.Models.Product;
 using Role = Mercure.API.Models.Role;
 
 namespace Mercure.API
@@ -147,6 +149,17 @@ namespace Mercure.API
              *   InvalidCastException: Cannot write DateTime with kind 
              */
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            
+            // Stripe API Key
+            var stripe = Configuration.GetSection("Stripe");
+            var apiKey = stripe["SecretKey"];
+            if (apiKey == null)
+            {
+                Logger.LogError("Stripe API Key is null");
+                throw new Exception("Stripe API Key is null");
+            }
+            
+            StripeConfiguration.ApiKey = apiKey;
 
             if (env.IsDevelopment())
             {
@@ -198,7 +211,7 @@ namespace Mercure.API
                 // Concernant les rôles
                 var hasAlreadyRoles = context.Roles.Any();
                 var countRoles = context.Roles.Count();
-                Logger.LogInfo("La table Roles contient déjà des données : " + hasAlreadyRoles + "(" + countRoles + " rôles");
+                Logger.LogInfo("La table Roles contient déjà des données : " + hasAlreadyRoles + "(" + countRoles + ") rôles");
                 
                 var roleEnum = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>().ToList();
                 if (!hasAlreadyRoles || countRoles != roleEnum.Count())

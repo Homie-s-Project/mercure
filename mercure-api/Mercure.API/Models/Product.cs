@@ -40,4 +40,12 @@ public class Product
     
     public virtual ICollection<Category> Categories { get; set; }
     
+    /// <summary>
+    /// Convert a Product to a ProductDto
+    /// </summary>
+    /// <returns></returns>
+    public ProductDto ToDto()
+    {
+        return new ProductDto(this);
+    }
 }
