@@ -1,9 +1,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Mercure.API.Context;
+using Mercure.API.Models;
 using Mercure.API.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace Mercure.API.Middleware;
 
@@ -25,7 +27,10 @@ public class JwtMiddleware
         string token = context.Request.Headers.Authorization;
 
         // Si le token n'est pas null et qu'il commence par "Bearer "
-        if (token != null && token.StartsWith(bearer))
+        var hasToken = token != null && token.StartsWith(bearer);
+
+        // Si le token est présent
+        if (hasToken)
         {
             // On récupère le token sans le "Bearer "
             token = token.Remove(0, bearer.Length + 1);
@@ -37,11 +42,19 @@ public class JwtMiddleware
         // Si le token est valide
         if (informationsJwt != null)
         {
-            // On récupère l'utilisateur dans le token.
+            // On ajoute dans le context de la requête l'utilisateur ainsi que son rôle
             var userId = informationsJwt.Value;
             context.Items["User"] = mercureContext.Users
                 .Include(u => u.Role)
                 .First(u => u.UserId == userId);
+        }
+
+        // Si le token est présent mais invalide
+        if (hasToken && informationsJwt == null)
+        {
+            // 498 = Token expired
+            context.Response.StatusCode = 498;
+            await context.Response.WriteAsync("Bad token");
         }
 
         await _next(context);
