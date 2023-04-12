@@ -15,16 +15,14 @@ namespace Mercure.API.Controllers;
 /// Controller for the cart only for authenticated users
 /// </summary>
 [Route("cart")]
-public class CartController : ApiSecurityController
+public class CartController : ApiNoSecurityController
 {
     
-    private readonly IMemoryCache _cache;
     private readonly MercureContext _context;
     private readonly IDistributedCache _distributedCache;
 
-    public CartController(IMemoryCache cache, MercureContext context, IDistributedCache distributedCache)
+    public CartController(MercureContext context, IDistributedCache distributedCache)
     {
-        _cache = cache;
         _context = context;
         _distributedCache = distributedCache;
     }
@@ -33,16 +31,27 @@ public class CartController : ApiSecurityController
     /// Get the cart of the user
     /// </summary>
     /// <returns></returns>
-    [HttpGet("/")]
-    public IActionResult GetCart()
+    [HttpGet("")]
+    public IActionResult GetCart(string randomId)
     {
         var userContext = (User) HttpContext.Items["User"];
-        if (userContext == null)
+        var isAuthenticated = userContext != null;
+
+        var hasRandomId = !string.IsNullOrEmpty(randomId);
+
+        // If the user is not authenticated and don't provide an id
+        if (!hasRandomId && !isAuthenticated)
         {
-            return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
+            return BadRequest(new ErrorMessage("You are not authenticated and don't provide an id.", StatusCodes.Status401Unauthorized));
+        }
+
+        // If the user is authenticated and provide an id
+        if (hasRandomId && isAuthenticated)
+        {
+            return BadRequest(new ErrorMessage("You can't get the cart of an authenticated user and providing an id.", StatusCodes.Status401Unauthorized));
         }
         
-        var cacheKey = $"cart-{userContext.UserId}";
+        var cacheKey = isAuthenticated ? $"cart-{userContext.UserId}" : $"cart-{randomId}";
         var redisCart = _distributedCache.GetString(cacheKey);
         if (redisCart != null)
         {
@@ -56,14 +65,27 @@ public class CartController : ApiSecurityController
     /// Add a product to the cart
     /// </summary>
     /// <param name="productId"></param>
+    /// <param name="randomId"></param>
+    /// <param name="quantity"></param>
     /// <returns></returns>
     [HttpPost("/add/{productId}")]
-    public async Task<IActionResult> AddProductCart(string productId)
+    public async Task<IActionResult> AddProductCart(string productId, string randomId, string quantity = "1")
     {
         var userContext = (User) HttpContext.Items["User"];
-        if (userContext == null)
+        var isAuthenticated = userContext != null;
+
+        var hasRandomId = !string.IsNullOrEmpty(randomId);
+        
+        // If the user is not authenticated and don't provide an id
+        if (!hasRandomId && !isAuthenticated)
         {
-            return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
+            return BadRequest(new ErrorMessage("You are not authenticated and don't provide an id.", StatusCodes.Status401Unauthorized));
+        }
+
+        // If the user is authenticated and provide an id
+        if (hasRandomId && isAuthenticated)
+        {
+            return BadRequest(new ErrorMessage("You can't add an product in the cart when beeing connected and providing an id.", StatusCodes.Status401Unauthorized));
         }
         
         var isProductParsed = int.TryParse(productId, out var productIdParsed);
@@ -78,24 +100,35 @@ public class CartController : ApiSecurityController
             return NotFound(new ErrorMessage("Product not found", StatusCodes.Status404NotFound));
         }
         
-        var cacheKey = $"cart-{userContext.UserId}";
-        var redisCart = _distributedCache.GetString(cacheKey);
+        var cacheKey = isAuthenticated ? $"cart-{userContext.UserId}" : $"cart-{randomId}";
+        var redisCart = await _distributedCache.GetStringAsync(cacheKey);
+        
+        // Set the expiration of the cache to 1 day if the user is not authenticated and 30 days if the user is authenticated
+        var cacheOptions = new DistributedCacheEntryOptions()
+            .SetSlidingExpiration(System.TimeSpan.FromDays(isAuthenticated ? 30 : 1));
+        
+        bool isQuantityParsed = int.TryParse(quantity, out int parsedQuantity);
+        if (!isQuantityParsed)
+        {
+            return BadRequest(new ErrorMessage("Quantity is not a number: " + quantity, StatusCodes.Status400BadRequest));
+        }
+        
         if (redisCart != null)
         {
             var cart = JsonConvert.DeserializeObject<Cart>(redisCart);
-            cart.AddProduct(product);
-            
-            _distributedCache.SetString(cacheKey, JsonConvert.SerializeObject(cart));
+            cart.AddProduct(product, parsedQuantity);
+
+            await _distributedCache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cart), cacheOptions);
             
             var cartProductAdded = cart.Products.Find(p => p.Product.ProductId == productIdParsed);
             return Ok(cartProductAdded);
         }
         else
         {
-            var cart = new Cart(userContext.UserId);
-            cart.AddProduct(product);
+            var cart = new Cart(isAuthenticated ? userContext.UserId.ToString() : randomId);
+            cart.AddProduct(product, parsedQuantity);
             
-            _distributedCache.SetString(cacheKey, JsonConvert.SerializeObject(cart));
+            await _distributedCache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cart), cacheOptions);
             
             var cartProductAdded = cart.Products.Find(p => p.Product.ProductId == productIdParsed);
             return Ok(cartProductAdded);
@@ -106,14 +139,26 @@ public class CartController : ApiSecurityController
     /// Remove a product from the cart
     /// </summary>
     /// <param name="productId"></param>
+    /// <param name="randomId"></param>
     /// <returns></returns>
     [HttpDelete("/remove/{productId}")]
-    public async Task<IActionResult> RemoveProductCart(string productId)
+    public async Task<IActionResult> RemoveProductCart(string productId, string randomId)
     {
         var userContext = (User) HttpContext.Items["User"];
-        if (userContext == null)
+        var isAuthenticated = userContext != null;
+
+        var hasRandomId = !string.IsNullOrEmpty(randomId);
+
+        // If the user is not authenticated and don't provide an id
+        if (!hasRandomId && !isAuthenticated)
         {
-            return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
+            return BadRequest(new ErrorMessage("You are not authenticated and don't provide an id.", StatusCodes.Status401Unauthorized));
+        }
+
+        // If the user is authenticated and provide an id
+        if (hasRandomId && isAuthenticated)
+        {
+            return BadRequest(new ErrorMessage("You can't add an product in the cart when beeing connected and providing an id.", StatusCodes.Status401Unauthorized));
         }
         
         var isProductParsed = int.TryParse(productId, out var productIdParsed);
@@ -128,14 +173,14 @@ public class CartController : ApiSecurityController
             return NotFound(new ErrorMessage("Product not found", StatusCodes.Status404NotFound));
         }
         
-        var cacheKey = $"cart-{userContext.UserId}";
-        var redisCart = _distributedCache.GetString(cacheKey);
+        var cacheKey = isAuthenticated ? $"cart-{userContext.UserId}" : $"cart-{randomId}";
+        var redisCart = await _distributedCache.GetStringAsync(cacheKey);
         if (redisCart != null)
         {
             var cart = JsonConvert.DeserializeObject<Cart>(redisCart);
             cart.RemoveProduct(product);
             
-            _distributedCache.SetString(cacheKey, JsonConvert.SerializeObject(cart));
+            await _distributedCache.SetStringAsync(cacheKey, JsonConvert.SerializeObject(cart));
             return Ok(new ErrorMessage("Product removed from cart", StatusCodes.Status200OK));
         }
         
