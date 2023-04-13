@@ -80,7 +80,7 @@ public class Logger
                 throw new ArgumentException("Invalid log level");
         }
 
-        logText += $"[{logTarget}] {message}";
+        logText += $" [{logTarget}] {message}";
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {

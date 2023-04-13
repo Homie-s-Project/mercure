@@ -171,6 +171,7 @@ namespace Mercure.API
 
             app.UseAuthorization();
             app.UseMiddleware<JwtMiddleware>();
+            app.UseMiddleware<HttpLoggerSystem>();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
