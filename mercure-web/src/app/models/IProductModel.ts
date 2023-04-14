@@ -1,9 +1,19 @@
+import {ICategoriesModel} from "./ICategoriesModel";
+import {IStockModel} from "./IStockModel";
+
 export interface IProductModel {
-    Id: Number;
-    Brand: string;
-    Type: string;
-    Description: string;
-    Price: number;
-    Info: string;
-    Tags: string[];
+  productId: number;
+  productName: string;
+  productBrandName: string;
+  productDescription: string;
+  productPrice: number;
+  productType?: string;
+  productWeight?: number;
+  productCreationDate?: Date;
+  productLastUpdate?: Date;
+  stock?: IStockModel;
+  categories?: ICategoriesModel[];
 }
+
+// productWeight pas encore implémenté dans le back-end
+// productType pas encore implémenté dans le back-end et c'est enft une catégorie?

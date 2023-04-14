@@ -1,11 +1,11 @@
-<a [routerLink]="['/product', product?.Id]">
-    <img src="../../../assets/img/image.png" class="item-image">    
+<a [routerLink]="['/product', product?.productId]">
+    <img src="../../../assets/img/image.png" class="item-image">
     <div class="card-content">
-        <h3 class="brand">{{product?.Brand}}</h3>
+        <h3 class="brand">{{product?.productBrandName}}</h3>
         <div class="card-data">
-            <p class="price">{{product?.Price}} CHF</p>
+            <p class="price">{{product?.productPrice}} CHF</p>
         </div>
     </div>
 </a>
-<app-tags [tags]="product?.Tags"></app-tags>
+<app-tags [categories]="product?.categories"></app-tags>
 <button class="add-to-cart"><fa-icon [icon]="faCartPlus"></fa-icon></button>

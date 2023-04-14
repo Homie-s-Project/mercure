@@ -37,6 +37,9 @@ export class CartService implements OnInit {
       })
       .catch(e => {
         console.log(e);
+        if (e.status === 404) {
+          this.cart = [];
+        }
       })
       .finally(() => {
         console.log(this.cart);
