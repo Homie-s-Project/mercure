@@ -260,8 +260,14 @@ namespace Mercure.API
                     var tokenDevUser = JwtUtils.GenerateJsonWebToken(devUser);
                     Logger.LogInfo("Token de l'utilisateur de dev : " + tokenDevUser);
                     
-                    var linkSwagger = "http://localhost:5000/swagger/index.html?token="+tokenDevUser;
-                    OpenBrowser(linkSwagger);
+                    string isRunningInDockerEnv = Environment.GetEnvironmentVariable("RUN_IN_DOCKER");
+                    Boolean.TryParse(isRunningInDockerEnv, out bool isRunningInDockerEnvBoolean);
+
+                    if (!isRunningInDockerEnvBoolean)
+                    {
+                        var linkSwagger = "http://localhost:5000/swagger/index.html?token="+tokenDevUser;
+                        OpenBrowser(linkSwagger); 
+                    }
 
                     // DEV STOCK
                     var devStock = context.Stocks.Where(s => s.StockQuantityAvailable > 999_999_999).ToList();
