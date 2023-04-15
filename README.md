@@ -23,6 +23,7 @@
 ![Docker Production](https://github.com/Homie-s-Project/mercure/actions/workflows/docker-compose-prod.yml/badge.svg)
 ![Mercure API Testing](https://github.com/Homie-s-Project/mercure/actions/workflows/mercure-api-testing.yml/badge.svg)
 ![Mercure WEB Testing](https://github.com/Homie-s-Project/mercure/actions/workflows/mercure-web-testing.yml/badge.svg)
+![Cleanup caches for closed branches](https://github.com/Homie-s-Project/mercure/actions/workflows/auto-clean-cache.yml/badge.svg)
 
 Mercure la plateforme de e-commerce qui va vous changer votre façon de penser aux animaux.
 
