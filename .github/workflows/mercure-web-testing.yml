@@ -17,11 +17,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: mercure-web/npm-shrinkwrap.json
 
-      - run: npm ci
+      - name: Get node_modules cache
+        uses: actions/cache@v3
+        id: node_modules
+        with:
+          path: ./mercure-web/node_modules
+          # Adding node version as cache key
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/npm-shrinkwrap.json') }}-${{ matrix.node-version }}
+
+      - name: Install dependencies 
+        run: npm ci
         working-directory: ./mercure-web
           
-      - run: npm run test
+      - name: Run tests 
+        run: npm run test
         working-directory: ./mercure-web
