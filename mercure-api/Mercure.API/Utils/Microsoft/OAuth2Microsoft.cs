@@ -5,23 +5,47 @@ using Mercure.API.Utils.Microsoft.Models;
 
 namespace Mercure.API.Utils.Microsoft;
 
-public class OAuth2Microsoft
+/// <summary>
+/// Classe utilitaire pour la connexion à Microsoft
+/// </summary>
+public abstract class OAuth2Microsoft
 {
+    /// <summary>
+    /// Options pour la connexion à Microsoft
+    /// </summary>
     public class AuthorizeOptions
     {
+        /// <summary>
+        /// Le client id de notre application
+        /// </summary>
         public string ClientId { get; set; }
+        /// <summary>
+        /// Le client secret de notre application
+        /// </summary>
         public string TenantId { get; set; }
+        /// <summary>
+        /// L'url de redirection après la connexion
+        /// </summary>
         public string RedirectUri { get; set; }
+        /// <summary>
+        /// Le state de la connexion (pour éviter les attaques CSRF)
+        /// </summary>
         public string State { get; set; }
+        /// <summary>
+        /// Le scope de la connexion
+        /// </summary>
         public string Scope { get; set; }
     }
 
+    /// <summary>
+    /// Options pour la récupération du token d'accès
+    /// </summary>
     public static class OAuthHelper
     {
-        public const string OAuthEndpoint =
+        private const string OAuthEndpoint =
             "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token";
 
-        public const string AuthorizeEndpoint = "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize";
+        private const string AuthorizeEndpoint = "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/authorize";
 
         /// <summary>
         /// On crée une url pour rediriger l'utilisateur vers la page de connexion de Microsoft

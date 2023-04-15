@@ -7,34 +7,49 @@ using Microsoft.Extensions.Configuration;
 
 namespace Mercure.API.Context;
 
+/// <summary>
+/// Contexte de la base de données
+/// </summary>
 public class MercureContext : DbContext
 {
+    /// <summary>
+    /// Constructeur par défaut
+    /// </summary>
     protected MercureContext()
     {
     }
 
-    // Lors de la configuration du contexte, cette méthode est appelée pour définir les options de base de données pour ce contexte.
+    /// <summary>
+    /// Configuration de la connexion à la base de données
+    /// </summary>
+    /// <param name="options"></param>
+    /// <remarks>Lors de la configuration du contexte, cette méthode est appelée pour définir les options de base de données pour ce contexte.</remarks>
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        if (!options.IsConfigured)
-        {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json")
-                .Build();
+        if (options.IsConfigured) return;
+        
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
             
-            string isRunningInDockerEnv = Environment.GetEnvironmentVariable("RUN_IN_DOCKER");
-            Boolean.TryParse(isRunningInDockerEnv, out bool isRunningInDockerEnvBoolean);
+        var isRunningInDockerEnv = Environment.GetEnvironmentVariable("RUN_IN_DOCKER");
+        var tryParse = bool.TryParse(isRunningInDockerEnv, out bool isRunningInDockerEnvBoolean);
+        if (!tryParse) isRunningInDockerEnvBoolean = false;
 
-            var connectionString = isRunningInDockerEnvBoolean
-                ? configuration.GetConnectionString("MercureDb")
-                : configuration.GetConnectionString("MercureDbNoDocker");
+        var connectionString = isRunningInDockerEnvBoolean
+            ? configuration.GetConnectionString("MercureDb")
+            : configuration.GetConnectionString("MercureDbNoDocker");
             
-            Logger.LogInfo("Configuration de connexion à la base de données : " + (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
-            options.UseNpgsql(connectionString);
-        }
+        Logger.LogInfo("Configuration de connexion à la base de données : " + (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
+        options.UseNpgsql(connectionString);
     }
 
+    /// <summary>
+    /// Constructeur de la classe MercureContext avec les options de base de données
+    /// </summary>
+    /// <param name="options"></param>
+    /// <remarks>Définition des modèles de la base de données</remarks>
     public MercureContext(DbContextOptions<MercureContext> options) : base(options)
     {
     }

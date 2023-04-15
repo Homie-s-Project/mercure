@@ -11,13 +11,16 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Mercure.API.Utils;
 
+/// <summary>
+/// Classe utilitaire pour la génération et la validation du JWT
+/// </summary>
 public static class JwtUtils
 {
-    public static readonly IConfiguration _config;
+    private static readonly IConfiguration Config;
 
     static JwtUtils()
     {
-        _config = Startup.StaticConfig;
+        Config = Startup.StaticConfig;
     }
 
     /// <summary>
@@ -27,7 +30,7 @@ public static class JwtUtils
     /// <returns>le texte chiffré</returns>
     private static string Encrypt(string toBeEncrypted)
     {
-        var secretKey = _config.GetSection("Jwt")["SecretKey"];
+        var secretKey = Config.GetSection("Jwt")["SecretKey"];
         return AES.EncryptString(secretKey, toBeEncrypted);
     }
 
@@ -38,7 +41,7 @@ public static class JwtUtils
     /// <returns>le texte déchiffré</returns>
     private static string Decrypt(string encrypted)
     {
-        var secretKey = _config.GetSection("Jwt")["SecretKey"];
+        var secretKey = Config.GetSection("Jwt")["SecretKey"];
         return AES.DecryptString(secretKey, encrypted);
     }
 
@@ -46,12 +49,11 @@ public static class JwtUtils
     /// Genère le JWT
     /// </summary>
     /// <param name="user">l'utilisateur concerné</param>
-    /// <param name="logUser">les informations de connexion</param>
     /// <returns>le jwt chiffré</returns>
     public static string GenerateJsonWebToken(User user)
     {
         // Récupèration de la clé de chiffrement
-        var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_config.GetSection("Jwt")["Key"]));
+        var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Config.GetSection("Jwt")["Key"]));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
         // Création des claims
@@ -64,7 +66,7 @@ public static class JwtUtils
         };
 
         // Récupèration de la configuration du token
-        var configurationSection = _config.GetSection("Jwt");
+        var configurationSection = Config.GetSection("Jwt");
         var jwtIssuer = configurationSection["Issuer"];
         var jwtAudience = configurationSection["Audience"];
 
@@ -104,7 +106,7 @@ public static class JwtUtils
         }
 
         // On récupère la clé de chiffrement
-        var jwtKey = _config.GetSection("Jwt")["Key"];
+        var jwtKey = Config.GetSection("Jwt")["Key"];
 
         // On génère le token handler et la clé de chiffrement
         var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey));
@@ -113,7 +115,7 @@ public static class JwtUtils
         // On essaye de déchiffrer le token
         try
         {
-            var configurationSection = _config.GetSection("Jwt");
+            var configurationSection = Config.GetSection("Jwt");
             var validIssuer = configurationSection["Issuer"];
             var validAudience = configurationSection["Audience"];
 

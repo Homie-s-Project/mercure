@@ -3,13 +3,16 @@ using Microsoft.Extensions.Configuration;
 
 namespace Mercure.API.Utils;
 
-public class CryptoUtils
+/// <summary>
+/// Classe utilitaire pour le chiffrement et dé-chiffrement des données
+/// </summary>
+public abstract class CryptoUtils
 {
-    public static readonly IConfiguration _config;
+    private static readonly IConfiguration Config;
 
     static CryptoUtils()
     {
-        _config = Startup.StaticConfig;
+        Config = Startup.StaticConfig;
     }
     
     /// <summary>
@@ -19,7 +22,7 @@ public class CryptoUtils
     /// <returns>la valeur chiffré</returns>
     public static string Encrypt(string toBeEncrypted)
     {
-        return AES.EncryptString(_config["Secure:SecretKey"], toBeEncrypted);
+        return AES.EncryptString(Config["Secure:SecretKey"], toBeEncrypted);
     }
 
     /// <summary>
@@ -29,6 +32,6 @@ public class CryptoUtils
     /// <returns>la valeur dé-chiffrer</returns>
     public static string Decrypt(string encrypted)
     {
-        return AES.DecryptString(_config["Secure:SecretKey"], encrypted);
+        return AES.DecryptString(Config["Secure:SecretKey"], encrypted);
     }
 }

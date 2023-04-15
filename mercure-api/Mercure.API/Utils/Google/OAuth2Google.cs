@@ -5,22 +5,43 @@ using Mercure.API.Utils.Google.Models;
 
 namespace Mercure.API.Utils.Google;
 
-public class OAuth2Google
+/// <summary>
+/// Classe utilitaire pour gérer l'authentification avec Google
+/// </summary>
+public abstract class OAuth2Google
 {
+    /// <summary>
+    /// Options pour la connexion
+    /// </summary>
     public class AuthorizeOptions
     {
+        /// <summary>
+        /// Le client id de notre application
+        /// </summary>
         public string ClientId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public string RedirectUri { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public string State { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public string Scope { get; set; }
     }
 
+    /// <summary>
+    /// Classe utilitaire pour gérer l'authentification avec Google
+    /// </summary>
     public static class OAuthHelper
     {
-        public const string OAuthEndpoint =
+        private const string OAuthEndpoint =
             "https://oauth2.googleapis.com/token";
 
-        public const string AuthorizeEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+        private const string AuthorizeEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
 
         /// <summary>
         /// On crée une url pour rediriger l'utilisateur vers la page de connexion de Google

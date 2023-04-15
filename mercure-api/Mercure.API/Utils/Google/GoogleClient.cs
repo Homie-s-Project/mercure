@@ -4,13 +4,20 @@ using Mercure.API.Utils.Google.Models;
 
 namespace Mercure.API.Utils.Google;
 
+/// <summary>
+/// Classe utilitaire pour gérer l'authentification avec Google
+/// </summary>
 public class GoogleClient
 {
-    public const string OAuthUser =
+    private const string OAuthUser =
         "https://people.googleapis.com/v1/people/me?personFields=birthdays,emailAddresses,names";
 
     private readonly string _userToken;
 
+    /// <summary>
+    /// Constructeur
+    /// </summary>
+    /// <param name="encryptedUserToken"></param>
     public GoogleClient(string encryptedUserToken)
     {
         _userToken = CryptoUtils.Decrypt(encryptedUserToken);

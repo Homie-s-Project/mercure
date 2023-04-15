@@ -6,11 +6,22 @@ using System.Text.RegularExpressions;
 
 namespace Mercure.API.Utils.Logger;
 
-public class Logger
+/// <summary>
+/// Logger class to log messages in the console and in a file
+/// </summary>
+public abstract class Logger
 {
+    /// <summary>
+    /// Log level
+    /// </summary>
+    /// <param name="logLevel"></param>
+    /// <param name="logTarget"></param>
+    /// <param name="message"></param>
+    /// <exception cref="ArgumentException"></exception>
     public static void Log(LogLevel logLevel, LogTarget logTarget, string message)
     {
-        string logText = $"[{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}] ";
+        if (message == null) throw new ArgumentNullException(nameof(message));
+        var logText = $"[{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}] ";
         switch (logLevel)
         {
             case LogLevel.Trace:
@@ -84,16 +95,17 @@ public class Logger
 
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            if (logLevel == LogLevel.Error || logLevel == LogLevel.Critical)
+            switch (logLevel)
             {
-                WriteColorForWindows(logText, ConsoleColor.Red);
-            } else if (logLevel == LogLevel.Warn)
-            {
-                WriteColorForWindows(logText, ConsoleColor.Yellow);
-            }
-            else
-            {
-                WriteColorForWindows(logText, ConsoleColor.White);
+                case LogLevel.Error or LogLevel.Critical:
+                    WriteColorForWindows(logText, ConsoleColor.Red);
+                    break;
+                case LogLevel.Warn:
+                    WriteColorForWindows(logText, ConsoleColor.Yellow);
+                    break;
+                default:
+                    WriteColorForWindows(logText, ConsoleColor.White);
+                    break;
             }
         }
         else
@@ -116,22 +128,49 @@ public class Logger
         }
     }
 
+    /// <summary>
+    /// Log a message with the Info level
+    /// </summary>
+    /// <param name="message"></param>
     public static void LogInfo(string message) => Log(LogLevel.Info, LogTarget.File, message);
+    /// <summary>
+    /// Log a message with the level in parameter
+    /// </summary>
+    /// <param name="logTarget"></param>
+    /// <param name="message"></param>
     public static void LogInfo(LogTarget logTarget, string message) => Log(LogLevel.Info, logTarget, message);
 
+    /// <summary>
+    /// Log a message with the Warn level
+    /// </summary>
+    /// <param name="message"></param>
     public static void LogWarn(string message) => Log(LogLevel.Info, LogTarget.File, message);
+    /// <summary>
+    /// Log a message with the Warn in parameter
+    /// </summary>
+    /// <param name="logTarget"></param>
+    /// <param name="message"></param>
     public static void LogWarn(LogTarget logTarget, string message) => Log(LogLevel.Info, logTarget, message);
 
+    /// <summary>
+    /// Log a message with the Error level
+    /// </summary>
+    /// <param name="message"></param>
     public static void LogError(string message) => Log(LogLevel.Info, LogTarget.File, message);
+    /// <summary>
+    /// Log a message with the Error level in parameter
+    /// </summary>
+    /// <param name="logTarget"></param>
+    /// <param name="message"></param>
     public static void LogError(LogTarget logTarget, string message) => Log(LogLevel.Info, logTarget, message);
     
     private static void WriteColorForWindows(string message, ConsoleColor color)
     {
         var pieces = Regex.Split(message, @"(\[[^\]]*\])");
 
-        for(int i=0;i<pieces.Length;i++)
+        foreach (var t in pieces)
         {
-            string piece = pieces[i];
+            var piece = t;
         
             if (piece.StartsWith("[") && piece.EndsWith("]"))
             {

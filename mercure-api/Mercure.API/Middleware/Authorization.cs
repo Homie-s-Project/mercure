@@ -8,9 +8,16 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Mercure.API.Middleware;
 
+/// <summary>
+///  Filtre d'authentification
+/// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
+    /// <summary>
+    /// Méthode d'authentification
+    /// </summary>
+    /// <param name="context"></param>
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         // On regarde si on exige une authentification

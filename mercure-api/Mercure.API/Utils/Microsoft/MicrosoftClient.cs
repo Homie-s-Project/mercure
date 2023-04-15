@@ -4,12 +4,19 @@ using Mercure.API.Utils.Microsoft.Models;
 
 namespace Mercure.API.Utils.Microsoft;
 
+/// <summary>
+/// Classe utilitaire pour la connexion à Microsoft
+/// </summary>
 public class MicrosoftClient
 {
-    public const string OAuthUser = "https://graph.microsoft.com/v1.0/me";
+    private const string OAuthUser = "https://graph.microsoft.com/v1.0/me";
 
     private readonly string _userToken;
 
+    /// <summary>
+    /// Constructeur de la classe
+    /// </summary>
+    /// <param name="encryptedUserToken"></param>
     public MicrosoftClient(string encryptedUserToken)
     {
         _userToken = CryptoUtils.Decrypt(encryptedUserToken);

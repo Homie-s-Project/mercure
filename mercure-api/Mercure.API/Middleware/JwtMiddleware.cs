@@ -9,16 +9,28 @@ using Microsoft.VisualBasic;
 
 namespace Mercure.API.Middleware;
 
-// https://jasonwatmore.com/post/2021/06/02/net-5-create-and-validate-jwt-tokens-use-custom-jwt-middleware
+/// <summary>
+/// Middleware d'authentification
+/// </summary>
+/// <remarks>https://jasonwatmore.com/post/2021/06/02/net-5-create-and-validate-jwt-tokens-use-custom-jwt-middleware</remarks>
 public class JwtMiddleware
 {
     private readonly RequestDelegate _next;
 
+    /// <summary>
+    /// Constructeur
+    /// </summary>
+    /// <param name="next"></param>
     public JwtMiddleware(RequestDelegate next)
     {
         _next = next;
     }
 
+    /// <summary>
+    /// Méthode d'authentification
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="mercureContext"></param>
     public async Task Invoke(HttpContext context, MercureContext mercureContext)
     {
         const string bearer = "Bearer";

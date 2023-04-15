@@ -2,7 +2,7 @@
 * @Author: Romain Antunes
 */
 
-var authToken = findGetParameter("token");
+let authToken = findGetParameter("token");
 
 window.addEventListener ?
     window.addEventListener("load", finishLoad, false) :
@@ -20,7 +20,7 @@ function finishLoad() {
 
 
 function findGetParameter(parameterName) {
-    var result = null,
+    let result = null,
         tmp = [];
     location.search
         .substr(1)

@@ -17,10 +17,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Prometheus;
 using StackExchange.Redis;
+using LogLevel = Mercure.API.Utils.Logger.LogLevel;
 using Role = Mercure.API.Models.Role;
 
 namespace Mercure.API
@@ -190,262 +192,266 @@ namespace Mercure.API
         /// <param name="env"></param>
         private async Task CreateSeed(IWebHostEnvironment env)
         {
-            using (var context = new MercureContext(_contextOptions))
+            await using var context = new MercureContext(_contextOptions);
+            if (context == null)
             {
-                Logger.Log(LogLevel.Info, LogTarget.EventLog, "Migration de la base de données si nécessaire");
-                context.Database.Migrate();
+                Logger.LogError(LogTarget.Database, "MercureContext est null on startup");
+                throw new Exception("MercureContext is null");
+            }
+            
+            Logger.Log(LogLevel.Info, LogTarget.EventLog, "Migration de la base de données si nécessaire");
+            await context.Database.MigrateAsync();
 
-                // Concernant les rôles
-                var hasAlreadyRoles = context.Roles.Any();
-                var countRoles = context.Roles.Count();
-                Logger.LogInfo("La table Roles contient déjà des données : " + hasAlreadyRoles + "(" + countRoles + " rôles");
+            // Concernant les rôles
+            var hasAlreadyRoles = context.Roles.Any();
+            var countRoles = context.Roles.Count();
+            Logger.LogInfo("La table Roles contient déjà des données : " + hasAlreadyRoles + "(" + countRoles + " rôles");
                 
-                var roleEnum = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>().ToList();
-                if (!hasAlreadyRoles || countRoles != roleEnum.Count())
+            var roleEnum = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>().ToList();
+            if (!hasAlreadyRoles || countRoles != roleEnum.Count())
+            {
+                // Suppression des rôles
+                if (hasAlreadyRoles)
                 {
-                    // Suppression des rôles
-                    if (hasAlreadyRoles)
-                    {
-                        Logger.LogInfo("Suppression des rôles de la table Roles");
-                        context.Roles.ToList().ForEach(r => context.Remove(r));
-                        await context.SaveChangesAsync();
-                    }
-                    
-                    roleEnum.ToList().ForEach(role =>
-                    {
-                        Logger.LogInfo("Création du rôle " + role + " avec le numéro " + (int) role);
-                        context.Roles.Add(new Role
-                        {
-                            RoleName = role.ToString(),
-                            RoleNumber = (int) role
-                        });
-                    });
+                    Logger.LogInfo("Suppression des rôles de la table Roles");
+                    context.Roles.ToList().ForEach(r => context.Remove(r));
                     await context.SaveChangesAsync();
                 }
-
-                // EN MODE DEV => Docker Débug ou lancer depuis l'IDE
-                if (env.IsDevelopment())
-                {
-                    // Utilisateurs de tests
-                    var devTestUser = context.Users.Where(u => u.ServiceId.StartsWith("DEV"));
-                    if (devTestUser.Count() > 0)
-                    {
-                        Logger.LogInfo("Suppression des utilisateurs de dev de la table Users");
-                        devTestUser.ToList().ForEach(u => context.Remove(u));
-                        await context.SaveChangesAsync();
-                    }
                     
-                    // Création des utilisateurs de test pour les rôles
-                    var allRoles = context.Roles.ToList();
-                    allRoles.ForEach(r =>
+                roleEnum.ToList().ForEach(role =>
+                {
+                    Logger.LogInfo("Création du rôle " + role + " avec le numéro " + (int) role);
+                    context.Roles.Add(new Role
                     {
-                        Logger.LogInfo("Création des utilisateurs de test pour le rôle " + r.RoleName);
-                        User userRoleTest = new User
-                        {
-                            ServiceId = "DEV:"+r.RoleName+":RandomDevServiceId",
-                            LastName = "LastNameDev",
-                            FirstName = "FirstNameDev",
-                            Email = "dev@mercure.com",
-                            CreatedAt = DateTime.Now,
-                            LastUpdatedAt = DateTime.Now
-                        };
+                        RoleName = role.ToString(),
+                        RoleNumber = (int) role
+                    });
+                });
+                await context.SaveChangesAsync();
+            }
+
+            // EN MODE DEV => Docker Débug ou lancer depuis l'IDE
+            if (env.IsDevelopment())
+            {
+                // Utilisateurs de tests
+                var devTestUser = context.Users.Where(u => u.ServiceId.StartsWith("DEV"));
+                if (devTestUser.Any())
+                {
+                    Logger.LogInfo("Suppression des utilisateurs de dev de la table Users");
+                    devTestUser.ToList().ForEach(u => context.Remove(u));
+                    await context.SaveChangesAsync();
+                }
+                    
+                // Création des utilisateurs de test pour les rôles
+                var allRoles = context.Roles.ToList();
+                allRoles.ForEach(r =>
+                {
+                    Logger.LogInfo("Création des utilisateurs de test pour le rôle " + r.RoleName);
+                    User userRoleTest = new User
+                    {
+                        ServiceId = "DEV:"+r.RoleName+":RandomDevServiceId",
+                        LastName = "LastNameDev",
+                        FirstName = "FirstNameDev",
+                        Email = "dev@mercure.com",
+                        CreatedAt = DateTime.Now,
+                        LastUpdatedAt = DateTime.Now
+                    };
                         
-                        userRoleTest.Role = r;
-                        context.Users.Add(userRoleTest);
-                    });
-                    await context.SaveChangesAsync();
+                    userRoleTest.Role = r;
+                    context.Users.Add(userRoleTest);
+                });
+                await context.SaveChangesAsync();
                     
-                    // Token Dev User
-                    var devUser = context.Users.FirstOrDefault(u => u.ServiceId.StartsWith("DEV") && u.Role.RoleNumber == (int) RoleEnum.Dev);
-                    var tokenDevUser = JwtUtils.GenerateJsonWebToken(devUser);
-                    Logger.LogInfo("Token de l'utilisateur de dev : " + tokenDevUser);
+                // Token Dev User
+                var devUser = context.Users.FirstOrDefault(u => u.ServiceId.StartsWith("DEV") && u.Role.RoleNumber == (int) RoleEnum.Dev);
+                var tokenDevUser = JwtUtils.GenerateJsonWebToken(devUser);
+                Logger.LogInfo("Token de l'utilisateur de dev : " + tokenDevUser);
                     
-                    var linkSwagger = "http://localhost:5000/swagger/index.html?token="+tokenDevUser;
-                    OpenBrowser(linkSwagger);
+                var linkSwagger = "http://localhost:5000/swagger/index.html?token="+tokenDevUser;
+                OpenBrowser(linkSwagger);
 
-                    // DEV STOCK
-                    var devStock = context.Stocks.Where(s => s.StockQuantityAvailable > 999_999_999).ToList();
-                    if (devStock.Count() > 0)
-                    {
-                        Logger.LogInfo("Suppression des stocks de dev de la table Stocks");
-                        devStock.ForEach(s => context.Remove(s));
-                        await context.SaveChangesAsync();
-                    }
-
-                    // Création des stocks de dev
-                    Logger.LogInfo("Création des stocks de dev...");
-                    var devStocks = new List<Stock>()
-                    {
-                        new Stock(1_999_999_999),
-                        new Stock(1_999_999_999),
-                        new Stock(1_999_999_999),
-                    };
-
-                    devStocks.ForEach(s => context.Stocks.Add(s));
-                    await context.SaveChangesAsync();
-
-                    // DEV CATEGORIES
-                    var devCategories = context.Categories.Where(c => c.CategoryTitle.StartsWith("DEV:")).ToList();
-                    if (devCategories.Count() > 0)
-                    {
-                        Logger.LogInfo("Suppression des catégories de dev de la table Categories");
-                        devCategories.ForEach(c => context.Remove(c));
-                        await context.SaveChangesAsync();
-                    }
-
-                    // Création des catégories de dev
-                    Logger.LogInfo("Création des catégories de dev...");
-                    var devCategoriesList = new List<Category>()
-                    {
-                        new Category("DEV:Chien", "pas de description: Chien"),
-                        new Category("DEV:Chat", "pas de description: Chat"),
-                        new Category("DEV:Rongeur", "pas de description: Rongeur"),
-                        new Category("DEV:Oiseau", "pas de description: Oiseau"),
-                        new Category("DEV:Poisson", "pas de description: Poisson"),
-                        new Category("DEV:Reptile", "pas de description: Reptile"),
-                        new Category("DEV:Autre", "pas de description: Autre"),
-                    };
-
-                    devCategoriesList.ForEach(c => context.Categories.Add(c));
-                    await context.SaveChangesAsync();
-
-
-                    // Si la base de données contient des produits commencant par DEV:, alors on supprime les données de la base de données et on les recréeq
-                    var devProducts = context.Products.Where(p => p.ProductName.StartsWith("DEV:")).ToList();
-                    if (devProducts.Count() > 0)
-                    {
-                        Logger.LogInfo("Suppression des produits commencant par 'DEV:' de la table Products");
-                        devProducts.ForEach(p => context.Remove(p));
-                        await context.SaveChangesAsync();
-                    }
-
-                    // Création des produits de dev
-                    Logger.LogInfo("Création des produits de dev...");
-                    var products = new List<Product>()
-                    {
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                    };
-
-                    products.ForEach(p => context.Add(p));
-                    await context.SaveChangesAsync();
-
-                    var allDevproducts = context.Products.Where(p => p.ProductName.StartsWith("DEV:")).ToList();
-                    allDevproducts.ForEach(async p =>
-                    {
-                        p.Categories = new List<Category>();
-                        p.Categories = await RandomCategories(context);
-                    });
+                // DEV STOCK
+                var devStock = context.Stocks.Where(s => s.StockQuantityAvailable > 999_999_999).ToList();
+                if (devStock.Any())
+                {
+                    Logger.LogInfo("Suppression des stocks de dev de la table Stocks");
+                    devStock.ForEach(s => context.Remove(s));
                     await context.SaveChangesAsync();
                 }
+
+                // Création des stocks de dev
+                Logger.LogInfo("Création des stocks de dev...");
+                var devStocks = new List<Stock>()
+                {
+                    new Stock(1_999_999_999),
+                    new Stock(1_999_999_999),
+                    new Stock(1_999_999_999),
+                };
+
+                devStocks.ForEach(s => context.Stocks.Add(s));
+                await context.SaveChangesAsync();
+
+                // DEV CATEGORIES
+                var devCategories = context.Categories.Where(c => c.CategoryTitle.StartsWith("DEV:")).ToList();
+                if (devCategories.Any())
+                {
+                    Logger.LogInfo("Suppression des catégories de dev de la table Categories");
+                    devCategories.ForEach(c => context.Remove(c));
+                    await context.SaveChangesAsync();
+                }
+
+                // Création des catégories de dev
+                Logger.LogInfo("Création des catégories de dev...");
+                var devCategoriesList = new List<Category>()
+                {
+                    new Category("DEV:Chien", "pas de description: Chien"),
+                    new Category("DEV:Chat", "pas de description: Chat"),
+                    new Category("DEV:Rongeur", "pas de description: Rongeur"),
+                    new Category("DEV:Oiseau", "pas de description: Oiseau"),
+                    new Category("DEV:Poisson", "pas de description: Poisson"),
+                    new Category("DEV:Reptile", "pas de description: Reptile"),
+                    new Category("DEV:Autre", "pas de description: Autre"),
+                };
+
+                devCategoriesList.ForEach(c => context.Categories.Add(c));
+                await context.SaveChangesAsync();
+
+
+                // Si la base de données contient des produits commencant par DEV:, alors on supprime les données de la base de données et on les recréeq
+                var devProducts = context.Products.Where(p => p.ProductName.StartsWith("DEV:")).ToList();
+                if (devProducts.Any())
+                {
+                    Logger.LogInfo("Suppression des produits commencant par 'DEV:' de la table Products");
+                    devProducts.ForEach(p => context.Remove(p));
+                    await context.SaveChangesAsync();
+                }
+
+                // Création des produits de dev
+                Logger.LogInfo("Création des produits de dev...");
+                var products = new List<Product>()
+                {
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                    new ()
+                    {
+                        ProductName = RandomProductName(),
+                        ProductBrandName = RandomBrandNames(),
+                        ProductPrice = ProductPrice(),
+                        ProductDescription = "Description de test",
+                        ProductCreationDate = DateTime.Now,
+                        ProductLastUpdate = DateTime.Now,
+                        Stock = RandomStocks(context)
+                    },
+                };
+
+                products.ForEach(p => context.Add(p));
+                await context.SaveChangesAsync();
+
+                var allDevproducts = context.Products.Where(p => p.ProductName.StartsWith("DEV:")).ToList();
+                allDevproducts.ForEach(async p =>
+                {
+                    p.Categories = new List<Category>();
+                    p.Categories = await RandomCategories(context);
+                });
+                await context.SaveChangesAsync();
             }
         }
 
@@ -469,7 +475,7 @@ namespace Mercure.API
             }
         }
 
-        private string RandomProductName()
+        private static string RandomProductName()
         {
             var productNames = new List<string>()
             {
@@ -485,7 +491,7 @@ namespace Mercure.API
             return "DEV:" + productNames[new Random().Next(0, productNames.Count)];
         }
 
-        private string RandomBrandNames()
+        private static string RandomBrandNames()
         {
             var brandNames = new List<string>()
             {
@@ -552,10 +558,10 @@ namespace Mercure.API
             return brandNames[new Random().Next(0, brandNames.Count)];
         }
 
-        private async Task<List<Category>> RandomCategories(MercureContext context)
+        private static async Task<List<Category>> RandomCategories(MercureContext context)
         {
-            Random rand = new Random();
-            int skipper = rand.Next(0, context.Categories.Count());
+            var rand = new Random();
+            var skipper = rand.Next(0, context.Categories.Count());
 
             return context.Categories
                 .Skip(skipper)
@@ -563,13 +569,13 @@ namespace Mercure.API
                 .ToList();
         }
 
-        private Stock RandomStocks(MercureContext context)
+        private static Stock RandomStocks(MercureContext context)
         {
             var dbStocks = context.Stocks.ToList();
             return dbStocks[new Random().Next(0, dbStocks.Count)];
         }
 
-        private int ProductPrice()
+        private static int ProductPrice()
         {
             return new Random().Next(1, 100);
         }
