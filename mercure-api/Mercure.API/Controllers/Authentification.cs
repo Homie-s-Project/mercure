@@ -69,6 +69,13 @@ public class Authentification : BaseController
     }
 
     /// <summary>
+    /// Constructeur pour les tests unitaires
+    /// </summary>
+    public Authentification()
+    {
+    }
+
+    /// <summary>
     /// Permet de se connecter à l'applicaation
     /// </summary>
     /// <returns>La redirection sur le système d'authentification de Microsoft</returns>

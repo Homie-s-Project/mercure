@@ -3,7 +3,7 @@ using NUnit.Framework;
 namespace Mercure.API.Tests.Models;
 
 [TestFixture]
-public class AnimalTEst : AssemblyLoader
+public class AnimalTest : AssemblyLoader
 {
     private const string TYPE_NAME = "animal";
     
