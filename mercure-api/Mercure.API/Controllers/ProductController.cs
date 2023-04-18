@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mercure.API.Context;
 using Mercure.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace Mercure.API.Controllers;
 /// All the routes for the products
 /// </summary>
 [Route("products")]
-public class ProductController : ApiSecurityController
+public class ProductController : ApiNoSecurityController
 {
 
     private readonly MercureContext _context;
@@ -32,6 +33,7 @@ public class ProductController : ApiSecurityController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [AllowAnonymous]
     public async Task<IActionResult> ProductGet(string productId)
     {
         if (string.IsNullOrEmpty(productId))

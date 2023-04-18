@@ -498,7 +498,9 @@ public class Authentification : BaseController
             return NotFound(new ErrorMessage("You don't seem to be connected", StatusCodes.Status404NotFound));
         }
 
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == userContext.UserId);
+        var user = await _context.Users
+            .Include(u => u.Role)
+            .FirstOrDefaultAsync(u => u.UserId == userContext.UserId);
         if (user == null)
         {
             return NotFound(new ErrorMessage("Can't find your account.", StatusCodes.Status404NotFound));

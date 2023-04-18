@@ -16,10 +16,16 @@ public class UserDto
         LastName = user.LastName;
         FirstName = user.FirstName;
         Email = user.Email;
+        
+        if (user.Role != null)
+        {
+            Role = new RoleDto(user.Role);
+        }
     }
 
     public int UserId { get; set; }
     public string LastName { get; set; }
     public string FirstName { get; set; }
     public string Email { get; set; }
+    public RoleDto Role { get; set; }
 }
