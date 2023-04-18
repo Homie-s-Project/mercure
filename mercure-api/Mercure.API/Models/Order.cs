@@ -16,17 +16,22 @@ public class Order
         OrderStatus = orderStatus;
     }
 
+    public Order()
+    {
+    }
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int OrderId { get; set; }
-    public int OrderPrice { get; set; }
+    public long? OrderPrice { get; set; }
     public int OrderTaxPrice { get; set; }
     public int OrderDeliveryPrice { get; set; }
+    public string? SessionId { get; set; }
     public DateTime OrderDate { get; set; }
     // True = payé, False = non payé
     public Boolean OrderStatus { get; set; }
     
-    [ForeignKey("User")] public int UserId { get; set; }
+    [ForeignKey("User")] public int? UserId { get; set; }
     public virtual User User { get; set; }
     
     public  ICollection<OrderProduct> Products { get; set; }

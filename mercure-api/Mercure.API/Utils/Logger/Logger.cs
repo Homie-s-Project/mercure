@@ -119,11 +119,11 @@ public class Logger
     public static void LogInfo(string message) => Log(LogLevel.Info, LogTarget.File, message);
     public static void LogInfo(LogTarget logTarget, string message) => Log(LogLevel.Info, logTarget, message);
 
-    public static void LogWarn(string message) => Log(LogLevel.Info, LogTarget.File, message);
-    public static void LogWarn(LogTarget logTarget, string message) => Log(LogLevel.Info, logTarget, message);
+    public static void LogWarn(string message) => Log(LogLevel.Warn, LogTarget.File, message);
+    public static void LogWarn(LogTarget logTarget, string message) => Log(LogLevel.Warn, logTarget, message);
 
-    public static void LogError(string message) => Log(LogLevel.Info, LogTarget.File, message);
-    public static void LogError(LogTarget logTarget, string message) => Log(LogLevel.Info, logTarget, message);
+    public static void LogError(string message) => Log(LogLevel.Error, LogTarget.File, message);
+    public static void LogError(LogTarget logTarget, string message) => Log(LogLevel.Error, logTarget, message);
     
     private static void WriteColorForWindows(string message, ConsoleColor color)
     {

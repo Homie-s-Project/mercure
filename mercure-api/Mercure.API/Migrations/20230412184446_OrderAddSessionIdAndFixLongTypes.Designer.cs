@@ -3,6 +3,7 @@ using System;
 using Mercure.API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mercure.API.Migrations
 {
     [DbContext(typeof(MercureContext))]
-    partial class MercureContextModelSnapshot : ModelSnapshot
+    [Migration("20230412184446_OrderAddSessionIdAndFixLongTypes")]
+    partial class OrderAddSessionIdAndFixLongTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,7 +143,7 @@ namespace Mercure.API.Migrations
                     b.Property<string>("SessionId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("OrderId");
@@ -353,7 +355,9 @@ namespace Mercure.API.Migrations
                 {
                     b.HasOne("Mercure.API.Models.User", "User")
                         .WithMany("Orders")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

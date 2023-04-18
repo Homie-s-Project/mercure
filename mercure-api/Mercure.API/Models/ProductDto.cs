@@ -45,7 +45,11 @@ public class ProductDto
             }                
         }
     }
-    
+
+    public ProductDto()
+    {
+    }
+
     public int ProductId { get; set; }
     public string ProductBrandName { get; set; }
     public string ProductName { get; set; }

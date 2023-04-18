@@ -14,6 +14,10 @@ public class OrderProduct
         Shipped = shipped;
     }
 
+    public OrderProduct()
+    {
+    }
+
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int OrderProductId { get; set; }
@@ -24,7 +28,7 @@ public class OrderProduct
     [ForeignKey("Order")] public int OrderId { get; set; }
     public virtual Order Order { get; set; }
     
-    public int Quantity { get; set; }
+    public long? Quantity { get; set; }
     // True = livré, False = non livré
     public Boolean Shipped { get; set; }
 }
