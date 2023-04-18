@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -23,6 +23,8 @@ import {
 } from "./interceptors/jwtTokenRequest/jwt-token-header-request-interceptor.service";
 import { ProductComponent } from './components/product/product.component';
 import { TagsComponent } from './components/tags/tags.component';
+import {CartService} from "./services/cart/cart.service";
+import {ProductService} from "./services/product/product.service";
 
 @NgModule({
   declarations: [
@@ -48,7 +50,14 @@ import { TagsComponent } from './components/tags/tags.component';
   ],
   providers: [
     AuthService,
+    ProductService,
     UserService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (cartService: CartService) => () => cartService.ngOnInit(),
+      deps: [CartService],
+      multi: true
+    },
     {
       provide: HTTP_INTERCEPTORS, useClass: JwtTokenHeaderRequestInterceptor, multi: true
     },

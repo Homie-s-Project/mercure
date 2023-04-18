@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { faTag } from '@fortawesome/free-solid-svg-icons';
+import {ICategoriesModel} from "../../models/ICategoriesModel";
 
 @Component({
   selector: 'app-tags',
@@ -10,5 +11,5 @@ export class TagsComponent {
  // Variable fontawesome
  faTag = faTag;
 
- @Input() tags?: string[];
+ @Input() categories?: ICategoriesModel[];
 }
