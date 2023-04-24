@@ -97,7 +97,7 @@ Les url et information comme les paramètres des routes sont disponible en consu
 
 Notre projet utilise  [Docker](https://www.docker.com), pour des questions de simplicité et de temps. Grâce à Docker, nous pouvons transférer un environnement simplement et l'installer sur une autre machine grâce à une commande.
 
-Nous utilisons **4** images dans notre projet avec chacune des images une particularité.
+Nous utilisons **8** images dans notre projet dont 2 qui sont privé.
 
 | Image Docker    | Description         |  URL |
 | ------------------    | --------------- | ----------------|
