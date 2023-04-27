@@ -349,6 +349,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
@@ -359,6 +361,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "500g",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
@@ -369,6 +373,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "200g",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
@@ -379,6 +385,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "200g",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
@@ -389,6 +397,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "200g",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
@@ -399,6 +409,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "200g",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
@@ -409,6 +421,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "200g",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
@@ -419,6 +433,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "200g",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
@@ -429,6 +445,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "200g",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
@@ -439,6 +457,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "200g",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
@@ -449,6 +469,8 @@ namespace Mercure.API
                             ProductBrandName = RandomBrandNames(),
                             ProductPrice = ProductPrice(),
                             ProductDescription = "Description de test",
+                            ProductInfo = "200g",
+                            ProductType = "Product Type",
                             ProductCreationDate = DateTime.Now,
                             ProductLastUpdate = DateTime.Now,
                             Stock = RandomStocks(context)
