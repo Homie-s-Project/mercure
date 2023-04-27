@@ -5,6 +5,7 @@ import { ProductComponent } from './product.component';
 import { ProductService } from 'src/app/services/product/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('ProductComponent', () => {
   let component: ProductComponent;
@@ -13,11 +14,11 @@ describe('ProductComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ ProductComponent ],
-      providers: [ 
-        AppComponent, 
-        ProductService, 
+      providers: [
+        AppComponent,
+        ProductService,
         {
-          provide: ActivatedRoute, 
+          provide: ActivatedRoute,
           useValue: {
             snapshot: {
               paramMap: {
@@ -27,9 +28,9 @@ describe('ProductComponent', () => {
               }
             }
           }
-        } 
+        }
       ],
-      imports: [BrowserAnimationsModule]
+      imports: [BrowserAnimationsModule, HttpClientTestingModule]
     })
     .compileComponents();
 

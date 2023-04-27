@@ -36,13 +36,18 @@ export class CartService implements OnInit {
         this.cart = r;
       })
       .catch(e => {
-        console.log(e);
+        if (!environment.production) {
+          console.log(e);
+        }
+
         if (e.status === 404) {
           this.cart = [];
         }
       })
       .finally(() => {
-        console.log(this.cart);
+        if (!environment.production) {
+          console.log("Cart loaded");
+        }
       });
   }
 
@@ -86,10 +91,10 @@ export class CartService implements OnInit {
       throw new Error("Quantity is not valid");
     }
 
-    let url = environment.apiUrl + `/cart/add/${productId}/${quantity != null ? quantity : ""}${!isLogged && hasCartId ? `?randomId=${this.cartId}` : ''}`;
+    let url = environment.apiUrl + `/cart/add/${productId}${quantity != null ? `?quantity=${quantity}` : ""}${!isLogged && hasCartId ? `?randomId=${this.cartId}` : ''}`;
 
     return new Promise((resolve, reject) => {
-      this.http.get<{ token: string }>(url)
+      this.http.post(url, {})
         .pipe(
           catchError((error) => {
             reject(error);
