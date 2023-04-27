@@ -12,6 +12,8 @@ public class ProductDto
         ProductBrandName = product.ProductBrandName;
         ProductName = product.ProductName;
         ProductDescription = product.ProductDescription;
+        ProductType = product.ProductType;
+        ProductInfo = product.ProductInfo;
         ProductPrice = product.ProductPrice;
         ProductCreationDate = product.ProductCreationDate;
         ProductLastUpdate = product.ProductLastUpdate;
@@ -28,6 +30,8 @@ public class ProductDto
         ProductBrandName = product.ProductBrandName;
         ProductName = product.ProductName;
         ProductDescription = product.ProductDescription;
+        ProductType = product.ProductType;
+        ProductInfo = product.ProductInfo;
         ProductPrice = product.ProductPrice;
         ProductCreationDate = product.ProductCreationDate;
         ProductLastUpdate = product.ProductLastUpdate;
@@ -54,6 +58,15 @@ public class ProductDto
     public string ProductBrandName { get; set; }
     public string ProductName { get; set; }
     public string ProductDescription { get; set; }
+    /// <summary>
+    /// ProductType is a string where you can save the brand of the product
+    /// </summary>
+    public string ProductType { get; set; }
+    
+    /// <summary>
+    /// ProductInfo is a string where you can save weight, size, etc.
+    /// </summary>
+    public string ProductInfo { get; set; }
     public int ProductPrice { get; set; }
     public DateTime ProductCreationDate { get; set; }
     public DateTime ProductLastUpdate { get; set; }
