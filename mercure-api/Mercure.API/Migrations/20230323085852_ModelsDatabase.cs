@@ -175,16 +175,10 @@ namespace Mercure.API.Migrations
                     AnimalCreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     AnimalLastUpdate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     SpeciesId = table.Column<int>(type: "integer", nullable: false),
-                    OrderId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Animal", x => x.AnimalId);
-                    table.ForeignKey(
-                        name: "FK_Animal_Order_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Order",
-                        principalColumn: "OrderId");
                     table.ForeignKey(
                         name: "FK_Animal_Species_SpeciesId",
                         column: x => x.SpeciesId,
@@ -218,11 +212,6 @@ namespace Mercure.API.Migrations
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Animal_OrderId",
-                table: "Animal",
-                column: "OrderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Animal_SpeciesId",

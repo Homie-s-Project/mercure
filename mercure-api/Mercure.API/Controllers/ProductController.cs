@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Mercure.API.Context;
 using Mercure.API.Models;
 using Mercure.API.Utils;
+using Mercure.API.Utils;
 using Mercure.API.Utils.Logger;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -129,17 +129,17 @@ public class ProductController : ApiNoSecurityController
         [FromForm] string categories
         )
     {
-        if (string.IsNullOrEmpty(productName) && productName.Length <= ConstantRules.MaxLengthName)
+        if (string.IsNullOrEmpty(productName) || productName.Length >= ConstantRules.MaxLengthName)
         {
             return BadRequest(new ErrorMessage("Your product need a name", StatusCodes.Status400BadRequest));
         }
-        
-        if (string.IsNullOrEmpty(productBrandName))
+
+        if (string.IsNullOrEmpty(productBrandName) || productBrandName.Length >= ConstantRules.MaxLengthName)
         {
             return BadRequest(new ErrorMessage("You need to give us a brand name", StatusCodes.Status400BadRequest));
         }
         
-        if (string.IsNullOrEmpty(productDescription) && productDescription.Length <= ConstantRules.MaxLengthDescription)
+        if (string.IsNullOrEmpty(productDescription) || productDescription.Length >= ConstantRules.MaxLengthDescription)
         {
             return BadRequest(new ErrorMessage("You need a description for your product", StatusCodes.Status400BadRequest));
         }
@@ -226,12 +226,12 @@ public class ProductController : ApiNoSecurityController
             return BadRequest(new ErrorMessage("You need to provide an id for the product you want to update", StatusCodes.Status400BadRequest));
         }
         
-        if (productName.Length <= ConstantRules.MaxLengthName)
+        if (productName.Length >= ConstantRules.MaxLengthName)
         {
             return BadRequest(new ErrorMessage("Your product name is too long, max " + ConstantRules.MaxLengthName + " character", StatusCodes.Status400BadRequest));
         }
         
-        if (productDescription.Length <= ConstantRules.MaxLengthDescription)
+        if (productDescription.Length >= ConstantRules.MaxLengthDescription)
         {
             return BadRequest(new ErrorMessage("Your description is too long, max " + ConstantRules.MaxLengthDescription + " charaacter", StatusCodes.Status400BadRequest));
         }
@@ -257,6 +257,12 @@ public class ProductController : ApiNoSecurityController
             return Unauthorized(new ErrorMessage("You cannot create an product", StatusCodes.Status401Unauthorized));
         }
 
+        var stock = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Stocks, s => s.StockId == stockId);
+        if (stock == null)
+        {
+            return BadRequest(new ErrorMessage("You need to specify a stock", StatusCodes.Status400BadRequest));
+        }
+
         bool isProductIdParsed = int.TryParse(productId, out int productIdParsed);
         if (!isProductIdParsed)
         {
@@ -266,7 +272,7 @@ public class ProductController : ApiNoSecurityController
         var productUpdatedWanted = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Products, p => p.ProductId == productIdParsed);
         if (productUpdatedWanted == null)
         {
-            return BadRequest(new ErrorMessage("We cannot found the product with this id: " + productIdParsed, StatusCodes.Status400BadRequest));
+            return BadRequest(new ErrorMessage("We cannot find the product with this id: " + productIdParsed, StatusCodes.Status400BadRequest));
         }
         
         if (!string.IsNullOrEmpty(categories))
@@ -291,6 +297,12 @@ public class ProductController : ApiNoSecurityController
                 productUpdatedWanted.Categories.Add(categoryDb);
             }
         }
+
+        productUpdatedWanted.ProductName = productName;
+        productUpdatedWanted.ProductBrandName = productBrandName;
+        productUpdatedWanted.ProductDescription = productDescription;
+        productUpdatedWanted.ProductPrice = productPrice;
+        productUpdatedWanted.StockId = stockId;
 
         _context.Products.Update(productUpdatedWanted);
         await _context.SaveChangesAsync();

@@ -3,6 +3,7 @@ using System;
 using Mercure.API.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mercure.API.Migrations
 {
     [DbContext(typeof(MercureContext))]
-    partial class MercureContextModelSnapshot : ModelSnapshot
+    [Migration("20230511090819_AnimalRemovedOrderId")]
+    partial class AnimalRemovedOrderId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,12 +65,7 @@ namespace Mercure.API.Migrations
                     b.Property<int>("AnimalPrice")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("OrderId")
-                        .HasColumnType("integer");
-
                     b.HasKey("AnimalId");
-
-                    b.HasIndex("OrderId");
 
                     b.ToTable("Animals");
                 });
@@ -348,13 +345,6 @@ namespace Mercure.API.Migrations
                         .HasForeignKey("ProductsProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Mercure.API.Models.Animal", b =>
-                {
-                    b.HasOne("Mercure.API.Models.Order", null)
-                        .WithMany("Animals")
-                        .HasForeignKey("OrderId");
                 });
 
             modelBuilder.Entity("Mercure.API.Models.AnimalSpecies", b =>

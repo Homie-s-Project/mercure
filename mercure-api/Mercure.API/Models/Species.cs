@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,4 +15,7 @@ public class Species
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int SpeciesId { get; set; }
     public string SpeciesName { get; set; }
+
+    public ICollection<AnimalSpecies> AnimalSpecies { get; set; }
+
 }

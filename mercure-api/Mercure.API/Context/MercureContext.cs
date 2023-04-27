@@ -49,4 +49,6 @@ public class MercureContext : DbContext
     public DbSet<Species> Speciess { get; set; }
     public DbSet<Stock> Stocks { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<AnimalSpecies> AnimalSpecies { get; set; }
+
 }

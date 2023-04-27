@@ -360,10 +360,74 @@ namespace Mercure.API
                     });
                     await context.SaveChangesAsync();
 
+
+                    // DEV Animals
+                    var devAnimals = context.Animals.ToList();
+                    if (devAnimals.Count() > 0)
+                    {
+                        Logger.LogInfo("Suppression des animaux de dev de la table Animals");
+                        devAnimals.ForEach(a => context.Remove(a));
+                        await context.SaveChangesAsync();
+                    }
+                    List<Animal> animals = new List<Animal> {
+                        new Animal("Pan-di", DateTime.Parse("2011-01-28T17:18:39.840229+02:00"), "White and grey", 1000000, DateTime.Now, DateTime.Now),
+                        new Animal("Noisette", DateTime.Parse("2011-05-12T17:18:39.840229+02:00"), "Red", 1000000, DateTime.Now, DateTime.Now),
+                        new Animal("Charlie", DateTime.Parse("2012-07-08T17:18:39.840229+02:00"), "Black", 1000000, DateTime.Now, DateTime.Now),
+                        new Animal("Ernesto", DateTime.Parse("2001-01-28T17:18:39.840229+02:00"), "Blue", 1000000, DateTime.Now, DateTime.Now),
+                        new Animal("Ulysse", DateTime.Parse("2010-02-14T17:18:39.840229+02:00"), "Yellow and purple", 1000000, DateTime.Now, DateTime.Now)
+                    };
+                    
+                    await context.Animals.AddRangeAsync(animals);
+                    await context.SaveChangesAsync();
+
+                    // DEV Species
+                    var devSpecies = context.Speciess.ToList();
+                    if (devSpecies.Count() > 0)
+                    {
+                        Logger.LogInfo("Suppression des espèces de dev de la table Species");
+                        devSpecies.ForEach(s => context.Remove(s));
+                        await context.SaveChangesAsync();
+                    }
+                    List<Species> species = new List<Species>
+                    {
+                        new Species("Labrador"),
+                        new Species("Terrier du tibet"),
+                        new Species("Berger allemand"),
+                        new Species("Bouledogue français"),
+                        new Species("Cocker"),
+                        new Species("Cavalier King Charles")
+                    };
+
+                    await context.Speciess.AddRangeAsync(species);
+                    await context.SaveChangesAsync();
+
+                    // DEV AnimalSpecies
+                    var devAnimalSpecies = await context.Speciess.ToListAsync();
+                    Logger.LogInfo("Il y a '" + devAnimalSpecies.Count + "' laision(s) qui ont été trouvé entre les animaux et les races.");
+                    
+                    if (devAnimalSpecies.Count() > 0)
+                    {
+                        Logger.LogInfo("Suppression des relations animaux - espèces de dev de la table AnimalSpecies");
+                        devAnimalSpecies.ForEach(a => context.Remove(a));
+                        await context.SaveChangesAsync();
+                    }
+
+
+                    Logger.LogInfo("Début de la création des liaisons entre les animaux et races");
+                    var animalSpecies = await context.Animals.ToListAsync();
+                    animalSpecies.ForEach((speciesAnimal) => {
+                        var animalSpecies = new AnimalSpecies();
+                        animalSpecies.Animal = speciesAnimal;
+                        animalSpecies.Species = randomSpecies(context);
+                    });
+
+                    await context.SaveChangesAsync();
+
                     Logger.LogInfo("Fin du remplissage de la base de données");
                 }
             }
         }
+
 
         private static void OpenBrowser(string url)
         {
@@ -496,6 +560,18 @@ namespace Mercure.API
                 .Skip(skipper)
                 .Take(3)
                 .ToList();
+        }
+
+
+        private Species randomSpecies(MercureContext context)
+        {
+            Random rand = new Random();
+            int skipper = rand.Next(0, context.Categories.Count());
+
+            return context.Speciess
+                .Skip(skipper)
+                .Take(1)
+                .FirstOrDefault();
         }
 
         private Stock RandomStocks(MercureContext context)

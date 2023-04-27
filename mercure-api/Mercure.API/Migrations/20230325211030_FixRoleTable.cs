@@ -9,10 +9,6 @@ namespace Mercure.API.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Animal_Order_OrderId",
-                table: "Animal");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Animal_Species_SpeciesId",
                 table: "Animal");
 
@@ -133,11 +129,6 @@ namespace Mercure.API.Migrations
                 table: "Animals",
                 newName: "IX_Animals_SpeciesId");
 
-            migrationBuilder.RenameIndex(
-                name: "IX_Animal_OrderId",
-                table: "Animals",
-                newName: "IX_Animals_OrderId");
-
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Stocks",
                 table: "Stocks",
@@ -177,13 +168,6 @@ namespace Mercure.API.Migrations
                 name: "PK_Animals",
                 table: "Animals",
                 column: "AnimalId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Animals_Orders_OrderId",
-                table: "Animals",
-                column: "OrderId",
-                principalTable: "Orders",
-                principalColumn: "OrderId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Animals_Speciess_SpeciesId",
@@ -251,10 +235,6 @@ namespace Mercure.API.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Animals_Orders_OrderId",
-                table: "Animals");
-
             migrationBuilder.DropForeignKey(
                 name: "FK_Animals_Speciess_SpeciesId",
                 table: "Animals");
@@ -376,11 +356,6 @@ namespace Mercure.API.Migrations
                 table: "Animal",
                 newName: "IX_Animal_SpeciesId");
 
-            migrationBuilder.RenameIndex(
-                name: "IX_Animals_OrderId",
-                table: "Animal",
-                newName: "IX_Animal_OrderId");
-
             migrationBuilder.AddPrimaryKey(
                 name: "PK_Role",
                 table: "Role",
@@ -420,13 +395,6 @@ namespace Mercure.API.Migrations
                 name: "PK_Animal",
                 table: "Animal",
                 column: "AnimalId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Animal_Order_OrderId",
-                table: "Animal",
-                column: "OrderId",
-                principalTable: "Order",
-                principalColumn: "OrderId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Animal_Species_SpeciesId",
