@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { UserModel } from 'src/app/models/UserModel';
-import { AuthService } from 'src/app/services/auth/auth.service';
+import {UserModel} from 'src/app/models/UserModel';
 import {UserService} from "../../services/user/user.service";
 
 @Component({
@@ -9,16 +8,25 @@ import {UserService} from "../../services/user/user.service";
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  currentUser: UserModel = {userId: 0, firstName: 'Loading...', lastName: 'Loading...', email: 'Loading...'};
+  currentUser: UserModel = {
+    userId: 0,
+    firstName: 'Loading...',
+    lastName: 'Loading...',
+    email: 'Loading...',
+    role: {roleId: 0, roleName: "Loading...", roleNumber: -1}
+  };
+
   isUserLoading: boolean = true;
   orderIsShow = false;
 
-  constructor(private userService: UserService  ) {}
+  constructor(private userService: UserService) {
+  }
 
-  profilShow(){
+  profilShow() {
     this.orderIsShow = false;
   }
-  orderShow(){
+
+  orderShow() {
     this.orderIsShow = true;
   }
 
