@@ -31,7 +31,7 @@ public class CartController : ApiNoSecurityController
     /// Get the cart of the user
     /// </summary>
     /// <returns></returns>
-    [HttpGet("")]
+    [HttpGet]
     public IActionResult GetCart(string randomId)
     {
         var userContext = (User) HttpContext.Items["User"];
@@ -68,7 +68,7 @@ public class CartController : ApiNoSecurityController
     /// <param name="randomId"></param>
     /// <param name="quantity"></param>
     /// <returns></returns>
-    [HttpPost("/add/{productId}")]
+    [HttpPost("add/{productId}")]
     public async Task<IActionResult> AddProductCart(string productId, string randomId, string quantity = "1")
     {
         var userContext = (User) HttpContext.Items["User"];
@@ -141,7 +141,7 @@ public class CartController : ApiNoSecurityController
     /// <param name="productId"></param>
     /// <param name="randomId"></param>
     /// <returns></returns>
-    [HttpDelete("/remove/{productId}")]
+    [HttpDelete("remove/{productId}")]
     public async Task<IActionResult> RemoveProductCart(string productId, string randomId)
     {
         var userContext = (User) HttpContext.Items["User"];

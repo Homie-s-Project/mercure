@@ -33,7 +33,6 @@ public class ProductController : ApiNoSecurityController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
-    [AllowAnonymous]
     public async Task<IActionResult> ProductGet(string productId)
     {
         if (string.IsNullOrEmpty(productId))

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Mercure.API.Controllers;
 
-[Route("/routes")]
+[Route("/roles")]
 public class RoleController : ApiSecurityController
 {
     private readonly MercureContext _context;
@@ -51,7 +51,7 @@ public class RoleController : ApiSecurityController
     /// Get one role by id
     /// </summary>
     /// <returns></returns>
-    [HttpGet("/{roleId}")]
+    [HttpGet("{roleId}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
