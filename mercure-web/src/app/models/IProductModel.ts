@@ -7,8 +7,8 @@ export interface IProductModel {
   productBrandName: string;
   productDescription: string;
   productPrice: number;
-  productType?: string;
-  productWeight?: number;
+  productType: string;
+  productInfo: string;
   productCreationDate?: Date;
   productLastUpdate?: Date;
   stock?: IStockModel;
