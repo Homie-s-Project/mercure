@@ -277,7 +277,7 @@ public class ShoppingController : ApiNoSecurityController
             }
 
             products = products.Where(p => p.ProductPrice >= minPriceParsed);
-        }
+        }4
 
         if (!string.IsNullOrEmpty(maxPrice))
         {
@@ -293,8 +293,9 @@ public class ShoppingController : ApiNoSecurityController
         if (products.Any())
         {
             var responseProduct = products
+                .Skip((pageParsed > 0 ? pageParsed : 0) * pageSizeParsed)
+                .Take(pageSizeParsed)
                 .Include(p => p.Categories)
-                .Take(30)
                 .Select(p => new ProductDto(p, true))
                 .ToList();
             

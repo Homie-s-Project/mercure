@@ -3,6 +3,7 @@ import {IPaginationProductModel} from "../../models/IPaginationProductModel";
 import {environment} from "../../../environments/environment";
 import {SearchService} from "../../services/search/search.service";
 import {ActivatedRoute, Router} from "@angular/router";
+import {interval, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-search',
@@ -22,9 +23,21 @@ export class SearchComponent implements OnInit {
   isLastPage = false;
   isFirstPage = true;
   search: string = "";
+  messageError: string = "";
+  subscriptionErrorTimer!: Subscription;
+  noProductFound: boolean = false
+  // in seconds
+  private TIME_BEFORE_REDIRECT: number = 10;
+  secondBeforeRedirect: number = this.TIME_BEFORE_REDIRECT;
 
   constructor(private searchService: SearchService, private route: ActivatedRoute, private router: Router) {
-    this.search = this.route.snapshot.paramMap.get('searchValue') ?? '';
+    this.route.queryParams
+      .subscribe(params => {
+        console.log(params)
+        this.search = params['q'].trim()
+      });
+
+    console.log(this.search)
 
     if (!this.search) {
       this.router.navigate(['/']);
@@ -39,15 +52,29 @@ export class SearchComponent implements OnInit {
         this.productsPaginated = data;
       })
       .catch((error) => {
-      this.hasProductsError = true;
+        if (!environment.production) {
+          console.error(error)
+        }
 
-      if (!environment.production) {
-        console.error(error)
-      }
+        this.noProductFound = error.status === 404;
 
-      // Afficher une erreur avec un modal
-      // this.modalService.open(error)
-    })
+        if (error.status !== 404) {
+          this.hasProductsError = true;
+
+          this.secondBeforeRedirect = 10;
+
+          this.subscriptionErrorTimer = interval(1000)
+            .subscribe(x => {
+              this.secondBeforeRedirect -= 1;
+            })
+
+          setTimeout(() => {
+            this.router.navigate(["/"]);
+          }, this.TIME_BEFORE_REDIRECT * 1_000);
+
+          this.messageError = error.error.message;
+        }
+      })
       .finally(() => {
         this.isLoading = false;
         this.checkIfFirstPage();
@@ -90,7 +117,7 @@ export class SearchComponent implements OnInit {
   }
 
   checkIfLastPage() {
-    if (this.productsPaginated && (this.pageIndex+1) === this.productsPaginated?.totalPages) {
+    if (this.productsPaginated && (this.pageIndex + 1) === this.productsPaginated?.totalPages) {
       this.isLastPage = true;
     }
   }
