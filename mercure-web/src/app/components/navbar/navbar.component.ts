@@ -60,4 +60,8 @@ export class NavbarComponent implements AfterViewInit {
         this.autocompleteSuggestions = res;
       });
   }
+
+  clearInput() {
+    this.autocompleteSuggestions = [];
+  }
 }

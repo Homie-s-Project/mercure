@@ -36,7 +36,12 @@ const routes: Routes = [
   },
   {
     path: 'search',
-    component: SearchComponent
+    children: [
+      {
+        path: ':searchValue',
+        component: SearchComponent
+      },
+    ]
   },
   {
     path: '**',

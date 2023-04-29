@@ -87,12 +87,14 @@ nav {
   background: vars.$lemon-chiffon;
   color: vars.$bole;
   margin-top: 5px;
-  margin: 6px -9px 0 -9px;
+  margin: -5px -9px 0 -9px;
   box-shadow: 0 1px 5px 3px rgba(0,0,0,0.12);
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 
   .suggestion {
+    background: vars.$lemon-chiffon;
+    color: vars.$bole;
     display: block;
     list-style: none;
     padding: 8px 12px;
