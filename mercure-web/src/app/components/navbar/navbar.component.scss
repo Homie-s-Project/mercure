@@ -30,6 +30,7 @@ nav {
             }
         }
         .search-button {
+          cursor: pointer;
             font-size: 18px;
             border-style: none;
             color: vars.$dark-green;

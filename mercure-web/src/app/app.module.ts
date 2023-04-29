@@ -26,6 +26,8 @@ import {TagsComponent} from './components/tags/tags.component';
 import {CartService} from "./services/cart/cart.service";
 import {ProductService} from "./services/product/product.service";
 import {ProductsPaginationComponent} from './components/products-pagination/products-pagination.component';
+import { SearchComponent } from './components/search/search.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -40,7 +42,8 @@ import {ProductsPaginationComponent} from './components/products-pagination/prod
     LoadingComponent,
     ProductComponent,
     TagsComponent,
-    ProductsPaginationComponent
+    ProductsPaginationComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,8 @@ import {ProductsPaginationComponent} from './components/products-pagination/prod
     AppRoutingModule,
     HttpClientModule,
     FontAwesomeModule,
-    ShareModule
+    ShareModule,
+    FormsModule
   ],
   providers: [
     AuthService,
