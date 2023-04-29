@@ -98,7 +98,10 @@ namespace Mercure.API
                 ? Configuration.GetConnectionString("MercureDb")
                 : Configuration.GetConnectionString("MercureDbNoDocker");
 
-            services.AddDbContext<MercureContext>(opts => { opts.UseNpgsql(connectionString); });
+            services.AddDbContext<MercureContext>(opts =>
+            {
+                opts.UseNpgsql(connectionString);
+            });
 
             Logger.LogInfo(LogTarget.Database, "Méthode de connexion à la base de données : " +
                                                   (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
@@ -341,141 +344,11 @@ namespace Mercure.API
 
                     // Création des produits de dev
                     Logger.LogInfo("Création des produits de dev...");
-                    var products = new List<Product>()
+                    var products = new List<Product>();
+                    for (var i = 0; i < 100; i++)
                     {
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "500g",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "200g",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "200g",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "200g",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "200g",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "200g",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "200g",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "200g",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "200g",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                        new Product()
-                        {
-                            ProductName = RandomProductName(),
-                            ProductBrandName = RandomBrandNames(),
-                            ProductPrice = ProductPrice(),
-                            ProductDescription = "Description de test",
-                            ProductInfo = "200g",
-                            ProductType = "Product Type",
-                            ProductCreationDate = DateTime.Now,
-                            ProductLastUpdate = DateTime.Now,
-                            Stock = RandomStocks(context)
-                        },
-                    };
+                        products.Add(GenerateProduct(context));
+                    }
 
                     products.ForEach(p => context.Add(p));
                     await context.SaveChangesAsync();
@@ -487,6 +360,8 @@ namespace Mercure.API
                         p.Categories = await RandomCategories(context);
                     });
                     await context.SaveChangesAsync();
+                    
+                    Logger.LogInfo("Fin du remplissage de la base de données");
                 }
             }
         }
@@ -614,6 +489,22 @@ namespace Mercure.API
         private int ProductPrice()
         {
             return new Random().Next(1, 100);
+        }
+
+        private Product GenerateProduct(MercureContext context)
+        {
+            return new Product()
+            {
+                ProductName = RandomProductName(),
+                ProductBrandName = RandomBrandNames(),
+                ProductPrice = ProductPrice(),
+                ProductDescription = "Description de test",
+                ProductInfo = "",
+                ProductType = "Product Type",
+                ProductCreationDate = DateTime.Now,
+                ProductLastUpdate = DateTime.Now,
+                Stock = RandomStocks(context)
+            };
         }
     }
 }

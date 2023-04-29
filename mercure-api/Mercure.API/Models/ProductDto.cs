@@ -54,6 +54,24 @@ public class ProductDto
     {
     }
 
+    protected ProductDto(ProductDto product)
+    {
+        ProductId = product.ProductId;
+        ProductBrandName = product.ProductBrandName;
+        ProductName = product.ProductName;
+        ProductDescription = product.ProductDescription;
+        ProductType = product.ProductType;
+        ProductInfo = product.ProductInfo;
+        ProductPrice = product.ProductPrice;
+        ProductCreationDate = product.ProductCreationDate;
+        ProductLastUpdate = product.ProductLastUpdate;
+        
+        if (product.Stock != null)
+        {
+            Stock = new StockDto(product.Stock);
+        }
+    }
+
     public int ProductId { get; set; }
     public string ProductBrandName { get; set; }
     public string ProductName { get; set; }

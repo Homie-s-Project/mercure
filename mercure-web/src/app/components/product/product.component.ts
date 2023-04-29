@@ -28,12 +28,12 @@ export class ProductComponent implements OnInit {
   faFaceFrown = faFaceFrown;
 
   collapsed: Boolean = false;
-  currentId?: number; 
+  currentId?: number;
   currentProduct?: IProductModel;
 
   constructor (public productService: ProductService, private route: ActivatedRoute) { }
-  
-  ngOnInit(): void {
+
+  async ngOnInit(): Promise<void> {
     var productRoute = this.route.snapshot.paramMap.get('productId');
 
     if (productRoute == undefined || null) {
@@ -43,15 +43,15 @@ export class ProductComponent implements OnInit {
       this.currentId = +productRoute;
     }
 
-    this.currentProduct = this.productService.getProductById(this.currentId);
+    this.currentProduct = await this.productService.getProductById(this.currentId);
   }
 
   toggleCollapse() {
     this.collapsed = !this.collapsed;
-    
+
     console.log(this.collapsed);
 
-    if (this.collapsed) 
+    if (this.collapsed)
       this.faCaret = faCaretRight;
     else
       this.faCaret = faCaretDown;

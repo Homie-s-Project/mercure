@@ -1,6 +1,6 @@
 import {APP_INITIALIZER, NgModule} from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -21,10 +21,11 @@ import {UserService} from "./services/user/user.service";
 import {
   JwtTokenHeaderRequestInterceptor
 } from "./interceptors/jwtTokenRequest/jwt-token-header-request-interceptor.service";
-import { ProductComponent } from './components/product/product.component';
-import { TagsComponent } from './components/tags/tags.component';
+import {ProductComponent} from './components/product/product.component';
+import {TagsComponent} from './components/tags/tags.component';
 import {CartService} from "./services/cart/cart.service";
 import {ProductService} from "./services/product/product.service";
+import {ProductsPaginationComponent} from './components/products-pagination/products-pagination.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import {ProductService} from "./services/product/product.service";
     LandingComponent,
     LoadingComponent,
     ProductComponent,
-    TagsComponent
+    TagsComponent,
+    ProductsPaginationComponent
   ],
   imports: [
     BrowserModule,

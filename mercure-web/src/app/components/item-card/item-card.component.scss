@@ -1,55 +1,69 @@
 @use '/src/styles/variables.scss' as vars;
 
 :host {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 270px;
-    margin: 15px;
-    padding: 30px;
-    border: 1px solid vars.$bole;
-    border-radius: 15px;
-    a {
-        text-decoration: none;
-        color: vars.$cal-poly-green;
-        .item-image {
-            width: 210px;
-            height: 210px;
-            margin-bottom: 24px;
-        }
-        .card-content {
-            .brand {
-                font-size: 24px;
-                margin-bottom: 15px;
-            }
-            .card-data {
-                .price{
-                    font-size: 21px;
-                    font-weight: bold;
-                    margin-bottom: 15px;
-                }
-            }
-        }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 270px;
+  margin: 15px;
+  padding: 30px;
+  border: 1px solid vars.$bole;
+  border-radius: 15px;
+
+  a {
+    text-decoration: none;
+    color: vars.$cal-poly-green;
+
+    .item-image {
+      width: 210px;
+      height: 210px;
+      margin-bottom: 24px;
     }
-    .add-to-cart {
-        width: 100%;
-        height: 42px;
-        color: vars.$lemon-chiffon;
-        text-decoration: none;
-        border-style: none;
-        border-radius: 5px;
-        margin-top: 24px;
-        background-color: vars.$dark-moss-green;
-        &:active {
-            transform: scale(0.95);
-            background-color: darken(vars.$dark-moss-green, 7%);
+
+    .card-content {
+      .product-info {
+        margin-bottom: 25px;
+      }
+
+      .brand {
+        font-size: 24px;
+        margin-bottom: 5px;
+      }
+
+      .card-data {
+        margin-top: 5px;
+
+        .price {
+          font-size: 21px;
+          font-weight: bold;
+          margin-bottom: 15px;
         }
-        &:disabled {
-            background-color: darken(vars.$dark-moss-green, 7%);
-        }
-        fa-icon {
-            vertical-align: middle;
-            font-size: 21px;
-        }
+      }
     }
+  }
+
+  .add-to-cart {
+    width: 100%;
+    height: 42px;
+    color: vars.$lemon-chiffon;
+    text-decoration: none;
+    border-style: none;
+    border-radius: 5px;
+    margin-top: 24px;
+    background-color: vars.$dark-moss-green;
+
+    &:active {
+      transform: scale(0.95);
+      background-color: darken(vars.$dark-moss-green, 7%);
+    }
+
+    &:disabled {
+      background-color: darken(vars.$dark-moss-green, 7%);
+    }
+
+    fa-icon {
+      vertical-align: middle;
+      font-size: 21px;
+    }
+  }
 }
