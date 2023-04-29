@@ -34,6 +34,9 @@ export class NavbarComponent implements AfterViewInit {
         if (this.searchValue.length > 0) {
           this.autocomplete();
         }
+        else {
+          this.autocompleteSuggestions = [];
+        }
       })
   }
 

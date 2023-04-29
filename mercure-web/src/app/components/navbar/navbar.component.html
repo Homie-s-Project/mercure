@@ -1,8 +1,13 @@
 <nav>
   <a class="home-button" [routerLink]="['/']"><h1 class="app-title">MERCURE</h1></a>
-  <div class="search-bar-container">
+  <div [className]="autocompleteSuggestions.length > 0 ? 'active-suggestion search-bar-container' : 'search-bar-container'">
     <input type="text" class="search-input" (keydown.enter)="search()" (keyup)="onChangeInput($event.target)"
-           placeholder="Rechercher">
+           placeholder="Rechercher..." autocomplete="off">
+    <div class="suggestions" *ngIf="autocompleteSuggestions.length > 0">
+      <li class="suggestion" *ngFor="let suggestion of autocompleteSuggestions">
+        {{suggestion}}
+      </li>
+    </div>
     <button class="search-button">
       <fa-icon class="navbar-icon" (click)="search()" [icon]="faMagnifyingGlass"></fa-icon>
     </button>

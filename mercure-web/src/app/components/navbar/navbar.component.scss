@@ -1,57 +1,109 @@
 @use '/src/styles/variables.scss' as vars;
 
 nav {
-    height: 78px;
+  height: 78px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 45px 9px 45px;
+  color: vars.$lemon-chiffon;
+  background: linear-gradient(160deg, vars.$dark-moss-green, vars.$cal-poly-green);
+  gap: 30px;
+  display: flex;
+
+  .search-bar-container {
+    width: 75%;
+    height: 45px;
+    align-items: center;
+    padding: 0 9px 0 9px;
+    border-radius: 5px;
+    background-color: vars.$lemon-chiffon;
+    gap: 5px;
+    box-shadow: 0 1px 5px 3px rgba(0,0,0,0.12);
+    position: relative;
+    display: block;
+
+    .search-input {
+      line-height: 40px;
+      width: 100%;
+      font-size: 18px;
+      padding: 5px;
+      border-style: none;
+      color: vars.$dark-green;
+      background-color: transparent;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .search-button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 55px;
+      width: 55px;
+      text-align: center;
+      line-height: 55px;
+      cursor: pointer;
+      font-size: 18px;
+      border-style: none;
+      color: vars.$dark-green;
+      background-color: transparent;
+    }
+  }
+
+  .nav-button-container {
+    min-width: 75px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 9px 45px 9px 45px;
+
+    .nav-button {
+      font-size: 24px;
+    }
+  }
+
+  h1 {
     color: vars.$lemon-chiffon;
-    background: linear-gradient(160deg, vars.$dark-moss-green, vars.$cal-poly-green);
-    gap: 30px;
-    .search-bar-container {
-        width: 70%;
-        height: 45px;
-        display: flex;
-        align-items: center;
-        padding: 0 9px 0 9px;
-        border-radius: 5px;
-        background-color: vars.$lemon-chiffon;
-        gap: 5px;
-        .search-input {
-            width: 100%;
-            font-size: 18px;
-            padding: 5px;
-            border-style: none;
-            color: vars.$dark-green;
-            background-color: transparent;
-            &:focus {
-                outline: none;
-            }
-        }
-        .search-button {
-          cursor: pointer;
-            font-size: 18px;
-            border-style: none;
-            color: vars.$dark-green;
-            background-color: transparent;
-        }
+    //font-family: 'Montserrat', 'sans-serif';
+    font-size: 42px;
+  }
+
+  a {
+    color: vars.$lemon-chiffon;
+    text-decoration: none;
+  }
+}
+
+.active-suggestion {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.suggestions {
+  padding: 10px 8px;
+  opacity: 1;
+  pointer-events: auto;
+  overflow-y: auto;
+  background: vars.$lemon-chiffon;
+  color: vars.$bole;
+  margin-top: 5px;
+  margin: 6px -9px 0 -9px;
+  box-shadow: 0 1px 5px 3px rgba(0,0,0,0.12);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  .suggestion {
+    display: block;
+    list-style: none;
+    padding: 8px 12px;
+    width: 100%;
+    cursor: default;
+    border-radius: 3px;
+    transition: .5s;
+
+    &:hover {
+      background: #f3e9c0;
+      cursor: pointer;
     }
-    .nav-button-container {
-        min-width: 75px;
-        display: flex;
-        justify-content: space-between;
-        .nav-button {
-            font-size: 24px;
-        }
-    }
-    h1 {
-        color: vars.$lemon-chiffon;
-        //font-family: 'Montserrat', 'sans-serif';
-        font-size: 42px;
-    }
-    a {
-        color: vars.$lemon-chiffon;
-        text-decoration: none;
-    }
+  }
 }
