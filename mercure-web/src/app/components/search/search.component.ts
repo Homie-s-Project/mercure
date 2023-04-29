@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {IPaginationProductModel} from "../../models/IPaginationProductModel";
 import {environment} from "../../../environments/environment";
 import {SearchService} from "../../services/search/search.service";
@@ -10,7 +10,8 @@ import {interval, Subscription} from "rxjs";
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy, OnChanges {
+  subscriptions: Subscription[] = []
 
   isLoading = true;
 
@@ -31,22 +32,38 @@ export class SearchComponent implements OnInit {
   secondBeforeRedirect: number = this.TIME_BEFORE_REDIRECT;
 
   constructor(private searchService: SearchService, private route: ActivatedRoute, private router: Router) {
-    this.route.queryParams
-      .subscribe(params => {
-        console.log(params)
-        this.search = params['q'].trim()
-      });
+    this.subscriptions.push(
+      this.route.queryParams
+        .subscribe(params => {
+          this.search = params['q'].trim();
 
-    console.log(this.search)
+          if (!this.search) {
+            this.router.navigate(['/']);
+          }
 
+          this.searchProduct();
+        })
+    );
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
     if (!this.search) {
       this.router.navigate(['/']);
     }
   }
 
+  ngOnDestroy(): void {this.subscriptions.forEach(s => s.unsubscribe());
+    if (this.hasProductsError) {
+      this.subscriptionErrorTimer.unsubscribe();
+    }
+  }
+
   ngOnInit(): void {
     this.isLoading = true;
+    this.searchProduct();
+  }
 
+  searchProduct() {
     this.searchService.search(this.search, undefined, this.pageIndex)
       .then((data) => {
         this.productsPaginated = data;
