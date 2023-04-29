@@ -223,16 +223,30 @@ public class ShoppingController : ApiNoSecurityController
     /// <param name="category">Select a category</param>
     /// <param name="minPrice">The minimum price of the searched product</param>
     /// <param name="maxPrice">The maximum price of the searched product</param>
+    /// <param name="pageIndex">The page index</param>
+    /// <param name="pageSize">Element shown per page</param>
     /// <returns></returns>
     [HttpGet("search/{search}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Product>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationProduct))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
-    public IActionResult Search(string search, string brand, string category, string minPrice, string maxPrice)
+    public async Task<IActionResult> Search(string search, string brand, string category, string minPrice, string maxPrice, string pageIndex = "1", string pageSize = "15")
     {
         if (string.IsNullOrEmpty(search))
         {
             return BadRequest(new ErrorMessage("Search is empty", StatusCodes.Status400BadRequest));
+        }
+        
+        var isPageParsed = int.TryParse(pageIndex, out var pageParsed);
+        if (!isPageParsed)
+        {
+            return BadRequest(new ErrorMessage("Page number is not valid", StatusCodes.Status400BadRequest));
+        }
+
+        var isPageSizeParsed = int.TryParse(pageSize, out var pageSizeParsed);
+        if (!isPageSizeParsed)
+        {
+            return BadRequest(new ErrorMessage("Page size is not valid", StatusCodes.Status400BadRequest));
         }
 
         // Trim the search param
@@ -283,8 +297,12 @@ public class ShoppingController : ApiNoSecurityController
                 .Take(30)
                 .Select(p => new ProductDto(p, true))
                 .ToList();
+            
+            var totalProducts = await products.CountAsync();
+            var totalPages = (int) Math.Ceiling((double) totalProducts / pageSizeParsed);
+            var paginationProduct = new PaginationProduct(responseProduct, pageParsed, pageSizeParsed, totalPages, totalProducts);
 
-            return Ok(responseProduct);
+            return Ok(paginationProduct);
         }
 
         return NotFound(new ErrorMessage("No product found.", StatusCodes.Status404NotFound));

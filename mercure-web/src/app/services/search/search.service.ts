@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {catchError} from "rxjs";
 import {SearchFilter} from "../../models/ISearchFilter";
+import {IPaginationProductModel} from "../../models/IPaginationProductModel";
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,8 @@ export class SearchService {
     return this.http.get<string[]>(environment.apiUrl + `/shopping/autocomplete?value=${query}`);
   }
 
-  search(query: string, filter?: SearchFilter) {
-    return new Promise((resolve, reject) => {
+  search(query: string, filter?: SearchFilter, pageIndex?: number, pageSize = 10): Promise<IPaginationProductModel> {
+    return new Promise<IPaginationProductModel>((resolve, reject) => {
 
       let queryString = '';
       if (filter) {
@@ -36,7 +37,7 @@ export class SearchService {
         }
       }
 
-      this.http.get(environment.apiUrl + `/shopping/search/${query}${filter != null ? queryString : ''}`)
+      this.http.get<IPaginationProductModel>(environment.apiUrl + `/shopping/search/${query}${filter != null ? queryString : '?'}${pageIndex != null ? `&pageIndex=${pageIndex}` : ''}${pageSize != null ? `&pageSize=${pageSize}` : ''}`)
         .pipe(
           catchError((error) => {
             reject(error);
@@ -44,6 +45,7 @@ export class SearchService {
           })
         )
         .subscribe((data) => {
+          // @ts-ignore
           resolve(data);
           return data;
         })

@@ -1,10 +1,13 @@
 <nav>
   <a class="home-button" [routerLink]="['/']"><h1 class="app-title">MERCURE</h1></a>
   <div [className]="autocompleteSuggestions.length > 0 ? 'active-suggestion search-bar-container' : 'search-bar-container'">
-    <input type="text" class="search-input" (keydown.enter)="search()" (keyup)="onChangeInput($event.target)"
+    <input type="text" class="search-input" (focusin)="active = true" (focusout)="active = false" (keydown.enter)="search()" (keyup)="onChangeInput($event.target)"
            placeholder="Rechercher..." autocomplete="off">
-    <div class="suggestions" *ngIf="autocompleteSuggestions.length > 0">
-      <a [routerLink]="'/search/'+suggestion" class="suggestion" (click)="clearInput()" *ngFor="let suggestion of autocompleteSuggestions">
+    <div class="suggestions" *ngIf="active && autocompleteSuggestions.length > 0">
+      <ng-container *ngIf="autocompleteSuggestions.length === 0">
+        Chargement...
+      </ng-container>
+      <a [routerLink]="'/search/'+suggestion" class="suggestion"  *ngFor="let suggestion of autocompleteSuggestions">
         {{suggestion}}
       </a>
     </div>

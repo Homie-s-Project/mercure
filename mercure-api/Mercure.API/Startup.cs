@@ -495,7 +495,7 @@ namespace Mercure.API
         {
             return new Product()
             {
-                ProductName = RandomProductName(),
+                ProductName = RandomProductName() + " - " + Guid.NewGuid().ToString().Substring(0, 4),
                 ProductBrandName = RandomBrandNames(),
                 ProductPrice = ProductPrice(),
                 ProductDescription = "Description de test",

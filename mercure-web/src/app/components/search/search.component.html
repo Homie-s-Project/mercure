@@ -1,1 +1,27 @@
-<p>search works!</p>
+<div class="pagination">
+  <div class="info">
+    <h4 *ngIf="productsPaginated">
+      {{pageIndex < productsPaginated.totalPages ? productsPaginated.pageSize * (productsPaginated.currentPage  + 1) : productsPaginated.totalProducts}} produits affichés sur {{productsPaginated.totalProducts}} produits pour la recherche {{search}}
+    </h4>
+  </div>
+</div>
+
+<div class="product-list">
+  <ng-container *ngIf="productsPaginated">
+    <app-item-card *ngFor="let product of productsPaginated.products" [product]="product"></app-item-card>
+  </ng-container>
+  <ng-container *ngIf="!productsPaginated && !hasProductsError">
+    Chargement...
+  </ng-container>
+  <ng-container *ngIf="hasProductsError">
+    Il y a eu une erreur lors du chargement des produits
+  </ng-container>
+</div>
+
+<div class="pagination">
+  <div class="control">
+    <button (click)="previousPage()" [className]="isLoading ? 'loading' : ''" [disabled]="isFirstPage || isLoading">Page précédente</button>
+    <span class="pageIndex">{{pageIndex+1}}/{{productsPaginated && productsPaginated.totalPages}}</span>
+    <button (click)="nextPage()" [className]="isLoading ? 'loading' : ''" [disabled]="isLastPage || isLoading">Prochaine page</button>
+  </div>
+</div>

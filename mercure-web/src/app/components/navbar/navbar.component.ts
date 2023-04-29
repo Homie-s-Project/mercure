@@ -1,7 +1,7 @@
 import {AfterViewInit, Component} from '@angular/core';
 import {faCartShopping, faGlobe, faMagnifyingGlass, faUser} from '@fortawesome/free-solid-svg-icons';
 import {SearchService} from "../../services/search/search.service";
-import {debounceTime, Subject, Subscription, tap} from "rxjs";
+import {debounceTime, Subject, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-navbar',
@@ -17,6 +17,7 @@ export class NavbarComponent implements AfterViewInit {
   searchValueChanged: Subject<string> = new Subject<string>();
   autocompleteSuggestions: string[] = [];
   searchValue: string = '';
+  active: boolean = false;
   private searchValueSubscription?: Subscription;
   private autocompleteDelay: number = 500;
   private autocompleteSubscription: any;
@@ -33,8 +34,7 @@ export class NavbarComponent implements AfterViewInit {
         this.searchValue = value;
         if (this.searchValue.length > 0) {
           this.autocomplete();
-        }
-        else {
+        } else {
           this.autocompleteSuggestions = [];
         }
       })
@@ -59,9 +59,5 @@ export class NavbarComponent implements AfterViewInit {
       .subscribe((res) => {
         this.autocompleteSuggestions = res;
       });
-  }
-
-  clearInput() {
-    this.autocompleteSuggestions = [];
   }
 }
