@@ -1,7 +1,7 @@
 <div class="pagination">
   <div class="info">
     <h4 *ngIf="productsPaginated">
-      {{pageIndex < productsPaginated.totalPages ? productsPaginated.pageSize * (productsPaginated.currentPage + 1) : productsPaginated.totalProducts}}
+      {{(pageIndex+1) < productsPaginated.totalPages ? productsPaginated.pageSize * (productsPaginated.currentPage + 1) : productsPaginated.totalProducts}}
       produits affichés sur {{productsPaginated.totalProducts}} produits pour la recherche '{{search}}'.
     </h4>
   </div>
