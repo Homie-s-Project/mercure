@@ -1,13 +1,27 @@
 <div class="home-title-section">
-    <div class="home-title-background">
-        <h1 class="home-title">MERCURE</h1>
-        <!-- <div class="line"></div> -->
-        <h2 class="slogan">l'excellence pour vos compagnons fidèles</h2>
-    </div>
+  <div class="home-title-background">
+    <h1 class="home-title">MERCURE</h1>
+    <!-- <div class="line"></div> -->
+    <h2 class="slogan">l'excellence pour vos compagnons fidèles</h2>
+  </div>
 </div>
 <div class="items-cards-section">
-    <h2 class="items-title">Meilleures ventes</h2>
-    <div class="cards-container">
-        <app-item-card *ngFor="let product of products" [product]="product"></app-item-card>
-    </div>
+
+  <h2 class="items-title">Les nouveaux produits</h2>
+  <div class="cards-container">
+
+    <app-products-pagination [pageSize]="8"></app-products-pagination>
+  </div>
+
+  <h2 class="items-title" style="margin-top: 55px">Meilleures ventes</h2>
+  <div class="cards-container">
+    <ng-container *ngIf="!bestSellerProducts && !hasBestSellerError">
+      Chargement des meilleures ventes
+    </ng-container>
+    <ng-container *ngIf="hasBestSellerError">
+      Erreur lors du chargement des meilleures ventes, aucune donnée disponible
+    </ng-container>
+
+    <app-item-card *ngFor="let product of bestSellerProducts" [product]="product"></app-item-card>
+  </div>
 </div>

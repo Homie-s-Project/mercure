@@ -6,6 +6,11 @@ public class StockDto
     {
         Quantity = stock.StockQuantityAvailable;
     }
-    
+
+    public StockDto(StockDto productStock)
+    {
+        Quantity = productStock.Quantity;
+    }
+
     public int Quantity {get; set;}
 }
