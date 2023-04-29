@@ -277,7 +277,7 @@ public class ShoppingController : ApiNoSecurityController
             }
 
             products = products.Where(p => p.ProductPrice >= minPriceParsed);
-        }4
+        }
 
         if (!string.IsNullOrEmpty(maxPrice))
         {
