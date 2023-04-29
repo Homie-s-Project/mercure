@@ -89,7 +89,7 @@ public class TestController : BaseController
     }
 
     /// <summary>
-    /// Get all roles for dev
+    /// Get all roles in the roleEnum and database
     /// </summary>
     /// <returns></returns>
     [HttpGet("roles")]
