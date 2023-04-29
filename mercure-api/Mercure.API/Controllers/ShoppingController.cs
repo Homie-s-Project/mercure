@@ -186,17 +186,26 @@ public class ShoppingController : ApiNoSecurityController
     /// <summary>
     /// Get result from a search
     /// </summary>
-    /// <param name="search"></param>
-    /// <param name="brand"></param>
-    /// <param name="category"></param>
-    /// <param name="minPrice"></param>
-    /// <param name="maxPrice"></param>
+    /// <param name="search">The name that can help us find the product</param>
+    /// <param name="brand">Select a brand</param>
+    /// <param name="category">Select a category</param>
+    /// <param name="minPrice">The minimum price of the searched product</param>
+    /// <param name="maxPrice">The maximum price of the searched product</param>
     /// <returns></returns>
     [HttpGet("search/{search}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Product>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public IActionResult Search(string search, string brand, string category, string minPrice, string maxPrice)
     {
+        if (string.IsNullOrEmpty(search))
+        {
+            return BadRequest(new ErrorMessage("Search is empty", StatusCodes.Status400BadRequest));
+        }
+        
+        // Trim the search param
+        search = search.Trim();
+        
         var products = _context.Products
             .Where(p =>
                 p.ProductName.ToLower().Contains(search.ToLower()) ||
