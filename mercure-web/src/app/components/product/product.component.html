@@ -1,13 +1,18 @@
-<div class="product-container" *ngIf="currentProduct != undefined else notFound">
+<ng-container *ngIf="!currentProduct">
+  Chargement...
+</ng-container>
+<div class="product-container" *ngIf="currentProduct">
     <div class="data">
         <div class="product-images">
-            <div class="image-menu">
-                <button class="change-image"><fa-icon [icon]="faChevronUp"></fa-icon></button>
-                <button class="change-image"><fa-icon [icon]="faChevronDown"></fa-icon></button>
-            </div>
+
             <div class="display-image">
-                <img src="../../../assets/img/image.png" class="product-image">
+                <img ngSrc="../../../assets/img/image.png" class="product-image" alt="image de development"
+                     height="500" width="500">
             </div>
+          <div class="image-menu">
+            <button class="change-image"><fa-icon [icon]="faCaretLeft"></fa-icon></button>
+            <button class="change-image"><fa-icon [icon]="faCaretRight"></fa-icon></button>
+          </div>
         </div>
         <div class="product">
             <div class="product-data">
@@ -35,9 +40,9 @@
         </div>
     </div>
 </div>
-<ng-template #notFound>
+<ng-container *ngIf="notFound">
     <div class="not-found">
         <h1 class="error-title">Erreur 404 <fa-icon [icon]="faFaceFrown"></fa-icon></h1>
         <p>Ce que vous cherchez n'existe pas ou ne se trouve pas ici</p>
     </div>
-</ng-template>
+</ng-container>

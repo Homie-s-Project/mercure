@@ -1,10 +1,19 @@
 import { animate, AUTO_STYLE, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { faCartPlus, faCaretRight, faCaretDown, faChevronUp, faChevronDown, faFaceFrown } from '@fortawesome/free-solid-svg-icons';
+import {ActivatedRoute, Router} from '@angular/router';
+import {
+  faCartPlus,
+  faCaretRight,
+  faCaretDown,
+  faChevronUp,
+  faChevronDown,
+  faFaceFrown,
+  faCaretLeft
+} from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { IProductModel } from 'src/app/models/IProductModel';
 import { ProductService } from 'src/app/services/product/product.service';
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-product',
@@ -24,14 +33,18 @@ export class ProductComponent implements OnInit {
   faCartPlus = faCartPlus;
   faCaret = faCaretDown;
   faChevronUp = faChevronUp;
+  faCaretLeft = faCaretLeft;
+  faCaretRight = faCaretRight;
   faChevronDown = faChevronDown;
   faFaceFrown = faFaceFrown;
 
-  collapsed: Boolean = false;
+  collapsed: boolean = false;
   currentId?: number;
   currentProduct?: IProductModel;
 
-  constructor (public productService: ProductService, private route: ActivatedRoute) { }
+  notFound: boolean = false;
+
+  constructor (public productService: ProductService, private route: ActivatedRoute, private router: Router) { }
 
   async ngOnInit(): Promise<void> {
     var productRoute = this.route.snapshot.paramMap.get('productId');
@@ -43,7 +56,21 @@ export class ProductComponent implements OnInit {
       this.currentId = +productRoute;
     }
 
-    this.currentProduct = await this.productService.getProductById(this.currentId);
+    this.productService.getProductById(this.currentId)
+      .then((product) => {
+        this.currentProduct = product;
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          this.notFound = true;
+        } else {
+          this.router.navigate(['/']);
+        }
+
+        if (!environment.production) {
+          console.error(error);
+        }
+      });
   }
 
   toggleCollapse() {

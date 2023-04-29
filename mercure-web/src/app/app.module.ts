@@ -28,6 +28,7 @@ import {ProductService} from "./services/product/product.service";
 import {ProductsPaginationComponent} from './components/products-pagination/products-pagination.component';
 import { SearchComponent } from './components/search/search.component';
 import {FormsModule} from "@angular/forms";
+import {NgOptimizedImage} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import {FormsModule} from "@angular/forms";
     HttpClientModule,
     FontAwesomeModule,
     ShareModule,
-    FormsModule
+    FormsModule,
+    NgOptimizedImage
   ],
   providers: [
     AuthService,
