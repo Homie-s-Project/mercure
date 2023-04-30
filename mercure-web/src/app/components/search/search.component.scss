@@ -1,0 +1,50 @@
+@use '/src/styles/variables.scss' as vars;
+
+.product-list {
+  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: start;
+  justify-content: center;
+}
+
+.pagination {
+  margin: 15px;
+
+  .control {
+    display: flex;
+    justify-content: center;
+
+    .pageIndex {
+      line-height: 33px;
+    }
+
+    button {
+      padding: 5px 10px;
+      margin: 0 5px;
+      border: 1px solid vars.$moss-green;
+      background: vars.$lemon-chiffon;
+      border-radius: 5px;
+    }
+
+    span {
+      margin: 0 10px;
+    }
+  }
+
+  .info {
+    margin-top: 25px;
+  }
+}
+
+.loading {
+  cursor: wait;
+}
+
+.error-message {
+  color: vars.$redwood;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin: 20px;
+}

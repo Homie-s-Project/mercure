@@ -1,7 +1,9 @@
-<app-navbar *ngIf="showNavbar"></app-navbar>
-<div id="app-container">
-    <router-outlet></router-outlet>
+<header>
+  <app-navbar *ngIf="showNavbar"></app-navbar>
+</header>
+<div class="content-wrap">
+  <router-outlet></router-outlet>
 </div>
 <footer *ngIf="showFooter">
-    <h1>© MERCURE - 2023</h1>
+  <h1>© MERCURE - 2023</h1>
 </footer>

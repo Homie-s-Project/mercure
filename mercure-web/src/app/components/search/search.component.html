@@ -1,0 +1,42 @@
+<div class="pagination">
+  <div class="info">
+    <h4 *ngIf="productsPaginated">
+      {{(pageIndex+1) < productsPaginated.totalPages ? productsPaginated.pageSize * (productsPaginated.currentPage + 1) : productsPaginated.totalProducts}}
+      produits affichés sur {{productsPaginated.totalProducts}} produits pour la recherche '{{search}}'.
+    </h4>
+  </div>
+</div>
+
+<div class="product-list">
+  <ng-container *ngIf="productsPaginated">
+    <app-item-card *ngFor="let product of productsPaginated.products" [product]="product"></app-item-card>
+  </ng-container>
+  <ng-container *ngIf="!productsPaginated && !hasProductsError && !noProductFound">
+    Chargement...
+  </ng-container>
+  <ng-container *ngIf="noProductFound">
+    Aucun produit trouvé pour la recherche '{{search}}'.
+  </ng-container>
+  <div class="error-message" *ngIf="hasProductsError">
+    Il y a eu une erreur lors du chargement des produits. <br/>
+    <span>
+      <b>{{messageError}}</b>
+    </span><br/>
+    <div style="margin-top: 25px">
+      Automatically redirect in {{secondBeforeRedirect}} second<span *ngIf="secondBeforeRedirect>0">s</span> <br/>
+      or <a [routerLink]="'/'">manually</a>
+    </div>
+  </div>
+</div>
+
+<div class="pagination" *ngIf="!noProductFound && !hasProductsError">
+  <div class="control">
+    <button (click)="previousPage()" [className]="isLoading ? 'loading' : ''" [disabled]="isFirstPage || isLoading">Page
+      précédente
+    </button>
+    <span class="pageIndex">{{pageIndex + 1}}/{{productsPaginated && productsPaginated.totalPages}}</span>
+    <button (click)="nextPage()" [className]="isLoading ? 'loading' : ''" [disabled]="isLastPage || isLoading">Prochaine
+      page
+    </button>
+  </div>
+</div>

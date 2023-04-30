@@ -1,8 +1,11 @@
 <a [routerLink]="['/product', product?.productId]">
     <img src="../../../assets/img/image.png" class="item-image">
     <div class="card-content">
-        <h3 class="brand">{{product?.productBrandName}}</h3>
-        <h4 class="product-info">{{product?.productInfo || "500g"}}</h4>
+        <div class="product-details">
+          <h3 class="product-name">{{product?.productName}}</h3>
+          <h4 class="product-brand">{{product?.productBrandName}}</h4>
+          <h5 class="product-info">{{product?.productInfo || "500g"}}</h5>
+        </div>
         <div class="card-data">
             <p class="price">{{product?.productPrice}} CHF</p>
         </div>

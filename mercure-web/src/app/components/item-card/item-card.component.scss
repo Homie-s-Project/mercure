@@ -10,6 +10,11 @@
   border: 1px solid vars.$bole;
   border-radius: 15px;
 
+  app-tags {
+    min-height: 110px;
+    max-height: 130px;
+  }
+
   a {
     text-decoration: none;
     color: vars.$cal-poly-green;
@@ -20,18 +25,34 @@
       margin-bottom: 24px;
     }
 
-    .card-content {
-      .product-info {
-        margin-bottom: 25px;
+    .product-details {
+
+      min-height: 120px;
+      max-height: 120px;
+      height: 120px;
+
+      .product-name {
+        font-size: 23px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        min-height: 30px;
       }
 
-      .brand {
-        font-size: 24px;
+      .product-brand {
+        font-size: 15px;
+        font-weight: 350;
         margin-bottom: 5px;
+        min-height: 40px;
+      }
+
+      .product-info {
+        margin-bottom: 25px;
+        margin-top: 10px;
+        min-height: 23px;
       }
 
       .card-data {
-        margin-top: 5px;
+        margin-top: 20px;
 
         .price {
           font-size: 21px;

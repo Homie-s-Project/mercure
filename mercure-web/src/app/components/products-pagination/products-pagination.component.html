@@ -21,9 +21,7 @@
 <div class="pagination">
   <div class="control">
     <button (click)="previousPage()" [className]="isLoading ? 'loading' : ''" [disabled]="isFirstPage || isLoading">Page précédente</button>
-    <span class="pageIndex">{{pageIndex+1}}</span>
+    <span class="pageIndex">{{pageIndex+1}}/{{productsPaginated && productsPaginated.totalPages}}</span>
     <button (click)="nextPage()" [className]="isLoading ? 'loading' : ''" [disabled]="isLastPage || isLoading">Prochaine page</button>
   </div>
 </div>
-
-<!--Crée le paginator en se basant sur ce que reçois data: IPaginationProductModel.ts-->

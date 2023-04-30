@@ -1,13 +1,25 @@
 @use '/src/styles/variables.scss' as vars;
 
+:host {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.content-wrap {
+  flex: 1;
+}
+
 footer {
-    height: 210px;
-    display: flex;
-    align-items: center;
-    padding: 9px 120px 9px 120px;
-    border-top: solid 1px vars.$bole;
-    background-color: vars.$lemon-chiffon;
-    h1 {
-        font-size: 21px;
-    }
+
+  height: 210px;
+  display: flex;
+  align-items: center;
+  padding: 9px 120px 9px 120px;
+  border-top: solid 1px vars.$bole;
+  background-color: vars.$lemon-chiffon;
+
+  h1 {
+    font-size: 21px;
+  }
 }

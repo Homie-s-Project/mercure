@@ -62,7 +62,7 @@ public class ShoppingController : ApiNoSecurityController
 
         var totalProducts = await _context.Products.CountAsync();
         var totalPages = (int) Math.Ceiling((double) totalProducts / pageSizeParsed);
-        
+
         // Permet de ne pas avoir de page en trop
         if (totalPages > 0)
         {
@@ -137,7 +137,7 @@ public class ShoppingController : ApiNoSecurityController
                 .Include(p => p.Categories)
                 .Include(p => p.Stock)
                 .FirstOrDefaultAsync(p => p.ProductId == bestSellerProduct.Key);
-            
+
             if (product != null)
             {
                 bestSellerProducts.Add(new ProductDto(product, true));
@@ -145,6 +145,38 @@ public class ShoppingController : ApiNoSecurityController
         }
 
         return Ok(bestSellerProducts);
+    }
+
+    /// <summary>
+    /// Autocomplete for the search bar
+    /// </summary>
+    /// <param name="value"></param>
+    [HttpGet("autocomplete")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<string>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    public async Task<IActionResult> Autocomplete(string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            return BadRequest(new ErrorMessage("Value is empty", StatusCodes.Status400BadRequest));
+        }
+
+        var produtsName = _context.Products.Where(p =>
+                p.ProductName.ToLower().Contains(value.ToLower()) ||
+                p.ProductDescription.ToLower().Contains(value.ToLower()) ||
+                p.ProductBrandName.ToLower().Contains(value.ToLower()))
+            .Select(p => p.ProductName)
+            .Distinct()
+            .Take(10)
+            .ToList();
+
+        if (!produtsName.Any())
+        {
+            return NotFound(new ErrorMessage("No products found", StatusCodes.Status404NotFound));
+        }
+
+        return Ok(produtsName);
     }
 
     /// <summary>
@@ -191,21 +223,35 @@ public class ShoppingController : ApiNoSecurityController
     /// <param name="category">Select a category</param>
     /// <param name="minPrice">The minimum price of the searched product</param>
     /// <param name="maxPrice">The maximum price of the searched product</param>
+    /// <param name="pageIndex">The page index</param>
+    /// <param name="pageSize">Element shown per page</param>
     /// <returns></returns>
     [HttpGet("search/{search}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Product>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationProduct))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
-    public IActionResult Search(string search, string brand, string category, string minPrice, string maxPrice)
+    public async Task<IActionResult> Search(string search, string brand, string category, string minPrice, string maxPrice, string pageIndex = "1", string pageSize = "15")
     {
         if (string.IsNullOrEmpty(search))
         {
             return BadRequest(new ErrorMessage("Search is empty", StatusCodes.Status400BadRequest));
         }
         
+        var isPageParsed = int.TryParse(pageIndex, out var pageParsed);
+        if (!isPageParsed)
+        {
+            return BadRequest(new ErrorMessage("Page number is not valid", StatusCodes.Status400BadRequest));
+        }
+
+        var isPageSizeParsed = int.TryParse(pageSize, out var pageSizeParsed);
+        if (!isPageSizeParsed)
+        {
+            return BadRequest(new ErrorMessage("Page size is not valid", StatusCodes.Status400BadRequest));
+        }
+
         // Trim the search param
         search = search.Trim();
-        
+
         var products = _context.Products
             .Where(p =>
                 p.ProductName.ToLower().Contains(search.ToLower()) ||
@@ -247,12 +293,17 @@ public class ShoppingController : ApiNoSecurityController
         if (products.Any())
         {
             var responseProduct = products
+                .Skip((pageParsed > 0 ? pageParsed : 0) * pageSizeParsed)
+                .Take(pageSizeParsed)
                 .Include(p => p.Categories)
-                .Take(30)
                 .Select(p => new ProductDto(p, true))
                 .ToList();
+            
+            var totalProducts = await products.CountAsync();
+            var totalPages = (int) Math.Ceiling((double) totalProducts / pageSizeParsed);
+            var paginationProduct = new PaginationProduct(responseProduct, pageParsed, pageSizeParsed, totalPages, totalProducts);
 
-            return Ok(responseProduct);
+            return Ok(paginationProduct);
         }
 
         return NotFound(new ErrorMessage("No product found.", StatusCodes.Status404NotFound));
