@@ -9,7 +9,11 @@
   text-align: center;
   border-top: 1px solid vars.$bole;
   font-size: 15px;
+  p{
+    align-self: flex-end;
+  }
   .product-info {
+    align-self: flex-end;
     display: flex;
     .price {
       padding-right: 6px;
@@ -26,4 +30,4 @@
     }
   }
 }
-  
+

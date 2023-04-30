@@ -40,8 +40,10 @@ nav {
         min-width: 75px;
         display: flex;
         justify-content: space-between;
+        fa-icon{
+          font-size: 25px;
+        }
         .nav-button {
-            font-size: 24px;
             background-color: transparent;
             border: none;
         }
