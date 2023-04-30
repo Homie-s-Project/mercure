@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Output, AfterViewInit} from '@angular/core';
-import { faCartShopping, faUser, faGlobe, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faUser, faGlobe, faXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import {SearchService} from "../../services/search/search.service";
 import {debounceTime, Subject, Subscription} from "rxjs";
 import {Router} from "@angular/router";
@@ -13,6 +13,8 @@ import {environment} from "../../../environments/environment";
 export class NavbarComponent implements AfterViewInit {
   faCartShopping = faCartShopping
   faUser = faUser;
+  faXmark = faXmark;
+  actualIcone = this.faXmark;
   faMagnifyingGlass = faMagnifyingGlass;
   @Output() toggleHide = new EventEmitter<boolean>();
   hideCart: boolean = true
@@ -70,6 +72,7 @@ export class NavbarComponent implements AfterViewInit {
   }
 
   toggleShowHide() {
+    this.actualIcone = this.actualIcone === this.faXmark ? this.faCartShopping : this.faXmark;
     this.hideCart = !this.hideCart;
     this.toggleHide.emit(this.hideCart);
   }

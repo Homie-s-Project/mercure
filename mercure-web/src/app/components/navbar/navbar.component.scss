@@ -18,7 +18,7 @@ nav {
     border-radius: 5px;
     background-color: vars.$lemon-chiffon;
     gap: 5px;
-    box-shadow: 0 1px 5px 3px rgba(0,0,0,0.12);
+    box-shadow: 0 1px 5px 3px rgba(0, 0, 0, 0.12);
     position: relative;
     display: block;
 
@@ -56,6 +56,10 @@ nav {
     min-width: 75px;
     display: flex;
     justify-content: space-between;
+
+    fa-icon {
+      font-size: 25px;
+    }
 
     .nav-button {
       font-size: 24px;
