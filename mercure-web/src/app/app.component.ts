@@ -8,4 +8,13 @@ import { Component } from '@angular/core';
 export class AppComponent {
   showNavbar: boolean = true;
   showFooter: boolean = true;
+  hideCart: boolean = true;
+
+  toggleHideCart(isHidded: boolean) {
+    this.hideCart = isHidded;
+  }
+
+  closeCart(isClosed: boolean) {
+    this.hideCart = isClosed;
+  }
 }

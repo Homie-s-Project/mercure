@@ -1,5 +1,8 @@
+
+<div id="app-container">
 <header>
-  <app-navbar *ngIf="showNavbar"></app-navbar>
+  <app-navbar *ngIf="showNavbar" (toggleHide)="toggleHideCart($event)"></app-navbar>
+  <app-product-cart *ngIf="hideCart"></app-product-cart>
 </header>
 <div class="content-wrap">
   <router-outlet></router-outlet>

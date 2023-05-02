@@ -1,5 +1,5 @@
-import {AfterViewInit, Component} from '@angular/core';
-import {faCartShopping, faGlobe, faMagnifyingGlass, faUser} from '@fortawesome/free-solid-svg-icons';
+import {Component, EventEmitter, Output, AfterViewInit} from '@angular/core';
+import { faCartShopping, faUser, faGlobe, faXmark, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import {SearchService} from "../../services/search/search.service";
 import {debounceTime, Subject, Subscription} from "rxjs";
 import {Router} from "@angular/router";
@@ -12,14 +12,18 @@ import {environment} from "../../../environments/environment";
 })
 export class NavbarComponent implements AfterViewInit {
   faCartShopping = faCartShopping
-  faGlobe = faGlobe;
   faUser = faUser;
+  faXmark = faXmark;
+  actualIcone = this.faXmark;
   faMagnifyingGlass = faMagnifyingGlass;
+  @Output() toggleHide = new EventEmitter<boolean>();
+  hideCart: boolean = true
 
   searchValueChanged: Subject<string> = new Subject<string>();
   autocompleteSuggestions: string[] = [];
   searchValue: string = '';
   active: boolean = false;
+
   private searchValueSubscription?: Subscription;
   private autocompleteDelay: number = 500;
   private autocompleteSubscription: any;
@@ -65,6 +69,12 @@ export class NavbarComponent implements AfterViewInit {
       .subscribe((res) => {
         this.autocompleteSuggestions = res;
       });
+  }
+
+  toggleShowHide() {
+    this.actualIcone = this.actualIcone === this.faXmark ? this.faCartShopping : this.faXmark;
+    this.hideCart = !this.hideCart;
+    this.toggleHide.emit(this.hideCart);
   }
 
   goToSearch() {

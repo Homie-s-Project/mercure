@@ -1,0 +1,33 @@
+@use '/src/styles/variables.scss' as vars;
+
+:host{
+  height: 51px;
+  display: flex;
+  justify-content: space-between ;
+  align-content: center;
+  align-items: baseline;
+  text-align: center;
+  border-top: 1px solid vars.$bole;
+  font-size: 15px;
+  p{
+    align-self: flex-end;
+  }
+  .product-info {
+    align-self: flex-end;
+    display: flex;
+    .price {
+      padding-right: 6px;
+    }
+    .remove-button {
+      font-size: 15px;
+      border-style: none;
+      color: vars.$dark-moss-green;
+      background: none;
+      &:active {
+        transform: scale(0.95);
+        color: darken(vars.$dark-moss-green, 7%);
+      }
+    }
+  }
+}
+

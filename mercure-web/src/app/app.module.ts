@@ -23,6 +23,8 @@ import {
 } from "./interceptors/jwtTokenRequest/jwt-token-header-request-interceptor.service";
 import {ProductComponent} from './components/product/product.component';
 import {TagsComponent} from './components/tags/tags.component';
+import {ProductCartComponent} from "./components/product-cart/product-cart.component";
+import {ItemCartComponent} from "./components/item-cart/item-cart.component";
 import {CartService} from "./services/cart/cart.service";
 import {ProductService} from "./services/product/product.service";
 import {ProductsPaginationComponent} from './components/products-pagination/products-pagination.component';
@@ -42,6 +44,8 @@ import {NgOptimizedImage} from "@angular/common";
     LandingComponent,
     LoadingComponent,
     ProductComponent,
+    ProductCartComponent,
+    ItemCartComponent,
     TagsComponent,
     ProductsPaginationComponent,
     SearchComponent

@@ -16,11 +16,7 @@
     </button>
   </div>
   <div class="nav-button-container">
-    <a class="nav-button" [routerLink]="['/']">
-      <fa-icon class="navbar-icon" [icon]="faCartShopping"></fa-icon>
-    </a>
-    <a class="nav-button" [routerLink]="['/profile']">
-      <fa-icon class="navbar-icon" [icon]="faUser"></fa-icon>
-    </a>
+    <button class="nav-button cart-btn" (click)="toggleShowHide()"> <fa-icon class="navbar-icon" [icon]="actualIcone"></fa-icon></button>
+    <a class="nav-button" [routerLink]="['/profile']"><fa-icon class="navbar-icon" [icon]="faUser"></fa-icon></a>
   </div>
 </nav>

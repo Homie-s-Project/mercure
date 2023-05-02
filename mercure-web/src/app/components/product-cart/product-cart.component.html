@@ -1,0 +1,17 @@
+<div class="product-cart-container"  >
+  <div class="cart-content">
+    <div class="title-product-cart">
+      <h2>Aperçu du panier</h2>
+    </div>
+    <app-item-cart *ngFor="let card of [].constructor(3)"></app-item-cart>
+  </div>
+  <div class="total">
+    <div class="total-price">
+      <p>Total :</p>
+      <p>35,00 Fr</p>
+    </div>
+    <div class="buy-cart">
+      <button><fa-icon [icon]="faCreditCard"></fa-icon></button>
+    </div>
+  </div>
+</div>
