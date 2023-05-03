@@ -59,6 +59,11 @@ nav {
     .cart-btn {
       color: vars.$lemon-chiffon;
       cursor: pointer;
+
+      .cart-close {
+        margin-left: 6px;
+        font-size: 24px;
+      }
     }
 
     .nav-button {
@@ -94,7 +99,7 @@ nav {
   color: vars.$bole;
   margin-top: 5px;
   margin: -5px -9px 0 -9px;
-  box-shadow: 0 1px 5px 3px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 5px 3px rgba(0, 0, 0, 0.12);
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 
