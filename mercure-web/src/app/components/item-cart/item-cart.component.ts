@@ -1,6 +1,8 @@
 import {Component, Input} from '@angular/core';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import {ICartProductModel} from "../../models/ICartProductModel";
+import {CartService} from "../../services/cart/cart.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-item-cart',
@@ -12,6 +14,17 @@ export class ItemCartComponent {
 
   @Input() product!: ICartProductModel;
 
-  constructor() {
+  constructor(private cartService: CartService) {
+  }
+
+  deleteProduct(productId: number) {
+    this.cartService.removeFromCart(productId.toString())
+      .finally(() => {
+        if (environment.apiUrl) {
+          console.log("Product deleted");
+        }
+
+        this.cartService.forceReloadCart();
+      });
   }
 }

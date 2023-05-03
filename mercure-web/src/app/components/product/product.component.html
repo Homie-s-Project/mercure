@@ -21,15 +21,15 @@
                 <p class="product-quantity">{{currentProduct.productInfo}}</p>
             </div>
             <div class="price-data">
-                <app-tags [categories]="currentProduct.categories"></app-tags>
+                <app-tags *ngIf="currentProduct.categories" [categories]="currentProduct.categories"></app-tags>
                 <div class="price-container">
                     <p class="total-price">{{currentProduct.productPrice}} CHF</p>
                     <div class="quantity-container">
                         <label for="order-quantity">Quantité : </label>
-                        <input id="order-quantity" type="number" class="quantity" min="1" max="10" value="1"/>
+                        <input id="order-quantity"  type="number" [(ngModel)]="quantity" [min]="1" [max]="10" class="quantity"/>
                     </div>
                 </div>
-                <button class="add-to-cart">Ajouter au panier <fa-icon [icon]="faCartPlus"></fa-icon></button>
+                <button class="add-to-cart" (click)="addToCart(currentProduct.productId)">Ajouter au panier <fa-icon [icon]="faCartPlus"></fa-icon></button>
             </div>
         </div>
     </div>

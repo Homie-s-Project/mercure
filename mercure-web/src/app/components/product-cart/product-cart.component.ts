@@ -3,7 +3,7 @@ import {faCreditCard} from "@fortawesome/free-solid-svg-icons";
 import {CartService} from "../../services/cart/cart.service";
 import {ICartProductModel} from "../../models/ICartProductModel";
 import {environment} from "../../../environments/environment";
-import {ICartModel} from "../../models/ICartModel";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-product-cart',
@@ -16,7 +16,9 @@ export class ProductCartComponent implements OnInit {
   cartProducts: ICartProductModel[] = []
   isLoading: boolean = true;
 
-  constructor(private cartService: CartService) {
+  totalPrice: number = 0.00;
+
+  constructor(public cartService: CartService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -31,6 +33,18 @@ export class ProductCartComponent implements OnInit {
       })
       .finally(() => {
         this.isLoading = false;
+
+        this.totalPrice = this.cartProducts.reduce((a, b) => a + (b.product.productPrice * b.quantity), 0);
       });
+  }
+
+  checkout() {
+    if (this.cartProducts.length > 0) {
+      window.location.href = this.cartService.getCheckoutUrl();
+    } else {
+      if (!environment.production) {
+        console.log("No products in cart");
+      }
+    }
   }
 }

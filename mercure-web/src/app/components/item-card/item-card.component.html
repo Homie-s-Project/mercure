@@ -11,5 +11,5 @@
         </div>
     </div>
 </a>
-<app-tags [categories]="product?.categories"></app-tags>
+<app-tags *ngIf="product?.categories" [categories]="product?.categories"></app-tags>
 <button class="add-to-cart" (click)="addProductCart(product?.productId)"><fa-icon [icon]="faCartPlus"></fa-icon></button>

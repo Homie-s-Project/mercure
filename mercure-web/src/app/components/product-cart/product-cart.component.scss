@@ -45,6 +45,11 @@ button {
       margin-bottom: 6px;
     }
 
+    .disable {
+      background-color: vars.$dark-green !important;
+      cursor: not-allowed !important;
+    }
+
     .buy-cart {
       height: 42px;
       display: flex;
@@ -52,6 +57,7 @@ button {
       align-content: center;
       border-radius: 6px;
       background-color: vars.$dark-moss-green;
+      cursor: pointer;
 
       &:active {
         transform: scale(0.95);
@@ -65,6 +71,7 @@ button {
       fa-icon {
         font-size: 21px;
         color: vars.$lemon-chiffon;
+        line-height: 45px;
       }
     }
   }
