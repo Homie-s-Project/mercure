@@ -3,7 +3,6 @@ import {faCreditCard} from "@fortawesome/free-solid-svg-icons";
 import {CartService} from "../../services/cart/cart.service";
 import {ICartProductModel} from "../../models/ICartProductModel";
 import {environment} from "../../../environments/environment";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-product-cart',
@@ -18,7 +17,7 @@ export class ProductCartComponent implements OnInit {
 
   totalPrice: number = 0.00;
 
-  constructor(public cartService: CartService, private router: Router) {
+  constructor(public cartService: CartService) {
   }
 
   ngOnInit(): void {

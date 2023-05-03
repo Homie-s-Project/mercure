@@ -1,18 +1,17 @@
-import { animate, AUTO_STYLE, state, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import {animate, AUTO_STYLE, state, style, transition, trigger} from '@angular/animations';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
-  faCartPlus,
-  faCaretRight,
   faCaretDown,
-  faChevronUp,
+  faCaretLeft,
+  faCaretRight,
+  faCartPlus,
   faChevronDown,
-  faFaceFrown,
-  faCaretLeft
+  faChevronUp,
+  faFaceFrown
 } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
-import { IProductModel } from 'src/app/models/IProductModel';
-import { ProductService } from 'src/app/services/product/product.service';
+import {IProductModel} from 'src/app/models/IProductModel';
+import {ProductService} from 'src/app/services/product/product.service';
 import {environment} from "../../../environments/environment";
 import {CartService} from "../../services/cart/cart.service";
 

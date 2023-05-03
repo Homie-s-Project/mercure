@@ -1,10 +1,13 @@
-<p>{{product.product.productName || 'Chargement...'}}</p>
-<div class="product-info">
-  <p class="quantity" aria-label="Quantité de produit">{{product.quantity}}x</p>
-  <p class="total-price">
-    <span>{{(product.product.productPrice * product.quantity).toFixed(2)}} CHF</span>
-  </p>
-  <button class="remove-button" (click)="deleteProduct(product.product.productId)">
-    <fa-icon [icon]="faTrash"></fa-icon>
-  </button>
-</div>
+<ng-container *ngIf="product">
+  <p>{{product.product.productName || 'Chargement...'}}</p>
+  <div class="product-info">
+    <p class="quantity" aria-label="Quantité de produit">{{product.quantity}}x</p>
+    <p class="total-price">
+      <span>{{(product.product.productPrice * product.quantity).toFixed(2)}} CHF</span>
+    </p>
+    <button class="remove-button" (click)="deleteProduct(product.product.productId)">
+      <fa-icon [icon]="faTrash"></fa-icon>
+    </button>
+  </div>
+
+</ng-container>
