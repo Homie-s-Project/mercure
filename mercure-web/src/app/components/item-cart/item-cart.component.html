@@ -1,5 +1,10 @@
-<p>Nom du produit</p>
+<p>{{product.product.productName || 'Chargement...'}}</p>
 <div class="product-info">
-    <p class="price">30,00 CHF</p>
-    <button class="remove-button"><fa-icon [icon]="faTrash"></fa-icon></button>
+  <p class="quantity" aria-label="Quantité de produit">{{product.quantity}}x</p>
+  <p class="total-price">
+    <span>{{product.product.productPrice * product.quantity}} CHF</span>
+  </p>
+  <button class="remove-button">
+    <fa-icon [icon]="faTrash"></fa-icon>
+  </button>
 </div>

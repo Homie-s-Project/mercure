@@ -3,7 +3,12 @@
     <div class="title-product-cart">
       <h2>Aperçu du panier</h2>
     </div>
-    <app-item-cart *ngFor="let card of [].constructor(3)"></app-item-cart>
+    <ng-container *ngIf="!isLoading">
+      <app-item-cart *ngFor="let product of cartProducts" [product]="product"></app-item-cart>
+    </ng-container>
+    <ng-container *ngIf="isLoading">
+      Chargement du panier...
+    </ng-container>
   </div>
   <div class="total">
     <div class="total-price">

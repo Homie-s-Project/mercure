@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import {ICartProductModel} from "../../models/ICartProductModel";
 
 @Component({
   selector: 'app-item-cart',
@@ -8,4 +9,9 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 })
 export class ItemCartComponent {
   faTrash = faTrash;
+
+  @Input() product!: ICartProductModel;
+
+  constructor() {
+  }
 }

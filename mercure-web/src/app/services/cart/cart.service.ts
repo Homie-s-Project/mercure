@@ -4,6 +4,8 @@ import {AuthService} from "../auth/auth.service";
 import {UserService} from "../user/user.service";
 import {environment} from "../../../environments/environment";
 import {catchError, throwError} from "rxjs";
+import {ICartProductModel} from "../../models/ICartProductModel";
+import {ICartModel} from "../../models/ICartModel";
 
 @Injectable({
   providedIn: 'root'
@@ -51,14 +53,14 @@ export class CartService implements OnInit {
       });
   }
 
-  getCart(): Promise<any> {
+  getCart(): Promise<ICartModel> {
     let isLogged = this.authService.isLogged();
     let hasCartId = this.hasCartId();
 
     let url = environment.apiUrl + `/cart${!isLogged && hasCartId ? `?randomId=${this.cartId}` : ''}`;
 
     return new Promise((resolve, reject) => {
-      this.http.get<{ token: string }>(url)
+      this.http.get<ICartModel>(url)
         .pipe(
           catchError((error) => {
             reject(error);
