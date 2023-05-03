@@ -18,7 +18,7 @@ nav {
         border-radius: 5px;
         background-color: vars.$lemon-chiffon;
         gap: 5px;
-        .search-input {
+        #search-input {
             width: 100%;
             font-size: 18px;
             padding: 5px;
@@ -52,5 +52,9 @@ nav {
     a {
         color: vars.$lemon-chiffon;
         text-decoration: none;
+    }
+    .error-input {
+        color: vars.$redwood;
+        outline: solid 1px vars.$redwood;
     }
 }

@@ -5,6 +5,7 @@ import { ProductComponent } from './components/product/product.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { SearchComponent } from './components/search/search.component';
 
 
 const routes: Routes = [
@@ -32,6 +33,10 @@ const routes: Routes = [
   {
     path: 'product/:productId',
     component: ProductComponent
+  },
+  {
+    path: 'search',
+    component: SearchComponent
   },
   {
     path: '**',
