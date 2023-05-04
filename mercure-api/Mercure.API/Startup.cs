@@ -417,7 +417,7 @@ namespace Mercure.API
                 "Nourriture"
             };
 
-            return "DEV:" + productNames[new Random().Next(0, productNames.Count)];
+            return productNames[new Random().Next(0, productNames.Count)];
         }
 
         private string RandomBrandNames()
