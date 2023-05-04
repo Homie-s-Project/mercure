@@ -3,6 +3,7 @@
   - [Installation](#installation)
   - [Deployment](#deployment)
   - [API Docs Tests](#api-docs-tests)
+  - [Test Credit Card](#test-credit-card)
   - [Nommage](#nommage)
     - [Branche](#branche)
   - [Routes](#routes)
@@ -74,6 +75,18 @@ docker compose -f "docker-compose.yml" up -d --build
 ## <a name='APIDocsTests'></a>API Docs Tests
 
 Il vous faudra vous rendre sur ce fichier, où les explications y sont. --> [ICI](TEST_BACK.md) <--
+
+## <a name='TestCreditCard'></a>Test Credit Card
+
+Selon la page de docs de Stripe, https://stripe.com/docs/testing#cards
+
+Vous pouvez utiliser ces cartes pour tester leur service :
+
+```
+Numéro 	: 4242 4242 4242 4242
+CCV 	: *3 chiffres aléatoires*
+Date 	: *date après l'achat*
+```
 
 ## <a name='Nommage'></a>Nommage
 
