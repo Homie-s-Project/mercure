@@ -1,19 +1,19 @@
-import { animate, AUTO_STYLE, state, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit } from '@angular/core';
+import {animate, AUTO_STYLE, state, style, transition, trigger} from '@angular/animations';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {
-  faCartPlus,
-  faCaretRight,
   faCaretDown,
-  faChevronUp,
+  faCaretLeft,
+  faCaretRight,
+  faCartPlus,
   faChevronDown,
-  faFaceFrown,
-  faCaretLeft
+  faChevronUp,
+  faFaceFrown
 } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
-import { IProductModel } from 'src/app/models/IProductModel';
-import { ProductService } from 'src/app/services/product/product.service';
+import {IProductModel} from 'src/app/models/IProductModel';
+import {ProductService} from 'src/app/services/product/product.service';
 import {environment} from "../../../environments/environment";
+import {CartService} from "../../services/cart/cart.service";
 
 @Component({
   selector: 'app-product',
@@ -41,10 +41,11 @@ export class ProductComponent implements OnInit {
   collapsed: boolean = false;
   currentId?: number;
   currentProduct?: IProductModel;
+  quantity: number = 1;
 
   notFound: boolean = false;
 
-  constructor (public productService: ProductService, private route: ActivatedRoute, private router: Router) { }
+  constructor (public productService: ProductService, private route: ActivatedRoute, private router: Router, private cartService: CartService) { }
 
   async ngOnInit(): Promise<void> {
     var productRoute = this.route.snapshot.paramMap.get('productId');
@@ -82,5 +83,15 @@ export class ProductComponent implements OnInit {
       this.faCaret = faCaretRight;
     else
       this.faCaret = faCaretDown;
+  }
+
+  addToCart(productId: number) {
+      this.cartService.addToCart(String(productId), this.quantity ?? 1).finally(() => {
+        this.cartService.forceReloadCart();
+
+        if (!environment.production) {
+          console.log("Added to cart");
+        }
+      });
   }
 }

@@ -10,11 +10,7 @@ export class AppComponent {
   showFooter: boolean = true;
   hideCart: boolean = true;
 
-  toggleHideCart(isHidded: boolean) {
-    this.hideCart = isHidded;
-  }
-
-  closeCart(isClosed: boolean) {
-    this.hideCart = isClosed;
+  toggleHideCart(isHidden: boolean) {
+    this.hideCart = isHidden;
   }
 }

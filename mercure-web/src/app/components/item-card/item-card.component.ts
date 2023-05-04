@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { faTag, faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import { IProductModel } from 'src/app/models/IProductModel';
 import {CartService} from "../../services/cart/cart.service";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-item-card',
@@ -22,7 +23,11 @@ export class ItemCardComponent implements OnInit {
   addProductCart(productId: number | undefined) {
     if (productId != undefined) {
       this.cartService.addToCart(String(productId), 1).finally(() => {
-        console.log("Added to cart");
+        this.cartService.forceReloadCart();
+
+        if (!environment.production) {
+          console.log("Added to cart");
+        }
       });
     }
   }

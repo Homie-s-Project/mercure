@@ -7,9 +7,9 @@
           <h5 class="product-info">{{product?.productInfo || "500g"}}</h5>
         </div>
         <div class="card-data">
-            <p class="price">{{product?.productPrice}} CHF</p>
+            <p class="total-price">{{product?.productPrice}} CHF</p>
         </div>
     </div>
 </a>
-<app-tags [categories]="product?.categories"></app-tags>
+<app-tags *ngIf="product?.categories" [categories]="product?.categories"></app-tags>
 <button class="add-to-cart" (click)="addProductCart(product?.productId)"><fa-icon [icon]="faCartPlus"></fa-icon></button>

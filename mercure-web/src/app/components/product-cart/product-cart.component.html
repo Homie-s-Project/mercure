@@ -1,17 +1,27 @@
-<div class="product-cart-container"  >
+<div class="product-cart-container">
   <div class="cart-content">
     <div class="title-product-cart">
       <h2>Aperçu du panier</h2>
     </div>
-    <app-item-cart *ngFor="let card of [].constructor(3)"></app-item-cart>
+    <ng-container *ngIf="!isLoading && cartProducts.length === 0">
+      Aucun produit dans votre panier.
+    </ng-container>
+    <ng-container *ngIf="!isLoading">
+      <app-item-cart *ngFor="let product of cartProducts" [product]="product"></app-item-cart>
+    </ng-container>
+    <ng-container *ngIf="isLoading">
+      Chargement du panier...
+    </ng-container>
   </div>
   <div class="total">
     <div class="total-price">
       <p>Total :</p>
-      <p>35,00 Fr</p>
+      <p>{{totalPrice.toFixed(2)}} Fr</p>
     </div>
-    <div class="buy-cart">
-      <button><fa-icon [icon]="faCreditCard"></fa-icon></button>
+    <div (click)="checkout()" [className]="cartProducts.length > 0 ? 'buy-cart' : 'buy-cart disable'">
+      <button>
+        <fa-icon [icon]="faCreditCard"></fa-icon>
+      </button>
     </div>
   </div>
 </div>
