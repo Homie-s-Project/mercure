@@ -29,6 +29,21 @@
     </div>
     <div class="parameters-content">
       <h1 class="paramaters-title">Paramètres</h1>
+      <div>
+        <h3 class="parameter-label">Langue:</h3>
+        <p *ngIf="isParametersLoading">Loading...</p>
+        <p *ngIf="!isParametersLoading">{{currentUser.firstName}}</p>
+      </div>
+      <div>
+        <h3 class="parameter-label">Monnaie:</h3>
+        <p *ngIf="isParametersLoading">Loading...</p>
+        <p *ngIf="!isParametersLoading">{{currentUser.firstName}}</p>
+      </div>
+      <div>
+        <h3 class="parameter-label">Adresse de livraison:</h3>
+        <p *ngIf="isParametersLoading">Loading...</p>
+        <p *ngIf="!isParametersLoading">{{currentUser.firstName}}</p>
+      </div>
     </div>
     <app-orders-panel *ngIf = "orderIsShow"></app-orders-panel>
 </div>

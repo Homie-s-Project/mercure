@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserModel} from 'src/app/models/UserModel';
 import {UserService} from "../../services/user/user.service";
+import { ParameterModel } from 'src/app/models/ParameterModel';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,14 @@ export class ProfileComponent implements OnInit {
     role: {roleId: 0, roleName: "Loading...", roleNumber: -1}
   };
 
+  currentParameter: ParameterModel = {
+    langue: 'Loading...',
+    monnaie: 'Loading...',
+    shipmentAdress: 'Loading...'
+  }
+
   isUserLoading: boolean = true;
+  isParametersLoading: boolean = true;
   orderIsShow: boolean = false;
   parameterIsShow: boolean = false;
 
