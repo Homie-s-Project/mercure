@@ -1,9 +1,9 @@
 <div class="sideBar">
-    <a class="" (click)="profilShow()">Profil</a>
-    <a class="" (click)="orderShow()">Historique de commandes</a>
+    <a (click)="profilShow()">Profil</a>
+    <a (click)="orderShow()">Historique de commandes</a>
 </div>
 <div class="profile">
-    <div class="profile-content" *ngIf = "!orderIsShow && !isUserLoading">
+    <div class="profile-content" *ngIf = "!orderIsShow && !isUserLoading && !parameterIsShow">
       <h1 class="profile-title">Profil</h1>
       <div>
         <h3 class="profile-label">Prenom:</h3>
@@ -26,6 +26,9 @@
           <option value="admin">Administrateur</option>
         </select>
       </div>
+    </div>
+    <div class="parameters-content">
+      <h1 class="paramaters-title">Paramètres</h1>
     </div>
     <app-orders-panel *ngIf = "orderIsShow"></app-orders-panel>
 </div>
