@@ -36,6 +36,15 @@
     .profile-title {
         margin-bottom: 21px;
     }
+    .parameters-content {
+        margin: 0 0 21px 21px;
+        div {
+            margin-bottom: 15px;
+        }
+        .paramaters-title {
+            margin-bottom: 21px;
+        }
+    }
     a{
         color: vars.$bole;
         text-decoration: none;
