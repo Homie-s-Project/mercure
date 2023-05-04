@@ -98,14 +98,11 @@ namespace Mercure.API
                 ? Configuration.GetConnectionString("MercureDb")
                 : Configuration.GetConnectionString("MercureDbNoDocker");
 
-            services.AddDbContext<MercureContext>(opts =>
-            {
-                opts.UseNpgsql(connectionString);
-            });
+            services.AddDbContext<MercureContext>(opts => { opts.UseNpgsql(connectionString); });
 
             Logger.LogInfo(LogTarget.Database, "Méthode de connexion à la base de données : " +
-                                                  (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
-            
+                                               (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
+
             // Connexion à Redis
             services.AddStackExchangeRedisCache(options =>
             {
@@ -115,9 +112,9 @@ namespace Mercure.API
                     : redis["RedisCacheURl"];
                 var redisPort = int.Parse(redis["RedisCachePort"]);
                 var redisPassword = redis["RedisCachePassword"];
-                
+
                 Logger.LogInfo(LogTarget.Database, "Méthode de connexion à Redis : " +
-                                                      (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
+                                                   (isRunningInDockerEnvBoolean ? "Docker" : "Non Docker"));
 
                 var configurationOptions = new ConfigurationOptions
                 {
@@ -134,7 +131,7 @@ namespace Mercure.API
                 options.Configuration = configurationOptions.ToString();
                 options.InstanceName = "Mercure_";
             });
-            
+
             // Ajout la gestion d'un cache en mémoire
             services.AddMemoryCache();
 
@@ -152,7 +149,7 @@ namespace Mercure.API
              *   InvalidCastException: Cannot write DateTime with kind 
              */
             AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-            
+
             // Stripe API Key
             var stripe = Configuration.GetSection("Stripe");
             var apiKey = stripe["SecretKey"];
@@ -161,7 +158,7 @@ namespace Mercure.API
                 Logger.LogError("Stripe API Key is null");
                 throw new Exception("Stripe API Key is null");
             }
-            
+
             StripeConfiguration.ApiKey = apiKey;
 
             if (env.IsDevelopment())
@@ -215,8 +212,9 @@ namespace Mercure.API
                 // Concernant les rôles
                 var hasAlreadyRoles = context.Roles.Any();
                 var countRoles = context.Roles.Count();
-                Logger.LogInfo("La table Roles contient déjà des données : " + hasAlreadyRoles + "(" + countRoles + ") rôles");
-                
+                Logger.LogInfo("La table Roles contient déjà des données : " + hasAlreadyRoles + "(" + countRoles +
+                               ") rôles");
+
                 var roleEnum = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>().ToList();
                 if (!hasAlreadyRoles || countRoles != roleEnum.Count())
                 {
@@ -227,7 +225,7 @@ namespace Mercure.API
                         context.Roles.ToList().ForEach(r => context.Remove(r));
                         await context.SaveChangesAsync();
                     }
-                    
+
                     roleEnum.ToList().ForEach(role =>
                     {
                         Logger.LogInfo("Création du rôle " + role + " avec le numéro " + (int) role);
@@ -251,7 +249,7 @@ namespace Mercure.API
                         devTestUser.ToList().ForEach(u => context.Remove(u));
                         await context.SaveChangesAsync();
                     }
-                    
+
                     // Création des utilisateurs de test pour les rôles
                     var allRoles = context.Roles.ToList();
                     allRoles.ForEach(r =>
@@ -259,31 +257,32 @@ namespace Mercure.API
                         Logger.LogInfo("Création des utilisateurs de test pour le rôle " + r.RoleName);
                         User userRoleTest = new User
                         {
-                            ServiceId = "DEV:"+r.RoleName+":RandomDevServiceId",
+                            ServiceId = "DEV:" + r.RoleName + ":RandomDevServiceId",
                             LastName = "LastNameDev",
                             FirstName = "FirstNameDev",
                             Email = "dev@mercure.com",
                             CreatedAt = DateTime.Now,
                             LastUpdatedAt = DateTime.Now
                         };
-                        
+
                         userRoleTest.Role = r;
                         context.Users.Add(userRoleTest);
                     });
                     await context.SaveChangesAsync();
-                    
+
                     // Token Dev User
-                    var devUser = context.Users.FirstOrDefault(u => u.ServiceId.StartsWith("DEV") && u.Role.RoleNumber == (int) RoleEnum.Dev);
+                    var devUser = context.Users.FirstOrDefault(u =>
+                        u.ServiceId.StartsWith("DEV") && u.Role.RoleNumber == (int) RoleEnum.Dev);
                     var tokenDevUser = JwtUtils.GenerateJsonWebToken(devUser);
                     Logger.LogInfo("Token de l'utilisateur de dev : " + tokenDevUser);
-                    
+
                     string isRunningInDockerEnv = Environment.GetEnvironmentVariable("RUN_IN_DOCKER");
                     Boolean.TryParse(isRunningInDockerEnv, out bool isRunningInDockerEnvBoolean);
 
                     if (!isRunningInDockerEnvBoolean)
                     {
-                        var linkSwagger = "http://localhost:5000/swagger/index.html?token="+tokenDevUser;
-                        OpenBrowser(linkSwagger); 
+                        var linkSwagger = "http://localhost:5000/swagger/index.html?token=" + tokenDevUser;
+                        OpenBrowser(linkSwagger);
                     }
 
                     // DEV STOCK
@@ -320,13 +319,13 @@ namespace Mercure.API
                     Logger.LogInfo("Création des catégories de dev...");
                     var devCategoriesList = new List<Category>()
                     {
-                        new Category("DEV:Chien", "pas de description: Chien"),
-                        new Category("DEV:Chat", "pas de description: Chat"),
-                        new Category("DEV:Rongeur", "pas de description: Rongeur"),
-                        new Category("DEV:Oiseau", "pas de description: Oiseau"),
-                        new Category("DEV:Poisson", "pas de description: Poisson"),
-                        new Category("DEV:Reptile", "pas de description: Reptile"),
-                        new Category("DEV:Autre", "pas de description: Autre"),
+                        new Category("Chien", "pas de description: Chien"),
+                        new Category("Chat", "pas de description: Chat"),
+                        new Category("Rongeur", "pas de description: Rongeur"),
+                        new Category("Oiseau", "pas de description: Oiseau"),
+                        new Category("Poisson", "pas de description: Poisson"),
+                        new Category("Reptile", "pas de description: Reptile"),
+                        new Category("Autre", "pas de description: Autre"),
                     };
 
                     devCategoriesList.ForEach(c => context.Categories.Add(c));
@@ -334,8 +333,8 @@ namespace Mercure.API
 
 
                     // Si la base de données contient des produits commencant par DEV:, alors on supprime les données de la base de données et on les recréeq
-                    var devProducts = context.Products.Where(p => p.ProductName.StartsWith("DEV:")).ToList();
-                    if (devProducts.Count() > 0)
+                    var devProducts = context.Products.ToList();
+                    if (devProducts.Any())
                     {
                         Logger.LogInfo("Suppression des produits commencant par 'DEV:' de la table Products");
                         devProducts.ForEach(p => context.Remove(p));
@@ -360,7 +359,7 @@ namespace Mercure.API
                         p.Categories = await RandomCategories(context);
                     });
                     await context.SaveChangesAsync();
-                    
+
                     Logger.LogInfo("Fin du remplissage de la base de données");
                 }
             }
@@ -388,15 +387,34 @@ namespace Mercure.API
 
         private string RandomProductName()
         {
+            // generate list of random product for animal shopping
             var productNames = new List<string>()
             {
-                "Chien",
-                "Chat",
-                "Oiseau",
                 "Croquettes",
-                "Steak",
-                "Pâtée",
-                "Litière"
+                "Boites",
+                "Friandises",
+                "Jouets",
+                "Litières",
+                "Couchages",
+                "Hygiène",
+                "Antiparasitaires",
+                "Compléments alimentaires",
+                "Matériel de toilettage",
+                "Matériel d'éducation",
+                "Matériel de transport",
+                "Matériel d'agility",
+                "Matériel de dressage",
+                "Matériel de sécurité",
+                "Brosse",
+                "Shampoing",
+                "Collier",
+                "Laisse",
+                "Harnais",
+                "Gamelle",
+                "Cage",
+                "Aquarium",
+                "Terrarium",
+                "Nourriture"
             };
 
             return "DEV:" + productNames[new Random().Next(0, productNames.Count)];
@@ -495,7 +513,7 @@ namespace Mercure.API
         {
             return new Product()
             {
-                ProductName = RandomProductName() + " - " + Guid.NewGuid().ToString().Substring(0, 4),
+                ProductName = RandomProductName() + " - " + RandomProductName(),
                 ProductBrandName = RandomBrandNames(),
                 ProductPrice = ProductPrice(),
                 ProductDescription = "Description de test",
