@@ -32,17 +32,17 @@
       <div>
         <h3 class="parameter-label">Langue:</h3>
         <p *ngIf="isParametersLoading">Loading...</p>
-        <p *ngIf="!isParametersLoading">{{currentUser.firstName}}</p>
+        <p *ngIf="!isParametersLoading">{{currentParameter.langue}}</p>
       </div>
       <div>
         <h3 class="parameter-label">Monnaie:</h3>
         <p *ngIf="isParametersLoading">Loading...</p>
-        <p *ngIf="!isParametersLoading">{{currentUser.firstName}}</p>
+        <p *ngIf="!isParametersLoading">{{currentParameter.monnaie}}</p>
       </div>
       <div>
         <h3 class="parameter-label">Adresse de livraison:</h3>
         <p *ngIf="isParametersLoading">Loading...</p>
-        <p *ngIf="!isParametersLoading">{{currentUser.firstName}}</p>
+        <p *ngIf="!isParametersLoading">{{currentParameter.shipmentAdress}}</p>
       </div>
     </div>
     <app-orders-panel *ngIf = "orderIsShow"></app-orders-panel>

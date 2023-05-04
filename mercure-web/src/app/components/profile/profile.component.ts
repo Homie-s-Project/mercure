@@ -18,13 +18,13 @@ export class ProfileComponent implements OnInit {
   };
 
   currentParameter: ParameterModel = {
-    langue: 'Loading...',
-    monnaie: 'Loading...',
-    shipmentAdress: 'Loading...'
+    langue: 'fr',
+    monnaie: 'chf',
+    shipmentAdress: 'Rue de Genève 63, 1004 Lausanne'
   }
 
   isUserLoading: boolean = true;
-  isParametersLoading: boolean = true;
+  isParametersLoading: boolean = false;
   orderIsShow: boolean = false;
   parameterIsShow: boolean = false;
 
