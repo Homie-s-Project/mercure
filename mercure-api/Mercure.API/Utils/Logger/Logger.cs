@@ -22,6 +22,7 @@ public class Logger
                 {
                     logText += $"\u001b[37m[Trace]\u001b[0m ";
                 }
+
                 break;
             case LogLevel.Debug:
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -32,6 +33,7 @@ public class Logger
                 {
                     logText += $"\u001b[34m[Debug]\u001b[0m ";
                 }
+
                 break;
             case LogLevel.Info:
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -42,6 +44,7 @@ public class Logger
                 {
                     logText += $"\u001b[32m[Info]\u001b[0m ";
                 }
+
                 break;
             case LogLevel.Warn:
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -63,6 +66,7 @@ public class Logger
                 {
                     logText += $"\u001b[31m[Error]\u001b[0m ";
                 }
+
                 break;
             case LogLevel.Critical:
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -73,6 +77,7 @@ public class Logger
                 {
                     logText += $"\u001b[35m[Critical]\u001b[0m ";
                 }
+
                 break;
             case LogLevel.None:
                 break;
@@ -87,7 +92,8 @@ public class Logger
             if (logLevel == LogLevel.Error || logLevel == LogLevel.Critical)
             {
                 WriteColorForWindows(logText, ConsoleColor.Red);
-            } else if (logLevel == LogLevel.Warn)
+            }
+            else if (logLevel == LogLevel.Warn)
             {
                 WriteColorForWindows(logText, ConsoleColor.Yellow);
             }
@@ -100,7 +106,7 @@ public class Logger
         {
             Console.WriteLine(logText);
         }
-        
+
         // Ajout du log dans le fichier de log
         var folderExist = Directory.Exists("logs");
         if (folderExist)
@@ -108,7 +114,10 @@ public class Logger
             var processStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
             var logFileName = $"log-{processStarted.ToString("dd-MM-yyyy")}.txt";
             var logFilePath = Path.Combine("logs", logFileName);
-            File.AppendAllText(logFilePath, logText + Environment.NewLine);
+            using (StreamWriter streamWriter = File.AppendText(logFilePath))
+            {
+                streamWriter.WriteLine(logText);
+            }
         }
         else
         {
@@ -124,25 +133,25 @@ public class Logger
 
     public static void LogError(string message) => Log(LogLevel.Error, LogTarget.File, message);
     public static void LogError(LogTarget logTarget, string message) => Log(LogLevel.Error, logTarget, message);
-    
+
     private static void WriteColorForWindows(string message, ConsoleColor color)
     {
         var pieces = Regex.Split(message, @"(\[[^\]]*\])");
 
-        for(int i=0;i<pieces.Length;i++)
+        for (int i = 0; i < pieces.Length; i++)
         {
             string piece = pieces[i];
-        
+
             if (piece.StartsWith("[") && piece.EndsWith("]"))
             {
                 Console.ForegroundColor = color;
-                piece = piece.Substring(1,piece.Length-2);          
+                piece = piece.Substring(1, piece.Length - 2);
             }
-        
+
             Console.Write(piece);
             Console.ResetColor();
         }
-    
+
         Console.WriteLine();
     }
 }
