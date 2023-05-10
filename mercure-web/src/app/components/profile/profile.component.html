@@ -28,7 +28,7 @@
         </select>
       </div>
     </div>
-    <div class="parameters-content">
+    <div class="parameters-content" *ngIf = "!orderIsShow && !isUserLoading && !parameterIsShow">
       <h1 class="paramaters-title">Paramètres</h1>
       <div>
         <h3 class="parameter-label">Langue:</h3>

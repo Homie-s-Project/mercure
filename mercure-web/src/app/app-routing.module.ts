@@ -1,11 +1,13 @@
-import { Component, NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './components/home/home.component';
-import { ProductComponent } from './components/product/product.component';
-import { ProfileComponent } from './components/profile/profile.component';
-import { LandingComponent } from './components/landing/landing.component';
-import { LoadingComponent } from './components/loading/loading.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {HomeComponent} from './components/home/home.component';
+import {ProductComponent} from './components/product/product.component';
+import {ProfileComponent} from './components/profile/profile.component';
+import {LandingComponent} from './components/landing/landing.component';
+import {LoadingComponent} from './components/loading/loading.component';
 import {SearchComponent} from "./components/search/search.component";
+import {AuthentifiedGuard} from "./guard/authentified/authentified.guard";
+import {UnauthentifiedGuard} from "./guard/unauthentified/unauthentified.guard";
 
 
 const routes: Routes = [
@@ -16,7 +18,10 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-    component: ProfileComponent
+    component: ProfileComponent,
+    canActivate: [
+      AuthentifiedGuard
+    ]
   },
   {
     path: 'product/:productId',
@@ -24,7 +29,10 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    component: LandingComponent
+    component: LandingComponent,
+    canActivate: [
+      UnauthentifiedGuard
+    ]
   },
   {
     path: 'loading',
@@ -46,6 +54,11 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+    AuthentifiedGuard,
+    UnauthentifiedGuard,
+  ]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
