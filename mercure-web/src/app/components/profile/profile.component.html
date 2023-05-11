@@ -1,9 +1,10 @@
 <div class="sideBar">
     <a (click)="profilShow()">Profil</a>
     <a (click)="orderShow()">Historique de commandes</a>
+    <a (click)="managementShow()">Gestion</a>
 </div>
 <div class="profile">
-  <div *ngIf = "!orderIsShow && !isUserLoading && !parameterIsShow">
+  <div *ngIf = "!managementIsShow && !orderIsShow && !isUserLoading">
     <div class="profile-content">
       <h1 class="profile-title">Profil</h1>
       <div>
@@ -48,4 +49,5 @@
     </div>
   </div>
   <app-orders-panel *ngIf = "orderIsShow"></app-orders-panel>
+  <app-management *ngIf = "managementIsShow"></app-management>
 </div>

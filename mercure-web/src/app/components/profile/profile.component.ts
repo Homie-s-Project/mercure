@@ -26,23 +26,23 @@ export class ProfileComponent implements OnInit {
   isUserLoading: boolean = true;
   isParametersLoading: boolean = false;
   orderIsShow: boolean = false;
-  parameterIsShow: boolean = false;
+  managementIsShow: boolean = false;
 
   constructor(private userService: UserService) {
   }
 
   profilShow() {
     this.orderIsShow = false;
-    this.parameterIsShow = false;
+    this.managementIsShow = false;
   }
 
   orderShow() {
     this.orderIsShow = true;
-    this.parameterIsShow = false;
+    this.managementIsShow = false;
   }
-  parameterShow(){
+  managementShow(){
+    this.managementIsShow = true;
     this.orderIsShow = false;
-    this.parameterIsShow = true;
   }
 
   ngOnInit(): void {

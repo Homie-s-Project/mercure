@@ -31,6 +31,7 @@ import {ProductsPaginationComponent} from './components/products-pagination/prod
 import { SearchComponent } from './components/search/search.component';
 import {FormsModule} from "@angular/forms";
 import {NgOptimizedImage} from "@angular/common";
+import { ManagementComponent } from './components/management/management.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import {NgOptimizedImage} from "@angular/common";
     ItemCartComponent,
     TagsComponent,
     ProductsPaginationComponent,
-    SearchComponent
+    SearchComponent,
+    ManagementComponent
   ],
   imports: [
     BrowserModule,

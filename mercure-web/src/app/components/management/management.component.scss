@@ -1,0 +1,40 @@
+@use '/src/styles/variables.scss' as vars;
+
+.management-title {
+    margin-bottom: 21px;
+}
+.management-subtitle {
+    margin-bottom: 21px;
+    display: block;
+}
+
+.management-nav {
+    background-color:vars.$lemon-chiffon;
+    border: solid 1px vars.$bole;
+    padding: 15px 32px;
+    text-align: center;
+    color: vars.$bole;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    float: left;
+    width: 33%;
+    margin-bottom: 21px;
+}
+.management-nav:focus{
+    text-decoration: underline;
+}
+input {
+    line-height: 40px;
+    width: 30%;
+    font-size: 18px;
+    padding: 5px;
+    border: solid 1px vars.$bole;
+    border-radius: 5px;
+    color: vars.$dark-green;
+    background-color: transparent;
+    margin-bottom: 15px;
+    &:focus {
+      outline: none;
+    }
+  }
