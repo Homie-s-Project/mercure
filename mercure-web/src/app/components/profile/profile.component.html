@@ -22,13 +22,11 @@
       </div>
       <div>
         <h3 for="roles" class="profile-label">Role:</h3>
-        <select class="role-select" name="roles" id="roles">
-          <option value="user">Utilisateur</option>
-          <option value="admin">Administrateur</option>
-        </select>
+        <p *ngIf="isUserLoading">Loading...</p>
+        <p *ngIf="!isUserLoading">{{currentUser.role.roleName}}</p>
       </div>
     </div>
-    <div class="parameters-content" *ngIf = "!orderIsShow && !isUserLoading && !parameterIsShow">
+    <div class="parameters-content">
       <h1 class="paramaters-title">Paramètres</h1>
       <div>
         <h3 class="parameter-label">Langue:</h3>
