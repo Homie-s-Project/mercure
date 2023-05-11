@@ -3,7 +3,8 @@
     <a (click)="orderShow()">Historique de commandes</a>
 </div>
 <div class="profile">
-    <div class="profile-content" *ngIf = "!orderIsShow && !isUserLoading && !parameterIsShow">
+  <div *ngIf = "!orderIsShow && !isUserLoading && !parameterIsShow">
+    <div class="profile-content">
       <h1 class="profile-title">Profil</h1>
       <div>
         <h3 class="profile-label">Prenom:</h3>
@@ -45,5 +46,6 @@
         <p *ngIf="!isParametersLoading">{{currentParameter.shipmentAdress}}</p>
       </div>
     </div>
-    <app-orders-panel *ngIf = "orderIsShow"></app-orders-panel>
+  </div>
+  <app-orders-panel *ngIf = "orderIsShow"></app-orders-panel>
 </div>
