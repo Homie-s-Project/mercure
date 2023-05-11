@@ -31,7 +31,6 @@ public class ShoppingController : ApiNoSecurityController
     /// <returns></returns>
     [HttpGet("home")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationProduct))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> GetProductsWithPagination(string pageIndex = "1", string pageSize = "15")
     {

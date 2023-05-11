@@ -54,7 +54,8 @@ public class RoleController : ApiSecurityController
     [HttpGet("{roleId}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RoleDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> GetRole(string roleId)
     {
         var userContext = (User) HttpContext.Items["User"];
@@ -86,8 +87,8 @@ public class RoleController : ApiSecurityController
     /// <returns></returns>
     [HttpPost("add")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RoleDto))]
     public async Task<IActionResult> CreateRole(
         [FromForm] string roleName,
         [FromForm] string roleNumber)
@@ -140,7 +141,8 @@ public class RoleController : ApiSecurityController
     [HttpDelete("delete/{roleId}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RoleDto))]
     public async Task<IActionResult> DeleteRole(string roleId)
     {
         var userContext = (User) HttpContext.Items["User"];
