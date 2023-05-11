@@ -13,7 +13,7 @@ export class JwtTokenResponseHeaderInterceptor implements HttpInterceptor {
       tap(
         (event: HttpEvent<any>) => {},
         (error: any) => {
-          if (error.status === 401 ||error.status === 498) {
+          if (error.status === 401 || error.status === 498 || error.status === 0) {
             sessionStorage.removeItem("token"); // Supprime le sessionStorage
           }
         }

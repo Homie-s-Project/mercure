@@ -44,9 +44,20 @@ public class JwtMiddleware
         {
             // On ajoute dans le context de la requête l'utilisateur ainsi que son rôle
             var userId = informationsJwt.Value;
-            context.Items["User"] = mercureContext.Users
+            var user = await mercureContext.Users
                 .Include(u => u.Role)
-                .First(u => u.UserId == userId);
+                .FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user != null)
+            {
+                context.Items["User"] = user;
+            }
+            else
+            {
+                // 498 = Token expired
+                context.Response.StatusCode = 498;
+                await context.Response.WriteAsync("Bad token");
+            }
         }
 
         // Si le token est présent mais invalide
