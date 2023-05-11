@@ -31,6 +31,8 @@ public class TestController : BaseController
     /// <returns></returns>
     [HttpGet("test-connected")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
     public IActionResult UserConnected()
     {
         var userContext = (User) HttpContext.Items["User"];
@@ -48,6 +50,8 @@ public class TestController : BaseController
     /// <returns></returns>
     [HttpGet("test-dev-users")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
     public IActionResult UserDevRoles()
     {
         var userRoles = _context.Users.Where(u => u.ServiceId.StartsWith("DEV"));
@@ -94,6 +98,7 @@ public class TestController : BaseController
     /// <returns></returns>
     [HttpGet("roles")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
     public IActionResult GetRoles()
     {
         var roles = _context.Roles
@@ -109,6 +114,10 @@ public class TestController : BaseController
     /// </summary>
     /// <returns></returns>
     [HttpPost("roles/{roleNumber}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
+
     public async Task<IActionResult> SetRole(string roleNumber)
     {
         if (string.IsNullOrEmpty(roleNumber))

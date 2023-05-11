@@ -31,7 +31,7 @@ public class ProductController : ApiNoSecurityController
     /// <returns></returns>
     [HttpGet("{productId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> ProductGet(string productId)
     {

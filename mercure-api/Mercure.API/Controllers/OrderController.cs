@@ -33,6 +33,7 @@ public class OrderController : ApiNoSecurityController
     /// <returns></returns>
     [HttpGet("buy")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status303SeeOther)]
     public async Task<IActionResult> BuyAction(string randomId)
     {
@@ -147,6 +148,7 @@ public class OrderController : ApiNoSecurityController
     [HttpGet("buy-again")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status303SeeOther)]
     public async Task<IActionResult> BuyAgainAction(string orderId)
     {
         if (string.IsNullOrEmpty(orderId))
@@ -260,8 +262,8 @@ public class OrderController : ApiNoSecurityController
     /// <param name="sessionId"></param>
     /// <returns></returns>
     [HttpGet("success")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status302Found, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> SuccessAction(string sessionId)
     {
         if (string.IsNullOrEmpty(sessionId))
@@ -349,7 +351,7 @@ public class OrderController : ApiNoSecurityController
     /// <param name="sessionId">the session to cancel</param>
     /// <returns></returns>
     [HttpGet("cancel")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status302Found)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> CancelAction(string sessionId)
     {
@@ -460,29 +462,5 @@ public class OrderController : ApiNoSecurityController
     {
         // ReSharper disable once PossibleInvalidOperationException
         return (int) products.Sum(p => p.Product.ProductPrice * p.Quantity);
-    }
-
-    /// <summary>
-    /// Convert the order product to cart product
-    /// </summary>
-    /// <param name="orderProducts"></param>
-    /// <returns></returns>
-    private List<CartProduct> OrderProductToCartProduct(List<OrderProduct> orderProducts)
-    {
-        var result = new List<CartProduct>();
-        orderProducts.ForEach(p =>
-        {
-            if (p == null) throw new ArgumentNullException(nameof(p));
-            if (p.Product == null) throw new ArgumentNullException(nameof(p.Product));
-
-            var cartProduct = new CartProduct()
-            {
-                Product = p.Product.ToDto(),
-                Quantity = p.Quantity
-            };
-            result.Add(cartProduct);
-        });
-
-        return result;
     }
 }

@@ -23,6 +23,9 @@ public class DeliveryController : ApiSecurityController
     /// Get all available delivery
     /// </summary>
     [HttpGet("available")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> GetAvailableDelivery()
     {
         var userContext = (User) HttpContext.Items["User"];
@@ -58,6 +61,10 @@ public class DeliveryController : ApiSecurityController
     /// <param name="orderId"></param>
     /// <returns></returns>
     [HttpGet("{orderId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> GetOrder(string orderId)
     {
         var isParsed = int.TryParse(orderId, out int orderIdParsed);
@@ -96,6 +103,10 @@ public class DeliveryController : ApiSecurityController
     /// <param name="orderId"></param>
     /// <returns></returns>
     [HttpPost("shipped/{orderId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> ShippedOrder(string orderId)
     {
         var isParsed = int.TryParse(orderId, out int orderIdParsed);
