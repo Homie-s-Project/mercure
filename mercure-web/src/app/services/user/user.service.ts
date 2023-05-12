@@ -4,13 +4,14 @@ import {UserModel} from "../../models/UserModel";
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {catchError, throwError} from "rxjs";
+import {IRoleModel} from "../../models/IRoleModel";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService implements OnInit {
 
-  private user?: UserModel;
+  private user!: UserModel;
 
   constructor(private authService: AuthService, private http: HttpClient) {
   }
@@ -19,7 +20,21 @@ export class UserService implements OnInit {
     this.user = await this.getUser();
   }
 
+  getRole() : IRoleModel | null {
+    if (this.user) {
+      return this.user.role;
+    }
+
+    return null;
+  }
+
   getUser() : Promise<UserModel> {
+
+    if (this.user) {
+      return new Promise((resolve, reject) => {
+        resolve(this.user);
+      });
+    }
 
     return new Promise((resolve, reject) => {
       this.http.get<UserModel>(environment.apiUrl + "/auth/current-user")
