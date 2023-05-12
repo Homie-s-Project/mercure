@@ -31,7 +31,7 @@ public class OrderController : ApiNoSecurityController
     /// </summary>
     /// <param name="randomId">need to give a randomId if not connected</param>
     /// <returns></returns>
-    [HttpGet("buy")]
+    [HttpPost("buy")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status303SeeOther)]
     public async Task<IActionResult> BuyAction(string randomId)
@@ -134,9 +134,8 @@ public class OrderController : ApiNoSecurityController
 
         Logger.LogInfo("The order : " + order.OrderId + ", has been created. \n\nSession id : " + session.Id + ".");
 
-        // Redirection vers la page de paiement
-        Response.Headers.Add("Location", session.Url);
-        return new StatusCodeResult(303);
+        // Retourne l'url qui permet de payer
+        return Ok(session.Url);
     }
 
     /// <summary>
@@ -144,7 +143,7 @@ public class OrderController : ApiNoSecurityController
     /// </summary>
     /// <param name="orderId">order id that has been canceled</param>
     /// <returns></returns>
-    [HttpGet("buy-again")]
+    [HttpPost("buy-again")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> BuyAgainAction(string orderId)
@@ -249,9 +248,8 @@ public class OrderController : ApiNoSecurityController
         Logger.LogInfo("The order : " + order.OrderId + ", has been created to order again. \n\nSession id : " +
                        session.Id + ".");
 
-        // Redirection vers la page de paiement
-        Response.Headers.Add("Location", session.Url);
-        return new StatusCodeResult(303);
+        // Retourne l'url qui permet de pouvoir payer les articles
+        return Ok(session.Url);
     }
 
     /// <summary>

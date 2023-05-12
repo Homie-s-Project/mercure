@@ -68,6 +68,10 @@ button {
         background-color: darken(vars.$dark-moss-green, 7%);
       }
 
+      & button > p {
+        color: vars.$lemon-chiffon;
+      }
+
       fa-icon {
         font-size: 21px;
         color: vars.$lemon-chiffon;
