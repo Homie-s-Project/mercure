@@ -2,5 +2,5 @@
   Chargement des filtres...
 </ng-container>
 <ng-container *ngIf="filters && !isLoading">
-  <app-filter *ngFor="let filter of filters" [category]="filter.filterCategory" [filterValue]="filter.filterValues" (refresh)="refreshSearch()"></app-filter>
+  <app-filter *ngFor="let filter of filters" [filter]="filter" (refresh)="refreshSearch()"></app-filter>
 </ng-container>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Mercure.API.Context;
 using Mercure.API.Models;
@@ -206,7 +207,7 @@ public class ShoppingController : ApiNoSecurityController
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> GetCategories()
     {
-        var categories = await _context.Categories.Select(c => c.CategoryTitle).ToListAsync();
+        var categories = await _context.Categories.Select(c => c.CategoryTitle).Distinct().ToListAsync();
         if (!categories.Any())
         {
             return NotFound(new ErrorMessage("No categories found", StatusCodes.Status404NotFound));
@@ -230,13 +231,14 @@ public class ShoppingController : ApiNoSecurityController
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PaginationProduct))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
-    public async Task<IActionResult> Search(string search, string brand, string category, string minPrice, string maxPrice, string pageIndex = "1", string pageSize = "15")
+    public async Task<IActionResult> Search(string search, string brand, string category, string minPrice,
+        string maxPrice, string pageIndex = "1", string pageSize = "15")
     {
         if (string.IsNullOrEmpty(search))
         {
             return BadRequest(new ErrorMessage("Search is empty", StatusCodes.Status400BadRequest));
         }
-        
+
         var isPageParsed = int.TryParse(pageIndex, out var pageParsed);
         if (!isPageParsed)
         {
@@ -260,12 +262,17 @@ public class ShoppingController : ApiNoSecurityController
 
         if (!string.IsNullOrEmpty(brand))
         {
-            products = products.Where(p => p.ProductBrandName.ToLower() == brand.ToLower());
+            var splitBrand = brand.ToLower().Split(",");
+            
+            // TODO: Si possible normalisé dans le front et dans la requête sql
+            // Pour l'instant on passe direct le nom en entier en esperant que la requête web ne casse rien.
+            products = products.Where(p =>  splitBrand.Contains(p.ProductBrandName.ToLower()));
         }
 
         if (!string.IsNullOrEmpty(category))
         {
-            products = products.Where(p => p.Categories.Any(c => c.CategoryTitle.ToLower() == category.ToLower()));
+            var splitCategory = category.ToLower().Split(",");
+            products = products.Where(p => p.Categories.Any(c => splitCategory.Contains(c.CategoryTitle.ToLower())));
         }
 
         if (!string.IsNullOrEmpty(minPrice))
@@ -298,10 +305,11 @@ public class ShoppingController : ApiNoSecurityController
                 .Include(p => p.Categories)
                 .Select(p => new ProductDto(p, true))
                 .ToList();
-            
+
             var totalProducts = await products.CountAsync();
             var totalPages = (int) Math.Ceiling((double) totalProducts / pageSizeParsed);
-            var paginationProduct = new PaginationProduct(responseProduct, pageParsed, pageSizeParsed, totalPages, totalProducts);
+            var paginationProduct =
+                new PaginationProduct(responseProduct, pageParsed, pageSizeParsed, totalPages, totalProducts);
 
             return Ok(paginationProduct);
         }

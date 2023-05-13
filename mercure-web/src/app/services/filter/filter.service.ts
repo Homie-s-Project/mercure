@@ -16,6 +16,15 @@ export class FilterService {
   }
 
   getFilter() {
+    this.filter.push({
+      filterCategory: 'Prix',
+      filterCategoryBackend: 'price',
+      filterType: 'range',
+      filterValues: [],
+      filterRangeMax: 1000,
+      filterRangeMin: 10,
+    });
+
     return Promise.all([this.getBrands(), this.getCategories()])
       .then((data) => {
         let brands = data[0];
@@ -32,6 +41,7 @@ export class FilterService {
         this.filter.push({
           filterCategory: 'Marque',
           filterCategoryBackend: 'brand',
+          filterType: 'select',
           filterValues: filterValuesBrands
         });
 
@@ -48,6 +58,7 @@ export class FilterService {
         this.filter.push({
           filterCategory: 'Catégorie',
           filterCategoryBackend: 'category',
+          filterType: 'select',
           filterValues: filterValuesCategories
         });
 
@@ -58,6 +69,7 @@ export class FilterService {
           console.log(err);
         }
       });
+
   }
 
   getBrands(): Promise<string[]> {
@@ -114,21 +126,67 @@ export class FilterService {
 
   generateQueryString(): string {
     let queryString = '';
-    this.filter.forEach((category) => {
+
+    // filtre avec données de type select
+    this.filter.filter(f => f.filterCategory == 'select').forEach((category) => {
+
+      let categoryQueryString: string[] = [];
       category.filterValues.forEach((filter) => {
+
         if (filter.checked) {
-          queryString += `${category.filterCategoryBackend}=${filter.value}&`;
+          categoryQueryString.push(filter.value);
         }
       });
+
+      if (categoryQueryString.length > 0) {
+        queryString += `${category.filterCategoryBackend}=${categoryQueryString.join(',')}&`;
+      }
     });
+
+    // filtre avec données de type range
+    this.filter
 
     return queryString;
   }
 
   // Normalize string to remove accents and special characters
   private normalizeString(str: string): string {
-    let normalized = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    normalized = normalized.replace(/[^a-zA-Z0-9]/g, '-');
-    return normalized.toLowerCase();
+    let normalized = str.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+
+    // Remove multiple dashes, bug with the regex not the same as the one in the back
+    if (normalized.includes("---")) {
+      normalized = normalized.replace("---", "-");
+    }
+
+    // La normalisation ne peut pas marcher à cause de la regex du back
+    return str;
+  }
+
+  getSelectedCountFilterValue(category: string) {
+    let count = 0;
+    let filter = this.filter.find((filter) => {
+      return filter.filterCategory === category;
+    });
+
+    if (filter) {
+      filter.filterValues.forEach((filterValue) => {
+        if (filterValue.checked) {
+          count++;
+        }
+      });
+    }
+
+    return count;
+  }
+
+  setRangeValue(category: string, sliderMinValue: number, sliderMaxValue: number) {
+    let filter = this.filter.find((filter) => {
+      return filter.filterCategory === category;
+    });
+
+    if (filter) {
+      filter.filterRangeMin = sliderMinValue;
+      filter.filterRangeMax = sliderMaxValue;
+    }
   }
 }

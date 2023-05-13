@@ -1,8 +1,11 @@
 <div class="filter-item">
   <button (click)="toggleFilter()" [className]="isFilterOpen ? 'filter-title filter-open' : 'filter-title'">
-    <span>
-      <h3>{{category || 'Chargement...' }}</h3>
-    </span>
+    <div class="filter-category">
+      <h3>{{filter.filterCategory || 'Aucun titre' }}</h3>
+      <ng-container *ngIf="countSelectedFilterValue(filter.filterCategory) > 0">
+        <h3 class="filter-count">({{countSelectedFilterValue(filter.filterCategory)}})</h3>
+      </ng-container>
+    </div>
     <span class="filter-icon">
       <fa-icon [icon]="faChevronUp"></fa-icon>
     </span>
@@ -11,16 +14,22 @@
     <div class="filter-choice">
       <div class="filter-top">
       <span>
-        {{category || 'Chargement...'}}
+        {{filter.filterCategory || 'Aucune titre'}}
       </span>
       </div>
-      <div class="filter-select">
-        <label *ngFor="let filter of filterValue">
+      <!-- Select -->
+      <div class="filter-select" *ngIf="filter.filterType === 'select'">
+        <label *ngFor="let filterObject of filter.filterValues">
             <span>
-              <input (change)="setFilterValue($event, category, filter)" type="checkbox" [name]="filter.name" [value]="filter.value">
+              <input (change)="setFilterValue($event, filter.filterCategory, filterObject)" type="checkbox" [name]="filterObject.name"
+                     [value]="filterObject.value">
             </span>
-          <span>{{filter.name}}</span>
+          <span>{{filterObject.name}}</span>
         </label>
+      </div>
+      <!-- Range -->
+      <div class="filter-select filter-slider" *ngIf="filter.filterType === 'range' && filter.filterRangeMin != undefined">
+        <ngx-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" (userChangeEnd)="changeRange(filter.filterCategory)" [options]="sliderOption"></ngx-slider>
       </div>
       <div class="filter-submit">
         <button (click)="closeOrSave()">

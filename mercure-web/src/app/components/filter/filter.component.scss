@@ -34,6 +34,7 @@
     .filter-choice {
       background-color: vars.$lemon-chiffon;
       padding: 20px 20px;
+
       // Pour ne pas avoir le pixel de border de la même couleur que le boutton se trouvant en dessous
       border-top-color: vars.$lemon-chiffon !important;
       border: 1px solid vars.$moss-green;
@@ -103,3 +104,58 @@
   }
 }
 
+.filter-category {
+  display: flex;
+  gap: 12px;
+
+  .filter-count {
+    font-style: italic;
+  }
+}
+
+
+::ng-deep {
+  .filter-slider .ngx-slider .ngx-slider-bar {
+    background: vars.$dark-moss-green;
+    height: 2px;
+  }
+  .filter-slider .ngx-slider .ngx-slider-selection {
+    background: vars.$moss-green;
+  }
+
+  .filter-slider .ngx-slider .ngx-slider-pointer {
+    width: 8px;
+    height: 16px;
+    top: auto;
+    bottom: 0;
+    background-color: vars.$moss-green;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .filter-slider .ngx-slider .ngx-slider-pointer:after {
+    display: none;
+  }
+
+  .filter-slider .ngx-slider .ngx-slider-bubble {
+    bottom: 14px;
+  }
+
+  .filter-slider .ngx-slider .ngx-slider-limit {
+    font-weight: bold;
+    color: vars.$redwood;
+  }
+
+  .filter-slider .ngx-slider .ngx-slider-tick {
+    width: 1px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 0;
+    background: #ffe4d1;
+    top: -1px;
+  }
+
+  .filter-slider .ngx-slider .ngx-slider-tick.ngx-slider-selected {
+    background: vars.$moss-green;;
+  }
+}

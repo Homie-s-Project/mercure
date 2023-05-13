@@ -28,11 +28,12 @@ import {ItemCartComponent} from "./components/item-cart/item-cart.component";
 import {CartService} from "./services/cart/cart.service";
 import {ProductService} from "./services/product/product.service";
 import {ProductsPaginationComponent} from './components/products-pagination/products-pagination.component';
-import { SearchComponent } from './components/search/search.component';
+import {SearchComponent} from './components/search/search.component';
 import {FormsModule} from "@angular/forms";
 import {NgOptimizedImage} from "@angular/common";
-import { FilterComponent } from './components/filter/filter.component';
-import { FilterGroupComponent } from './components/filter-group/filter-group.component';
+import {FilterComponent} from './components/filter/filter.component';
+import {FilterGroupComponent} from './components/filter-group/filter-group.component';
+import {NgxSliderModule} from '@angular-slider/ngx-slider';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { FilterGroupComponent } from './components/filter-group/filter-group.com
     FontAwesomeModule,
     ShareModule,
     FormsModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    NgxSliderModule
   ],
   providers: [
     AuthService,
@@ -83,4 +85,5 @@ import { FilterGroupComponent } from './components/filter-group/filter-group.com
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
