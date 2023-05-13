@@ -1,4 +1,4 @@
-<div class="filter-item">
+<div class="filter-item" *ngIf="filter">
   <button (click)="toggleFilter()" [className]="isFilterOpen ? 'filter-title filter-open' : 'filter-title'">
     <div class="filter-category">
       <h3>{{filter.filterCategory || 'Aucun titre' }}</h3>
