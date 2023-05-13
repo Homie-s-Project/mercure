@@ -85,7 +85,7 @@ public class ShoppingController : ApiNoSecurityController
     {
         var products = await _context.Products
             .OrderBy(p => Guid.NewGuid())
-            .Take(30)
+            .Take(4)
             .Include(p => p.Categories)
             .Select(p => new ProductDto(p, true))
             .ToListAsync();

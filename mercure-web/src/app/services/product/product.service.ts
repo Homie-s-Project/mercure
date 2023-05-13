@@ -105,4 +105,21 @@ export class ProductService implements OnInit {
         })
     });
   }
+
+  getRandomProducts() : Promise<IProductModel[]> {
+
+    return new Promise((resolve, reject) => {
+      this.http.get<IProductModel[]>(environment.apiUrl + "/shopping")
+        .pipe(
+          catchError((error) => {
+            reject(error);
+            return throwError(error);
+          })
+        )
+        .subscribe((data) => {
+          resolve(data);
+          return data;
+        });
+    });
+  }
 }
