@@ -91,6 +91,8 @@ nav {
 }
 
 .suggestions {
+  z-index: 10 !important;
+  position: inherit;
   padding: 10px 8px;
   opacity: 1;
   pointer-events: auto;

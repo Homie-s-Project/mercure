@@ -9,7 +9,7 @@
   </div>
 
   <div>
-    <app-filter-group></app-filter-group>
+    <app-filter-group (refresh)="searchProduct()"></app-filter-group>
   </div>
 
   <div class="product-list">
@@ -20,7 +20,7 @@
       Chargement...
     </ng-container>
     <ng-container *ngIf="noProductFound">
-      Aucun produit trouvé pour la recherche '{{search}}'.
+      Aucun produit trouvé pour la recherche '{{search}}' avec les filtres actuelles.
     </ng-container>
     <div class="error-message" *ngIf="hasProductsError">
       Il y a eu une erreur lors du chargement des produits. <br/>

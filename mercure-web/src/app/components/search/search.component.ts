@@ -27,6 +27,7 @@ export class SearchComponent implements OnInit, OnDestroy, OnChanges {
   messageError: string = "";
   subscriptionErrorTimer!: Subscription;
   noProductFound: boolean = false
+
   // in seconds
   private TIME_BEFORE_REDIRECT: number = 10;
   secondBeforeRedirect: number = this.TIME_BEFORE_REDIRECT;
@@ -52,7 +53,8 @@ export class SearchComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  ngOnDestroy(): void {this.subscriptions.forEach(s => s.unsubscribe());
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
     if (this.hasProductsError) {
       this.subscriptionErrorTimer.unsubscribe();
     }
@@ -64,7 +66,7 @@ export class SearchComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   searchProduct() {
-    this.searchService.search(this.search, undefined, this.pageIndex)
+    this.searchService.search(this.search, this.pageIndex)
       .then((data) => {
         this.productsPaginated = data;
         this.noProductFound = false;
@@ -74,7 +76,11 @@ export class SearchComponent implements OnInit, OnDestroy, OnChanges {
           console.error(error)
         }
 
-        this.noProductFound = error.status === 404;
+        if (error.status === 404) {
+          this.noProductFound = true;
+          this.productsPaginated = undefined;
+        }
+
 
         if (error.status !== 404) {
           this.hasProductsError = true;

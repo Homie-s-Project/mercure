@@ -206,7 +206,7 @@ public class ShoppingController : ApiNoSecurityController
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> GetCategories()
     {
-        var categories = await _context.Categories.ToListAsync();
+        var categories = await _context.Categories.Select(c => c.CategoryTitle).ToListAsync();
         if (!categories.Any())
         {
             return NotFound(new ErrorMessage("No categories found", StatusCodes.Status404NotFound));

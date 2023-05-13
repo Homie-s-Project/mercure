@@ -1,2 +1,6 @@
-<app-filter filterName="Catégorie"></app-filter>
-<app-filter filterName="Marque"></app-filter>
+<ng-container *ngIf="isLoading">
+  Chargement des filtres...
+</ng-container>
+<ng-container *ngIf="filters && !isLoading">
+  <app-filter *ngFor="let filter of filters" [category]="filter.filterCategory" [filterValue]="filter.filterValues" (refresh)="refreshSearch()"></app-filter>
+</ng-container>
