@@ -19,13 +19,13 @@ export class FilterComponent {
   isFilterOpen: boolean = false;
   sliderOption: Options = {
     floor: 10,
-    ceil: 1000,
+    ceil: 120,
     step: 5,
     animate: false,
   }
 
   sliderMinValue: number = 10;
-  sliderMaxValue: number = 1000;
+  sliderMaxValue: number = 120;
 
 
   protected readonly faChevronUp = faChevronUp;

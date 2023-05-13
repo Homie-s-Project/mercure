@@ -24,7 +24,7 @@ export class FilterService {
       filterCategoryBackend: 'price',
       filterType: 'range',
       filterValues: [],
-      filterRangeMax: 1000,
+      filterRangeMax: 120,
       filterRangeMin: 10,
     });
 
