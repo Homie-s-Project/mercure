@@ -67,6 +67,7 @@ export class SearchComponent implements OnInit, OnDestroy, OnChanges {
     this.searchService.search(this.search, undefined, this.pageIndex)
       .then((data) => {
         this.productsPaginated = data;
+        this.noProductFound = false;
       })
       .catch((error) => {
         if (!environment.production) {

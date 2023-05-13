@@ -31,6 +31,8 @@ import {ProductsPaginationComponent} from './components/products-pagination/prod
 import { SearchComponent } from './components/search/search.component';
 import {FormsModule} from "@angular/forms";
 import {NgOptimizedImage} from "@angular/common";
+import { FilterComponent } from './components/filter/filter.component';
+import { FilterGroupComponent } from './components/filter-group/filter-group.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +50,9 @@ import {NgOptimizedImage} from "@angular/common";
     ItemCartComponent,
     TagsComponent,
     ProductsPaginationComponent,
-    SearchComponent
+    SearchComponent,
+    FilterComponent,
+    FilterGroupComponent
   ],
   imports: [
     BrowserModule,

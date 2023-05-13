@@ -1,0 +1,39 @@
+<div class="filter-item">
+  <button (click)="toggleFilter()" [className]="isFilterOpen ? 'filter-title filter-open' : 'filter-title'">
+    <span>
+      <h3>{{filterName || 'Chargement...' }}</h3>
+    </span>
+    <span class="filter-icon">
+      <fa-icon [icon]="faChevronUp"></fa-icon>
+    </span>
+  </button>
+  <div class="filter-control" [hidden]="!isFilterOpen">
+    <div class="filter-choice">
+      <div class="filter-top">
+      <span>
+        {{filterName || 'Chargement...'}}
+      </span>
+      </div>
+      <div class="filter-select">
+        <label>
+            <span>
+              <input type="checkbox" name="category">
+            </span>
+          <span>Category 1</span>
+        </label>
+        <label>
+            <span>
+              <input type="checkbox" name="category">
+            </span>
+          <span>Category 2</span>
+        </label>
+      </div>
+      <div class="filter-submit">
+        <button>
+          <!--            Si contenu changer "Sauvegarder" sinon "Fermer"-->
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
