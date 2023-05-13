@@ -20,11 +20,14 @@ export class FilterGroupComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.isLoading = true;
+
     this.filterService.getFilter()
       .then((data) => {
         if (!environment.production) {
           console.log("Filter loaded");
           console.log(data);
+          this.filters = this.filterService.filter;
         }
       })
       .catch((err) => {

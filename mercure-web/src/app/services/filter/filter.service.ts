@@ -16,7 +16,10 @@ export class FilterService {
   }
 
   getFilter() {
-    this.filter.push({
+    let filterTemp: IFilterModel[] = [];
+
+    // On remplit les filtres avec les données
+    filterTemp.push({
       filterCategory: 'Prix',
       filterCategoryBackend: 'price',
       filterType: 'range',
@@ -38,7 +41,7 @@ export class FilterService {
           });
         });
 
-        this.filter.push({
+        filterTemp.push({
           filterCategory: 'Marque',
           filterCategoryBackend: 'brand',
           filterType: 'select',
@@ -55,13 +58,14 @@ export class FilterService {
           });
         });
 
-        this.filter.push({
+        filterTemp.push({
           filterCategory: 'Catégorie',
           filterCategoryBackend: 'category',
           filterType: 'select',
           filterValues: filterValuesCategories
         });
 
+        this.filter = filterTemp;
         return this.filter;
       })
       .catch((err) => {
@@ -128,7 +132,7 @@ export class FilterService {
     let queryString = '';
 
     // filtre avec données de type select
-    this.filter.filter(f => f.filterCategory == 'select').forEach((category) => {
+    this.filter.filter(f => f.filterType == 'select').forEach((category) => {
 
       let categoryQueryString: string[] = [];
       category.filterValues.forEach((filter) => {
@@ -144,22 +148,16 @@ export class FilterService {
     });
 
     // filtre avec données de type range
-    this.filter
+    this.filter.filter(f => f.filterType === 'range').forEach((category) => {
+
+      function capitalizeFirstLetter(str: string) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+
+      queryString += `min${capitalizeFirstLetter(category.filterCategoryBackend)}=${category.filterRangeMin}&max${capitalizeFirstLetter(category.filterCategoryBackend)}=${category.filterRangeMax}&`;
+    });
 
     return queryString;
-  }
-
-  // Normalize string to remove accents and special characters
-  private normalizeString(str: string): string {
-    let normalized = str.replace(/[^a-z0-9]/gi, '-').toLowerCase();
-
-    // Remove multiple dashes, bug with the regex not the same as the one in the back
-    if (normalized.includes("---")) {
-      normalized = normalized.replace("---", "-");
-    }
-
-    // La normalisation ne peut pas marcher à cause de la regex du back
-    return str;
   }
 
   getSelectedCountFilterValue(category: string) {
@@ -189,4 +187,19 @@ export class FilterService {
       filter.filterRangeMax = sliderMaxValue;
     }
   }
+
+  // Normalize string to remove accents and special characters
+  private normalizeString(str: string): string {
+    let normalized = str.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+
+    // Remove multiple dashes, bug with the regex not the same as the one in the back
+    if (normalized.includes("---")) {
+      normalized = normalized.replace("---", "-");
+    }
+
+    // La normalisation ne peut pas marcher à cause de la regex du back
+    return str;
+  }
 }
+
+

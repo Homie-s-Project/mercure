@@ -34,6 +34,8 @@ import {NgOptimizedImage} from "@angular/common";
 import {FilterComponent} from './components/filter/filter.component';
 import {FilterGroupComponent} from './components/filter-group/filter-group.component';
 import {NgxSliderModule} from '@angular-slider/ngx-slider';
+import {FilterService} from "./services/filter/filter.service";
+import {SearchService} from "./services/search/search.service";
 
 @NgModule({
   declarations: [
@@ -70,6 +72,8 @@ import {NgxSliderModule} from '@angular-slider/ngx-slider';
     AuthService,
     ProductService,
     UserService,
+    FilterService,
+    SearchService,
     {
       provide: APP_INITIALIZER,
       useFactory: (cartService: CartService) => () => cartService.ngOnInit(),

@@ -2,8 +2,11 @@
   <button (click)="toggleFilter()" [className]="isFilterOpen ? 'filter-title filter-open' : 'filter-title'">
     <div class="filter-category">
       <h3>{{filter.filterCategory || 'Aucun titre' }}</h3>
-      <ng-container *ngIf="countSelectedFilterValue(filter.filterCategory) > 0">
+      <ng-container *ngIf="filter.filterType === 'select' && countSelectedFilterValue(filter.filterCategory) > 0">
         <h3 class="filter-count">({{countSelectedFilterValue(filter.filterCategory)}})</h3>
+      </ng-container>
+      <ng-container *ngIf="filter.filterType === 'range' && (sliderMinValue !== 10 && sliderMaxValue !== 1000)">
+        [{{sliderMinValue}} - {{sliderMaxValue}}]
       </ng-container>
     </div>
     <span class="filter-icon">
