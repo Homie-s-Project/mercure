@@ -116,7 +116,8 @@ public class Logger
             var logFilePath = Path.Combine("logs", logFileName);
             using (StreamWriter streamWriter = File.AppendText(logFilePath))
             {
-                streamWriter.WriteLine(logText);
+                string logWrite = $"[{DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss")}] [{logTarget}] {message}";
+                streamWriter.WriteLine(logWrite);
             }
         }
         else
