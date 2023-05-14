@@ -28,9 +28,14 @@ import {ItemCartComponent} from "./components/item-cart/item-cart.component";
 import {CartService} from "./services/cart/cart.service";
 import {ProductService} from "./services/product/product.service";
 import {ProductsPaginationComponent} from './components/products-pagination/products-pagination.component';
-import { SearchComponent } from './components/search/search.component';
+import {SearchComponent} from './components/search/search.component';
 import {FormsModule} from "@angular/forms";
 import {NgOptimizedImage} from "@angular/common";
+import {FilterComponent} from './components/filter/filter.component';
+import {FilterGroupComponent} from './components/filter-group/filter-group.component';
+import {NgxSliderModule} from '@angular-slider/ngx-slider';
+import {FilterService} from "./services/filter/filter.service";
+import {SearchService} from "./services/search/search.service";
 
 @NgModule({
   declarations: [
@@ -48,7 +53,9 @@ import {NgOptimizedImage} from "@angular/common";
     ItemCartComponent,
     TagsComponent,
     ProductsPaginationComponent,
-    SearchComponent
+    SearchComponent,
+    FilterComponent,
+    FilterGroupComponent
   ],
   imports: [
     BrowserModule,
@@ -58,12 +65,15 @@ import {NgOptimizedImage} from "@angular/common";
     FontAwesomeModule,
     ShareModule,
     FormsModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    NgxSliderModule
   ],
   providers: [
     AuthService,
     ProductService,
     UserService,
+    FilterService,
+    SearchService,
     {
       provide: APP_INITIALIZER,
       useFactory: (cartService: CartService) => () => cartService.ngOnInit(),
@@ -85,4 +95,5 @@ import {NgOptimizedImage} from "@angular/common";
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

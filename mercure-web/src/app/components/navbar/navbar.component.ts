@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, EventEmitter, Output} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
 import {faCartShopping, faMagnifyingGlass, faUser, faXmark} from '@fortawesome/free-solid-svg-icons';
 import {SearchService} from "../../services/search/search.service";
 import {debounceTime, Subject, Subscription} from "rxjs";
-import {Router} from "@angular/router";
-import {environment} from "../../../environments/environment";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-navbar',
@@ -11,6 +10,8 @@ import {environment} from "../../../environments/environment";
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements AfterViewInit {
+  subscriptions: Subscription[] = []
+
   faCartShopping = faCartShopping
   faUser = faUser;
   faXmark = faXmark;
@@ -18,20 +19,34 @@ export class NavbarComponent implements AfterViewInit {
   faMagnifyingGlass = faMagnifyingGlass;
   @Output() toggleHide = new EventEmitter<boolean>();
   hideCart: boolean = true
+  isRedirecting: boolean = false;
 
   searchValueChanged: Subject<string> = new Subject<string>();
   autocompleteSuggestions: string[] = [];
   searchValue: string = '';
   active: boolean = false;
-
+  @ViewChild('autocomplete') autocompleteElement: ElementRef | undefined;
   private searchValueSubscription?: Subscription;
-  private autocompleteDelay: number = 500;
-  private autocompleteSubscription: any;
+  private autocompleteDelay: number = 750;
+  private autocompleteSubscription?: Subscription;
 
-  constructor(private searchService: SearchService, private router: Router) {
+  constructor(private searchService: SearchService, private router: Router, private route: ActivatedRoute) {
+    router.events.subscribe((val) => {
+      // Permet de cacher le panier lorsqu'on change de page
+      this.hideCart = true;
+      this.toggleHide.emit(this.hideCart);
+      this.actualIcone = this.faCartShopping;
+
+      // Efface les suggestions de recherche
+      this.autocompleteSuggestions = [];
+
+      // Permet de cancel les requêtes en cours
+      this.autocompleteSubscription?.unsubscribe();
+    });
   }
 
   ngAfterViewInit(): void {
+    this.isRedirecting = false;
     this.searchValueSubscription = this.searchValueChanged
       .pipe(
         debounceTime(this.autocompleteDelay),
@@ -43,25 +58,22 @@ export class NavbarComponent implements AfterViewInit {
         } else {
           this.autocompleteSuggestions = [];
         }
-      })
+      });
+
+    this.subscriptions.push(
+      this.route.queryParams
+        .subscribe(params => {
+          let search = params['q'];
+
+          if (search && this.searchValue.length === 0) {
+            this.searchValue = search;
+          }
+        })
+    );
   }
 
   onChangeInput(text: any) {
     this.searchValueChanged.next(text.value);
-  }
-
-  search() {
-    this.searchService.search(this.searchValue)
-      .then((res) => {
-        if (!environment.production) {
-          console.log(res);
-        }
-      })
-      .catch((err) => {
-        if (!environment.production) {
-          console.error(err);
-        }
-      });
   }
 
   autocomplete() {
@@ -78,6 +90,13 @@ export class NavbarComponent implements AfterViewInit {
   }
 
   goToSearch() {
-    this.router.navigate(['/search'], {queryParams: {q: this.searchValue.trim()}});
+    // Permet de unfocus l'input
+    this.autocompleteElement?.nativeElement.blur();
+
+    // Prevent multiple redirections and avoid page deplucation
+    if (!this.isRedirecting) {
+      this.isRedirecting = true;
+      this.router.navigate(['/search'], {queryParams: {q: this.searchValue.trim()}});
+    }
   }
 }

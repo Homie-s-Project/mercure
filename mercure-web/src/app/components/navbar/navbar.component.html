@@ -1,8 +1,8 @@
 <nav (keydown.escape)="active = false">
   <a class="home-button" [routerLink]="['/']"><h1 class="app-title">MERCURE</h1></a>
   <div [className]="active && autocompleteSuggestions.length > 0 ? 'active-suggestion search-bar-container' : 'search-bar-container'" >
-    <input type="text" class="search-input" (focusin)="active = true" (keydown.enter)="goToSearch()" (keydown.escape)="active = false" (keyup)="onChangeInput($event.target)"
-           placeholder="Rechercher..." autocomplete="off">
+    <input #autocomplete type="text" class="search-input" (focusin)="active = true"  (keydown.enter)="goToSearch()" (keydown.escape)="active = false" (keyup)="onChangeInput($event.target)"
+           placeholder="Rechercher..." autocomplete="off" [(ngModel)]="searchValue">
     <div class="suggestions" *ngIf="active && autocompleteSuggestions.length > 0">
       <ng-container *ngIf="autocompleteSuggestions.length === 0">
         Chargement...
@@ -12,7 +12,7 @@
       </a>
     </div>
     <button class="search-button">
-      <fa-icon class="navbar-icon" (click)="search()" [icon]="faMagnifyingGlass"></fa-icon>
+      <fa-icon class="navbar-icon" (click)="goToSearch()" [icon]="faMagnifyingGlass"></fa-icon>
     </button>
   </div>
   <div class="nav-button-container">

@@ -1,0 +1,58 @@
+<div class="filter-item" *ngIf="filter">
+  <button (click)="toggleFilter()" [className]="isFilterOpen ? 'filter-title filter-open' : 'filter-title'">
+    <div class="filter-category">
+      <h3>{{filter.filterCategory || 'Aucun titre' }}</h3>
+      <ng-container *ngIf="filter.filterType === 'select' && countSelectedFilterValue(filter.filterCategory) > 0">
+        <h3 class="filter-count">({{countSelectedFilterValue(filter.filterCategory)}})</h3>
+      </ng-container>
+      <ng-container *ngIf="filter.filterType === 'range' && (sliderMinValue !== 10 && sliderMaxValue !== 120)">
+        [{{sliderMinValue}} - {{sliderMaxValue}}]
+      </ng-container>
+    </div>
+    <span class="filter-icon">
+      <fa-icon [icon]="faChevronUp"></fa-icon>
+    </span>
+  </button>
+  <div class="filter-control" [hidden]="!isFilterOpen">
+    <div class="filter-choice">
+      <div class="filter-top">
+      <span>
+        {{filter.filterCategory || 'Aucune titre'}}
+      </span>
+      </div>
+      <!-- Select -->
+      <div class="filter-select" *ngIf="filter.filterType === 'select'">
+        <div class="filter-search">
+          <input type="text" [placeholder]="filter.filterCategory" [(ngModel)]="filterSearch" (keyup)="updateList()">
+          <button (click)="clearFilterSearch()" *ngIf="filterSearch.length > 0">
+            <fa-icon [icon]="faXmark"></fa-icon>
+          </button>
+        </div>
+        <div class="filter-search-error" *ngIf="filteredFilterValues.length === 0">
+          Rien à afficher avec le filtre "{{filterSearch}}"
+        </div>
+        <ng-container *ngIf="filteredFilterValues">
+          <label *ngFor="let filterObject of filteredFilterValues">
+            <span>
+              <input (change)="setFilterValue($event, filter.filterCategory, filterObject)" type="checkbox" [name]="filterObject.name"
+                     [value]="filterObject.value">
+            </span>
+            <span>{{filterObject.name}}</span>
+          </label>
+        </ng-container>
+      </div>
+      <!-- Range -->
+      <div class="filter-select filter-slider" *ngIf="filter.filterType === 'range' && filter.filterRangeMin != undefined">
+        <ngx-slider [(value)]="sliderMinValue" [(highValue)]="sliderMaxValue" (userChangeEnd)="changeRange(filter.filterCategory)" [options]="sliderOption"></ngx-slider>
+      </div>
+      <div class="filter-submit">
+        <button (click)="closeOrSave()">
+          <h3>
+            <ng-container *ngIf="hasChanged">Sauvegarder</ng-container>
+            <ng-container *ngIf="!hasChanged">Fermer</ng-container>
+          </h3>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

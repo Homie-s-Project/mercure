@@ -3,7 +3,7 @@ import {IPaginationProductModel} from "../../models/IPaginationProductModel";
 import {environment} from "../../../environments/environment";
 import {SearchService} from "../../services/search/search.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {interval, Subscription} from "rxjs";
+import {catchError, finalize, interval, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-search',
@@ -26,7 +26,9 @@ export class SearchComponent implements OnInit, OnDestroy, OnChanges {
   search: string = "";
   messageError: string = "";
   subscriptionErrorTimer!: Subscription;
+  subscriptionSearch!: Subscription;
   noProductFound: boolean = false
+
   // in seconds
   private TIME_BEFORE_REDIRECT: number = 10;
   secondBeforeRedirect: number = this.TIME_BEFORE_REDIRECT;
@@ -41,7 +43,9 @@ export class SearchComponent implements OnInit, OnDestroy, OnChanges {
             this.router.navigate(['/']);
           }
 
-          this.searchProduct();
+          if (!this.isLoading) {
+            this.searchProduct();
+          }
         })
     );
   }
@@ -52,7 +56,8 @@ export class SearchComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  ngOnDestroy(): void {this.subscriptions.forEach(s => s.unsubscribe());
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
     if (this.hasProductsError) {
       this.subscriptionErrorTimer.unsubscribe();
     }
@@ -64,38 +69,52 @@ export class SearchComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   searchProduct() {
-    this.searchService.search(this.search, undefined, this.pageIndex)
-      .then((data) => {
+    // évite de faire plusieurs requêtes en même temps
+    this.subscriptionSearch?.unsubscribe();
+
+    this.subscriptionSearch = this.searchService.search(this.search, this.pageIndex)
+      .pipe(
+        // @ts-ignore
+        catchError((err) => {
+          if (!environment.production) {
+            console.error(err)
+          }
+
+          if (err.status === 404) {
+            this.noProductFound = true;
+            this.productsPaginated = undefined;
+          }
+
+
+          if (err.status !== 404) {
+            this.hasProductsError = true;
+
+            this.secondBeforeRedirect = 10;
+
+            this.subscriptionErrorTimer = interval(1000)
+              .subscribe(x => {
+                this.secondBeforeRedirect -= 1;
+              })
+
+            setTimeout(() => {
+              this.router.navigate(["/"]);
+            }, this.TIME_BEFORE_REDIRECT * 1_000);
+
+            console.log(err)
+            this.messageError = err.error.message;
+
+            return new Error(err.error.message)
+          }
+        }),
+        finalize(() => {
+          this.isLoading = false;
+          this.checkIfFirstPage();
+          this.checkIfLastPage();
+        })
+      )
+      .subscribe((data) => {
         this.productsPaginated = data;
-      })
-      .catch((error) => {
-        if (!environment.production) {
-          console.error(error)
-        }
-
-        this.noProductFound = error.status === 404;
-
-        if (error.status !== 404) {
-          this.hasProductsError = true;
-
-          this.secondBeforeRedirect = 10;
-
-          this.subscriptionErrorTimer = interval(1000)
-            .subscribe(x => {
-              this.secondBeforeRedirect -= 1;
-            })
-
-          setTimeout(() => {
-            this.router.navigate(["/"]);
-          }, this.TIME_BEFORE_REDIRECT * 1_000);
-
-          this.messageError = error.error.message;
-        }
-      })
-      .finally(() => {
-        this.isLoading = false;
-        this.checkIfFirstPage();
-        this.checkIfLastPage();
+        this.noProductFound = false;
       });
   }
 

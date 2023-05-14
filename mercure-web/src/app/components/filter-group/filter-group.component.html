@@ -1,0 +1,6 @@
+<ng-container *ngIf="isLoading">
+  Chargement des filtres...
+</ng-container>
+<ng-container *ngIf="filters && !isLoading">
+  <app-filter *ngFor="let filter of filters" [filter]="filter" (refresh)="refreshSearch()"></app-filter>
+</ng-container>
