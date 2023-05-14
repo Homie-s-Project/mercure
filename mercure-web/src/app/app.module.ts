@@ -71,6 +71,12 @@ import {NgOptimizedImage} from "@angular/common";
       multi: true
     },
     {
+      provide: APP_INITIALIZER,
+      useFactory: (userService: UserService) => () => userService.ngOnInit(),
+      deps: [UserService],
+      multi: true
+    },
+    {
       provide: HTTP_INTERCEPTORS, useClass: JwtTokenHeaderRequestInterceptor, multi: true
     },
     {

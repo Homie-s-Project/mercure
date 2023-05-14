@@ -15,6 +15,8 @@ export class ProductCartComponent implements OnInit {
   cartProducts: ICartProductModel[] = []
   isLoading: boolean = true;
 
+  isCheckoutLoading: boolean = false;
+
   totalPrice: number = 0.00;
 
   constructor(public cartService: CartService) {
@@ -37,9 +39,17 @@ export class ProductCartComponent implements OnInit {
       });
   }
 
-  checkout() {
+  async checkout() {
     if (this.cartProducts.length > 0) {
-      window.location.href = this.cartService.getCheckoutUrl();
+      this.isCheckoutLoading = true;
+      
+      await this.cartService.getCheckoutUrl()
+        .then((data) => {
+          window.location.href = data;
+        })
+        .finally(() => {
+          this.isCheckoutLoading = false;
+        });
     } else {
       if (!environment.production) {
         console.log("No products in cart");

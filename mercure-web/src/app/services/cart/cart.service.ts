@@ -156,8 +156,23 @@ export class CartService implements OnInit {
     });
   }
 
-  getCheckoutUrl() {
-    return environment.apiUrl + this.router.createUrlTree(['/order/buy'], {queryParams: {randomId: this.cartId}}).toString();
+  getCheckoutUrl(): Promise<string> {
+
+    return new Promise((resolve, reject) => {
+      this.http.post<string>(environment.apiUrl + '/order/buy', {randomId: this.cartId})
+        .pipe(
+          catchError((error) => {
+            reject(error);
+            return throwError(error);
+          })
+        )
+        .subscribe((data) => {
+          resolve(data);
+          return data;
+        });
+    });
+
+    // return environment.apiUrl + this.router.createUrlTree(['/order/buy'], {queryParams: {randomId: this.cartId}}).toString();
   }
 
   checkoutBuyAgain(orderId: number) {

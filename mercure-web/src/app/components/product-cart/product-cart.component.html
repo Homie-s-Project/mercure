@@ -20,7 +20,10 @@
     </div>
     <div (click)="checkout()" [className]="cartProducts.length > 0 ? 'buy-cart' : 'buy-cart disable'">
       <button>
-        <fa-icon [icon]="faCreditCard"></fa-icon>
+        <fa-icon *ngIf="!isCheckoutLoading" [icon]="faCreditCard"></fa-icon>
+        <ng-container *ngIf="isCheckoutLoading">
+          <p>Chargement du paiement...</p>
+        </ng-container>
       </button>
     </div>
   </div>
