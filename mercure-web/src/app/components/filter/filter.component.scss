@@ -56,6 +56,54 @@
         flex: 1 1 auto;
         overflow: hidden auto;
 
+        .filter-search-error {
+          margin-top: 15px;
+          text-align: center;
+        }
+
+        .filter-search {
+          border: 1px solid vars.$dark-moss-green;
+          border-radius: 0;
+          width: 100%;
+          display: flex;
+
+          input {
+            padding: 10px 20px;
+            border: 0;
+            border-radius: 0;
+            width: 100%;
+            background-color: vars.$lemon-chiffon;
+            color: vars.$dark-green;
+            height: 41px;
+            transition: background-color 0.2s ease-in-out;
+
+            &:focus {
+              outline: none;
+              background-color: vars.$lemon-chiffon-dark;
+
+              & + .filter-search > button {
+                background-color: vars.$lemon-chiffon-dark !important;
+              }
+            }
+          }
+
+          button {
+            background-color: vars.$lemon-chiffon;
+            border: 0;
+            cursor: pointer;
+            height: 41px;
+            width: 41px;
+            line-height: 47px;
+            font-size: 16px;
+            margin: 0 auto;
+            transition: background-color 0.2s ease-in-out;
+
+            &:focus {
+              outline: none;
+            }
+          }
+        }
+
         label {
           padding: 5px 0;
           flex-wrap: nowrap;
@@ -119,6 +167,7 @@
     background: vars.$dark-moss-green;
     height: 2px;
   }
+
   .filter-slider .ngx-slider .ngx-slider-selection {
     background: vars.$moss-green;
   }

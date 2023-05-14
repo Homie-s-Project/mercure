@@ -22,13 +22,24 @@
       </div>
       <!-- Select -->
       <div class="filter-select" *ngIf="filter.filterType === 'select'">
-        <label *ngFor="let filterObject of filter.filterValues">
+        <div class="filter-search">
+          <input type="text" [placeholder]="filter.filterCategory" [(ngModel)]="filterSearch" (keyup)="updateList()">
+          <button (click)="clearFilterSearch()" *ngIf="filterSearch.length > 0">
+            <fa-icon [icon]="faXmark"></fa-icon>
+          </button>
+        </div>
+        <div class="filter-search-error" *ngIf="filteredFilterValues.length === 0">
+          Rien à afficher avec le filtre "{{filterSearch}}"
+        </div>
+        <ng-container *ngIf="filteredFilterValues">
+          <label *ngFor="let filterObject of filteredFilterValues">
             <span>
               <input (change)="setFilterValue($event, filter.filterCategory, filterObject)" type="checkbox" [name]="filterObject.name"
                      [value]="filterObject.value">
             </span>
-          <span>{{filterObject.name}}</span>
-        </label>
+            <span>{{filterObject.name}}</span>
+          </label>
+        </ng-container>
       </div>
       <!-- Range -->
       <div class="filter-select filter-slider" *ngIf="filter.filterType === 'range' && filter.filterRangeMin != undefined">

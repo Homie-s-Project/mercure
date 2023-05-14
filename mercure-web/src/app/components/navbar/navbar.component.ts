@@ -28,7 +28,7 @@ export class NavbarComponent implements AfterViewInit {
   @ViewChild('autocomplete') autocompleteElement: ElementRef | undefined;
   private searchValueSubscription?: Subscription;
   private autocompleteDelay: number = 750;
-  private autocompleteSubscription: any;
+  private autocompleteSubscription?: Subscription;
 
   constructor(private searchService: SearchService, private router: Router, private route: ActivatedRoute) {
     router.events.subscribe((val) => {
@@ -39,6 +39,9 @@ export class NavbarComponent implements AfterViewInit {
 
       // Efface les suggestions de recherche
       this.autocompleteSuggestions = [];
+
+      // Permet de cancel les requêtes en cours
+      this.autocompleteSubscription?.unsubscribe();
     });
   }
 

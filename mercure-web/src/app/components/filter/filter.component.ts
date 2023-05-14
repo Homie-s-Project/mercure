@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {faChevronUp} from "@fortawesome/free-solid-svg-icons";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {faChevronUp, faXmark} from "@fortawesome/free-solid-svg-icons";
 import {IFilterValueModel} from "../../models/IFilterValueModel";
 import {FilterService} from "../../services/filter/filter.service";
 import {IFilterModel} from "../../models/IFilterModel";
@@ -10,11 +10,10 @@ import {Options} from "@angular-slider/ngx-slider";
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss']
 })
-export class FilterComponent {
+export class FilterComponent implements OnInit {
   @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
 
   @Input() filter!: IFilterModel;
-
   hasChanged: boolean = false;
   isFilterOpen: boolean = false;
   sliderOption: Options = {
@@ -23,14 +22,20 @@ export class FilterComponent {
     step: 5,
     animate: false,
   }
-
   sliderMinValue: number = 10;
   sliderMaxValue: number = 120;
-
-
+  filterSearch: string = "";
+  filteredFilterValues!: IFilterValueModel[];
+  protected readonly faXmark = faXmark;
   protected readonly faChevronUp = faChevronUp;
 
   constructor(private filterService: FilterService) {
+  }
+
+  ngOnInit(): void {
+    if (this.filter?.filterValues) {
+      this.filteredFilterValues = this.filter.filterValues;
+    }
   }
 
   public toggleFilter(): void {
@@ -61,5 +66,18 @@ export class FilterComponent {
 
     this.filterService.setRangeValue(category, this.sliderMinValue, this.sliderMaxValue);
     this.hasChanged = true;
+  }
+
+  updateList() {
+    if (this.filterSearch === "") {
+      this.filteredFilterValues = this.filter.filterValues;
+    } else {
+      this.filteredFilterValues = this.filter.filterValues.filter(value => value.name.toLowerCase().includes(this.filterSearch.toLowerCase()));
+    }
+  }
+
+  clearFilterSearch() {
+    this.filterSearch = "";
+    this.updateList();
   }
 }
