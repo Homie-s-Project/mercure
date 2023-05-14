@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mercure.API.Context;
 using Mercure.API.Models;
+using Mercure.API.Utils;
 using Mercure.API.Utils.Logger;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,18 @@ public class OrderController : ApiNoSecurityController
 
         var isAuthenticated = userContext != null;
         var hasRandomId = !string.IsNullOrEmpty(randomId);
+
+        if (isAuthenticated)
+        {
+            // If the user is authenticated and is an admin he can't buy products
+            // to limit the risk of buying products with the admin account
+            var authRole = userContext.Role;
+            if (RoleChecker.HasRole(authRole, RoleEnum.Admin))
+            {
+                return Unauthorized(new ErrorMessage("You are an admin, you can't buy products.",
+                    StatusCodes.Status401Unauthorized));
+            }
+        }
 
         // If the user is not authenticated and don't provide an id
         if (!hasRandomId && !isAuthenticated)

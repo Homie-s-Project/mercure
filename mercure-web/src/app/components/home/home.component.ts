@@ -10,8 +10,11 @@ import {environment} from "../../../environments/environment";
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  bestSellerProducts?: IProductModel[]
+  bestSellerProducts?: IProductModel[];
+  randomProducts?: IProductModel[];
+
   hasBestSellerError: boolean = false;
+  isLoading = true;
 
   constructor(appComponent: AppComponent, private productService: ProductService) {
     appComponent.showNavbar = true;
@@ -26,12 +29,28 @@ export class HomeComponent implements OnInit {
       .catch((error) => {
         this.hasBestSellerError = true;
 
+        this.productService.getRandomProducts()
+          .then(data => {
+            this.randomProducts = data;
+          })
+          .catch((error) => {
+            if (!environment.production) {
+              console.error(error)
+            }
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
+
         if (!environment.production) {
           console.error(error)
         }
 
         // Afficher une erreur avec un modal
         // this.modalService.open(error)
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 }

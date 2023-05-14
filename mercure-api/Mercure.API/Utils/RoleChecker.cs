@@ -15,6 +15,17 @@ public static class RoleChecker
     /// <returns></returns>
     public static bool HasRole(Role userRole, RoleEnum roleEnum)
     {
+        return userRole.RoleNumber == (int) roleEnum;
+    }
+    
+    /// <summary>
+    /// Check if the user has the role or a superior role
+    /// </summary>
+    /// <param name="userRole">role of user</param>
+    /// <param name="roleEnum">role inferior of the validation</param>
+    /// <returns></returns>
+    public static bool HasSuperiorRole(Role userRole, RoleEnum roleEnum)
+    {
         return userRole.RoleNumber >= (int) roleEnum;
     }
 }

@@ -10,16 +10,19 @@ public class UserDto
         Email = email;
     }
 
-    public UserDto(User user)
+    public UserDto(User user, bool loadMore = false)
     {
         UserId = user.UserId;
         LastName = user.LastName;
         FirstName = user.FirstName;
         Email = user.Email;
-        
-        if (user.Role != null)
+
+        if (loadMore)
         {
-            Role = new RoleDto(user.Role);
+            if (user.Role != null)
+            {
+                Role = new RoleDto(user.Role);
+            }
         }
     }
 

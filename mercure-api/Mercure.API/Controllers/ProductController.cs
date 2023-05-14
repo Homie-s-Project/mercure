@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Mercure.API.Context;
 using Mercure.API.Models;
+using Mercure.API.Utils;
+using Mercure.API.Utils.Logger;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +25,50 @@ public class ProductController : ApiNoSecurityController
     public ProductController(MercureContext context)
     {
         _context = context;
+    }
+
+    
+    /// <summary>
+    /// Route for the management of the products to get them all.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("all")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    public async Task<IActionResult> ProductAll()
+    {
+        var userContext = (User) HttpContext.Items["User"];
+        if (userContext == null)
+        {
+            return Unauthorized(new ErrorMessage("You are not authenticated", StatusCodes.Status401Unauthorized));
+        }
+
+        var userRole = userContext.Role;
+        if (!RoleChecker.HasRole(userRole, RoleEnum.Admin))
+        {
+            return Unauthorized(new ErrorMessage("You don't have the right to access this page.",
+                StatusCodes.Status401Unauthorized));
+        }
+
+        // write log before the request because it can take a while and we want to keep track of it
+        Logger.LogInfo("User (" + userContext.UserId + "/" + userContext.Role.RoleName +
+                       ") is trying to get all products, this request can take a while.");
+
+        var products = _context.Products
+            .Select(p => new ProductDto(p, false))
+            .ToList();
+        
+
+        if (!products.Any())
+        {
+            return NotFound(new ErrorMessage("No prod found.", StatusCodes.Status404NotFound));
+        }
+
+        // write log to keep track of the request
+        Logger.LogInfo(
+            "The request to get all products has been successfully completed. (" + products.Count + " products found)");
+
+        return Ok(products);
     }
 
     /// <summary>
