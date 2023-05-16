@@ -10,7 +10,7 @@
   - [Image Docker](#image-docker)
   - [Environment Variables](#environment-variables)
     - [Postgres](#postgres)
-    - [pgAdmin4](#pgadmin4-site-local-qui-permet-de-gérer-la-postgres)
+    - [pgAdmin4](#pgadmin4)
     - [Mercure API](#mercure-api)
     - [Mercure WEB](#mercure-web)
     - [Mercure Grafana](#mercure-grafana)
@@ -149,7 +149,8 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 | `POSTGRES_USER`     | mercure_user     |
 | `POSTGRES_PASSWORD` | mercure_password |
 
-### <a name='pgAdmin4'></a>**pgAdmin4**    *(Site local qui permet de gérer la postgres)*
+### <a name='pgAdmin4'></a>**pgAdmin4**
+*(Site local qui permet de gérer la postgres)*
 
 | Environement name          | default     |
 | -------------------------- | ----------- |
