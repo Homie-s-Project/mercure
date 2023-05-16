@@ -9,6 +9,12 @@
   - [Routes](#routes)
   - [Image Docker](#image-docker)
   - [Environment Variables](#environment-variables)
+    - [Postgres](#postgres)
+    - [pgAdmin4](#pgadmin4-site-local-qui-permet-de-gérer-la-postgres)
+    - [Mercure API](#mercure-api)
+    - [Mercure WEB](#mercure-web)
+    - [Mercure Grafana](#mercure-grafana)
+  - [Connect Database](#connect-database)
   - [Color Reference](#color-reference)
   - [Authors](#authors)
 
@@ -135,7 +141,7 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 
 \*Le fichier avec les variables d'environnement est déjà prévu n'est pas encore utilisé par notre code.
 
-**Postgres**
+### <a name='Postgres'></a>**Postgres**
 
 | Environement name   | default         |
 | ------------------- | --------------- |
@@ -143,32 +149,39 @@ Pour exécuter ce projet, vous devrez ajouter les variables d'environnement suiv
 | `POSTGRES_USER`     | mercure_user     |
 | `POSTGRES_PASSWORD` | mercure_password |
 
-**pgAdmin4** *(Site local qui permet de gérer la postgres)*
+### <a name='pgAdmin4'></a>**pgAdmin4**    *(Site local qui permet de gérer la postgres)*
 
 | Environement name          | default     |
 | -------------------------- | ----------- |
 | `PGADMIN_DEFAULT_EMAIL`    | user@mercure.com |
 | `PGADMIN_DEFAULT_PASSWORD` | mercure      |
 
-**mercure-api**
+### <a name='mercureApi'></a>**mercure-api**
 
 | Environement name        | default       |
 | ------------------------ | ------------- |
 | `ASPNETCORE_ENVIRONMENT` | Development   |
 | `ASPNETCORE_URLS`        | <http://+:5000> |
 
-**mercure-web**
+### <a name='mercureWeb'></a>**mercure-web**
 
 | Environement name        | default       |
 | ------------------------ | ------------- |
 | `NODE_ENV` | development   |
 
-**mercure-grafana**
+### <a name='mercureGrafana'></a>**mercure-grafana**
 
 | Environement name        | default       |
 | ------------------------ | ------------- |
 | `GF_SECURITY_ADMIN_USER` | mercure   |
 | `GF_SECURITY_ADMIN_PASSWORD` | mercure_password   |
+
+
+## <a nam='connectDatabase'></a> Connect Database
+
+Pour se connecter à la base de données, vous pouvez utiliser ce logiciel [TablePlus](https://tableplus.com/download). Il est simple et facile d'utilisation.
+
+Lorsque vous l'aurez téléchargé, vous pourrez créer une connexion en vous basant sur les informations de connexion se trouvant juste au-dessus dans le tablea **[Postgres](#postgres)**.
 
 ## <a name='ColorReference'></a>Color Reference
 
