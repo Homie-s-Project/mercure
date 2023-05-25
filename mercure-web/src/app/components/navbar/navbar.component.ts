@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {faCartShopping, faMagnifyingGlass, faUser, faXmark} from '@fortawesome/free-solid-svg-icons';
 import {SearchService} from "../../services/search/search.service";
 import {debounceTime, Subject, Subscription} from "rxjs";
@@ -9,9 +9,8 @@ import {ActivatedRoute, Router} from "@angular/router";
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent implements AfterViewInit {
+export class NavbarComponent implements OnInit, AfterViewInit {
   subscriptions: Subscription[] = []
-
   faCartShopping = faCartShopping
   faUser = faUser;
   faXmark = faXmark;
@@ -20,6 +19,7 @@ export class NavbarComponent implements AfterViewInit {
   @Output() toggleHide = new EventEmitter<boolean>();
   hideCart: boolean = true
   isRedirecting: boolean = false;
+  isLoggedIn: boolean = false;
 
   searchValueChanged: Subject<string> = new Subject<string>();
   autocompleteSuggestions: string[] = [];
@@ -43,6 +43,10 @@ export class NavbarComponent implements AfterViewInit {
       // Permet de cancel les requêtes en cours
       this.autocompleteSubscription?.unsubscribe();
     });
+  }
+
+  ngOnInit(): void {
+    this.isLoggedIn = sessionStorage.getItem("token") !== null;
   }
 
   ngAfterViewInit(): void {
