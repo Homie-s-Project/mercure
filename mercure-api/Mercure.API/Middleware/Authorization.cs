@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Mercure.API.Middleware;
 
+/// <summary>
+/// Custom authorize attribute
+/// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {

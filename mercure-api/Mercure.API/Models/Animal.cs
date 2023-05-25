@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mercure.API.Models;
 
+/// <summary>
+/// Animal
+/// </summary>
 public class Animal
 {
     public Animal(DateTime animalBirthDate, string animalColor, int animalPrice, DateTime animalCreationDate, DateTime animalLastUpdate)

@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mercure.API.Models;
 
+/// <summary>
+/// User role
+/// </summary>
 [Table("UserRole")]
 public class Role
 {

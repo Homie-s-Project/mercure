@@ -1,5 +1,8 @@
 namespace Mercure.API.Models;
 
+/// <summary>
+/// User role dto
+/// </summary>
 public class RoleDto
 {
     public RoleDto(string roleName, int roleNumber)

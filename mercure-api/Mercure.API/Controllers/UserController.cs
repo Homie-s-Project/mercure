@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Mercure.API.Controllers;
 
+/// <summary>
+/// User controller allowing administrators to retrieve the list of users
+/// </summary>
 [Route("user")]
 public class UserController : ApiSecurityController
 {
@@ -27,6 +30,7 @@ public class UserController : ApiSecurityController
     [HttpGet("all")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> GetAllUsers()
     {
         var userContext = (User) HttpContext.Items["User"];

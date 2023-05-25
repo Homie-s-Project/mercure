@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace Mercure.API.Models;
 
+/// <summary>
+/// Category of product dto
+/// </summary>
 public class CategoryDto
 {
     public CategoryDto(Category category)

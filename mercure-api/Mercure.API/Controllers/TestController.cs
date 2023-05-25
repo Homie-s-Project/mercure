@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Mercure.API.Controllers;
 
 /// <summary>
-/// Controller for test
+/// Controller for test, only in dev environment
 /// </summary>
 [TypeFilter(typeof(DevOnlyActionFilter))]
 [Route("dev")]

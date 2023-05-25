@@ -15,6 +15,9 @@ using Stripe.Checkout;
 
 namespace Mercure.API.Controllers;
 
+/// <summary>
+/// Order controller, accessible by all users, even visitors
+/// </summary>
 [Route("/order")]
 public class OrderController : ApiNoSecurityController
 {
