@@ -1,57 +1,82 @@
 @use '/src/styles/variables.scss' as vars;
 
 :host {
-    width: auto;
+  width: auto;
+  display: flex;
+  padding: 30px 240px 30px 30px;
+  gap: 30px;
+
+  .sideBar {
+    border-right: solid 1px vars.$bole;;
+    min-width: 270px;
     display: flex;
-    padding: 30px 240px 30px 30px;
-    gap: 30px;
-    .sideBar{
-        border-right: solid 1px vars.$bole;;
-        min-width: 270px;
-        display: flex;
-        flex-direction: column;
-        padding-right: 10px;
+    flex-direction: column;
+    padding-right: 10px;
+  }
+
+  & a {
+    cursor: pointer;
+  }
+
+  .profile {
+    width: 100%;
+    display: inline-block;
+  }
+
+  .profile-content {
+    margin: 0 0 21px 21px;
+
+    div {
+      margin-bottom: 15px;
     }
-    & a {
-      cursor: pointer;
+
+    .role-select {
+      background: none;
+      border: none;
+
+      &:focus {
+        outline: solid 1px vars.$bole;
+        border-radius: 3px;
+      }
     }
-    .profile{
-        width: 100%;
-        display: inline-block;
+  }
+
+  .profile-title {
+    margin-bottom: 21px;
+  }
+
+  .parameters-content {
+    margin: 0 0 21px 21px;
+
+    div {
+      margin-bottom: 15px;
     }
-    .profile-content{
-        margin: 0 0 21px 21px;
-        div {
-            margin-bottom: 15px;
-        }
-        .role-select{
-            background: none;
-            border: none;
-            &:focus{
-                outline: solid 1px vars.$bole;
-                border-radius: 3px;
-            }
-        }
+
+    .paramaters-title {
+      margin-bottom: 21px;
     }
-    .profile-title {
-        margin-bottom: 21px;
+  }
+
+  a {
+    color: vars.$bole;
+    text-decoration: none;
+    margin-bottom: 9px;
+    font-size: 18px;
+
+    &:hover {
+      text-decoration: underline;
     }
-    .parameters-content {
-        margin: 0 0 21px 21px;
-        div {
-            margin-bottom: 15px;
-        }
-        .paramaters-title {
-            margin-bottom: 21px;
-        }
-    }
-    a{
-        color: vars.$bole;
-        text-decoration: none;
-        margin-bottom: 9px;
-        font-size: 18px;
-        &:hover{
-            text-decoration: underline;
-        }
-    }
+  }
+}
+
+
+.info-message {
+  margin-top: 6px;
+
+  span {
+    padding: 4px 6px;
+    border-radius: 3px;
+    border: 1px solid vars.$dark-moss-green;
+    background-color: #86965c40;
+  }
 }

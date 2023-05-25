@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {UserModel} from 'src/app/models/UserModel';
 import {UserService} from "../../services/user/user.service";
-import { ParameterModel } from 'src/app/models/ParameterModel';
+import {ParameterModel} from 'src/app/models/ParameterModel';
+import {environment} from "../../../environments/environment";
+import {IRoleModel} from "../../models/IRoleModel";
 
 @Component({
   selector: 'app-profile',
@@ -23,12 +25,16 @@ export class ProfileComponent implements OnInit {
     shipmentAdress: 'Rue de Genève 63, 1004 Lausanne'
   }
 
+  roles?: IRoleModel[];
+
   isUserLoading: boolean = true;
   isParametersLoading: boolean = false;
+  isDevEnv: boolean = false;
   orderIsShow: boolean = false;
   parameterIsShow: boolean = false;
 
   constructor(private userService: UserService) {
+    this.isDevEnv = !environment.production;
   }
 
   profilShow() {
