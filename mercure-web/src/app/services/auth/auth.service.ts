@@ -1,8 +1,6 @@
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable, OnInit} from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
-import {catchError, Observable, throwError} from 'rxjs';
-import { UserModel } from 'src/app/models/UserModel';
+import {catchError, throwError} from 'rxjs';
 import {environment} from "../../../environments/environment";
 
 @Injectable({
@@ -24,6 +22,10 @@ export class AuthService implements OnInit {
 
   isLogged(): boolean{
     return sessionStorage.getItem("token") !== null;
+  }
+
+  logOut(): void {
+    sessionStorage.removeItem("token");
   }
 
   getSessionToken(): string | null {
