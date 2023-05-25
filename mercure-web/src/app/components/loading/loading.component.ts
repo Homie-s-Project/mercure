@@ -3,6 +3,7 @@ import {AppComponent} from '../../app.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {interval, Subscription} from 'rxjs';
 import {AuthService} from "../../services/auth/auth.service";
+import {UserService} from "../../services/user/user.service";
 
 @Component({
   selector: 'app-loading',
@@ -20,7 +21,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
   private TIME_BEFORE_REDIRECT: number = 10;
   secondBeforeRedirect: number = this.TIME_BEFORE_REDIRECT;
 
-  constructor(private appComponent: AppComponent, private router: Router, private route: ActivatedRoute, private authService: AuthService) {
+  constructor(private appComponent: AppComponent, private router: Router, private route: ActivatedRoute, private authService: AuthService, private userService: UserService) {
     this.appComponent.showNavbar = false;
     this.appComponent.showFooter = false;
   }
@@ -41,6 +42,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
             this.authService.getUserToken(state)
               .then(r => {
                 sessionStorage.setItem("token", r.token);
+                this.userService.getUser(true);
               })
               .catch((error) => {
                 this.errorMessage = error.error.message;

@@ -37,9 +37,9 @@ export class UserService implements OnInit {
     return null;
   }
 
-  getUser() : Promise<UserModel> {
+  getUser(forceReload: boolean = false) : Promise<UserModel> {
 
-    if (this.user) {
+    if (this.user && !forceReload) {
       return new Promise((resolve, reject) => {
         resolve(this.user);
       });
