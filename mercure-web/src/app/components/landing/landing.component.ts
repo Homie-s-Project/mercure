@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { faGoogle, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { AppComponent } from 'src/app/app.component';
 
 
@@ -11,7 +12,7 @@ import { AppComponent } from 'src/app/app.component';
 export class LandingComponent implements OnDestroy{
   faGoogle = faGoogle;
   faMicrosoft = faMicrosoft;
-
+  faArrowLeft = faArrowLeft;
 
   title: string = 'MERCURE';
 

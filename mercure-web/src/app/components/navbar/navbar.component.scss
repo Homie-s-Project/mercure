@@ -71,6 +71,14 @@ nav {
       background-color: transparent;
       border: none;
     }
+    .login-button {
+      border-radius: 5px;
+      padding: 6px 12px 6px 12px;
+      margin-left: 12px;
+      font-size: 18px;
+      color: vars.$dark-green;
+      background-color: vars.$lemon-chiffon;
+    }
   }
 
   h1 {

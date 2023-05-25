@@ -19,6 +19,9 @@
     <button class="nav-button cart-btn" (click)="toggleShowHide()">
       <fa-icon [className]="hideCart ? '' : 'cart-close'" [icon]="actualIcone"></fa-icon>
     </button>
-    <a class="nav-button" [routerLink]="['/profile']"><fa-icon class="navbar-icon" [icon]="faUser"></fa-icon></a>
+    <a class="nav-button" [routerLink]="['/profile']" *ngIf="isLoggedIn; else loggedOut"><fa-icon class="navbar-icon" [icon]="faUser"></fa-icon></a>
+    <ng-template #loggedOut>
+      <a class="login-button" [routerLink]="['/login']">Connexion</a>
+    </ng-template>
   </div>
 </nav>
