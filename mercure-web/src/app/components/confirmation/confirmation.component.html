@@ -1,0 +1,13 @@
+<div class="confirmation">
+  <header class="order-header">
+    <h2 class="order-title">Historique de la commande:</h2>
+    <div class="order-details">
+    </div>
+  </header>
+  <div class="order-items">
+    <app-order-item *ngFor="let i of [].constructor(3)" [showShipped]="false"></app-order-item>
+  </div>
+  <div class="order-detail order-total">
+    Montant total de <span class="total">CHF 100.00</span>
+  </div>
+</div>
