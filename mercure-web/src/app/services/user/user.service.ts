@@ -17,7 +17,16 @@ export class UserService implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.user = await this.getUser();
+    this.getUser()
+      .then((data) => {
+        this.user = data;
+      })
+      .catch((error) => {
+        if (!environment.production) {
+          console.log(error);
+          this.authService.logOut();
+        }
+      });
   }
 
   getRole() : IRoleModel | null {
