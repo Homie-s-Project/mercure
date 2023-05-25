@@ -506,6 +506,6 @@ public class Authentification : BaseController
             return NotFound(new ErrorMessage("Can't find your account.", StatusCodes.Status404NotFound));
         }
 
-        return Ok(new UserDto(user));
+        return Ok(new UserDto(user, true));
     }
 }

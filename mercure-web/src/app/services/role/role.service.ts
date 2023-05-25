@@ -41,7 +41,7 @@ export class RoleService implements OnInit {
 
   setRoles(roleNumber: number) {
     return new Promise((resolve, reject) => {
-      this.http.post(environment.apiUrl + "/dev/roles", roleNumber)
+      this.http.post(environment.apiUrl + `/dev/roles/${roleNumber}`, null)
         .pipe(
           catchError((error) => {
             reject(error);

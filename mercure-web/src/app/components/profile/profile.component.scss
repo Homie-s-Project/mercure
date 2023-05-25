@@ -71,12 +71,34 @@
 
 
 .info-message {
-  margin-top: 6px;
+  margin-top: 10px;;
 
   span {
     padding: 4px 6px;
     border-radius: 3px;
     border: 1px solid vars.$dark-moss-green;
     background-color: #86965c40;
+  }
+}
+
+.select-role {
+  padding: 4px 6px;
+  border: 1px solid vars.$dark-moss-green;
+  background-color: vars.$lemon-chiffon;
+  color: vars.$dark-moss-green;
+  outline: none;
+}
+
+.btn-save {
+  cursor: pointer;
+  margin-left: 6px;
+  padding: 4px 6px;
+  border-radius: 3px;
+  border: 1px solid vars.$dark-moss-green;
+  background-color: vars.$lemon-chiffon;
+  color: vars.$dark-moss-green;
+
+  &:hover {
+    background-color: vars.$lemon-chiffon-dark;
   }
 }

@@ -27,9 +27,12 @@
         </div>
         <p *ngIf="isUserLoading">Loading...</p>
         <ng-container *ngIf="roles && !isUserLoading">
-          <select>
-            <option *ngFor="let role of roles" [selected]="currentUser.role.roleNumber === role.roleNumber" [value]="role.roleNumber">{{role.roleName}}</option>
+          <select id="roles" class="select-role" [(ngModel)]="selectedRole">
+            <option *ngFor="let role of roles" [selected]="role.roleNumber === currentUser.role.roleNumber" [value]="role.roleNumber">{{role.roleName}}</option>
           </select>
+        </ng-container>
+        <ng-container *ngIf="!isUserLoading && selectedRole !== currentUser.role.roleNumber">
+          <button class="btn-save" (click)="updateRole()">Changer de rôle</button>
         </ng-container>
       </div>
     </div>

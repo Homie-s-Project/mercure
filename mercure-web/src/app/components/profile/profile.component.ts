@@ -4,6 +4,7 @@ import {UserService} from "../../services/user/user.service";
 import {ParameterModel} from 'src/app/models/ParameterModel';
 import {environment} from "../../../environments/environment";
 import {IRoleModel} from "../../models/IRoleModel";
+import {RoleService} from "../../services/role/role.service";
 
 @Component({
   selector: 'app-profile',
@@ -32,8 +33,9 @@ export class ProfileComponent implements OnInit {
   isDevEnv: boolean = false;
   orderIsShow: boolean = false;
   parameterIsShow: boolean = false;
+  selectedRole: any;
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private roleService: RoleService) {
     this.isDevEnv = !environment.production;
   }
 
@@ -53,8 +55,43 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.getUser()
-      .then(u => this.currentUser = u)
+      .then(u => {
+        this.currentUser = u;
+        this.selectedRole = u.role.roleNumber;
+      })
       .finally(() => this.isUserLoading = false);
+
+    if (!environment.production) {
+      this.roleService.getRoles()
+        .then(r => this.roles = r);
+    }
+  }
+
+  protected readonly confirm = confirm;
+  protected readonly console = console;
+
+  updateRole() {
+
+    if (environment.production) {
+      return;
+    }
+
+    if (this.selectedRole !== this.currentUser.role.roleNumber) {
+      this.roleService.setRoles(this.selectedRole)
+        .then(r => {
+          this.userService.getUser(true)
+            .then(u => {
+              this.currentUser = u;
+              this.selectedRole = u.role.roleNumber;
+            })
+            .finally(() => this.isUserLoading = false);
+
+          alert((r as any).message)
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    }
   }
 }
 
