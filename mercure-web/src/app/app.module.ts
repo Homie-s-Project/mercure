@@ -36,6 +36,7 @@ import {FilterGroupComponent} from './components/filter-group/filter-group.compo
 import {NgxSliderModule} from '@angular-slider/ngx-slider';
 import {FilterService} from "./services/filter/filter.service";
 import {SearchService} from "./services/search/search.service";
+import {RoleService} from "./services/role/role.service";
 
 @NgModule({
   declarations: [
@@ -74,6 +75,12 @@ import {SearchService} from "./services/search/search.service";
     UserService,
     FilterService,
     SearchService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (roleService: RoleService,) => () => roleService.ngOnInit(),
+      deps: [RoleService],
+      multi: true
+    },
     {
       provide: APP_INITIALIZER,
       useFactory: (cartService: CartService) => () => cartService.ngOnInit(),

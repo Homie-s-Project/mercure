@@ -1,9 +1,9 @@
 <div class="sideBar">
-    <a (click)="profilShow()">Profil</a>
-    <a (click)="orderShow()">Historique de commandes</a>
+  <a (click)="profilShow()">Profil</a>
+  <a (click)="orderShow()">Historique de commandes</a>
 </div>
 <div class="profile">
-  <div *ngIf = "!orderIsShow && !isUserLoading && !parameterIsShow">
+  <div *ngIf="!orderIsShow && !isUserLoading && !parameterIsShow">
     <div class="profile-content">
       <h1 class="profile-title">Profil</h1>
       <div>
@@ -22,8 +22,18 @@
       </div>
       <div>
         <h3 for="roles" class="profile-label">Role:</h3>
+        <div class="info-message" *ngIf="isDevEnv">
+          <span>Vous êtes en environnement de développement, c'est pour cela que vous pouvez modifier votre rôle.</span>
+        </div>
         <p *ngIf="isUserLoading">Loading...</p>
-        <p *ngIf="!isUserLoading">{{currentUser.role.roleName}}</p>
+        <ng-container *ngIf="roles && !isUserLoading">
+          <select id="roles" class="select-role" [(ngModel)]="selectedRole">
+            <option *ngFor="let role of roles" [selected]="role.roleNumber === currentUser.role.roleNumber" [value]="role.roleNumber">{{role.roleName}}</option>
+          </select>
+        </ng-container>
+        <ng-container *ngIf="!isUserLoading && selectedRole !== currentUser.role.roleNumber">
+          <button class="btn-save" (click)="updateRole()">Changer de rôle</button>
+        </ng-container>
       </div>
     </div>
     <div class="parameters-content">
@@ -45,5 +55,5 @@
       </div>
     </div>
   </div>
-  <app-orders-panel *ngIf = "orderIsShow"></app-orders-panel>
+  <app-orders-panel *ngIf="orderIsShow"></app-orders-panel>
 </div>
