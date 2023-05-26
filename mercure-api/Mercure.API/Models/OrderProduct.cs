@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mercure.API.Models;
 
+/// <summary>
+/// Order-product intermediate table
+/// </summary>
 public class OrderProduct
 {
     public OrderProduct(int productId, int orderId, int quantity, bool shipped)
@@ -30,5 +33,5 @@ public class OrderProduct
     
     public long? Quantity { get; set; }
     // True = livré, False = non livré
-    public Boolean Shipped { get; set; }
+    public bool Shipped { get; set; }
 }

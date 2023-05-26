@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mercure.API.Models;
 
+/// <summary>
+/// Category of product
+/// </summary>
 public class Category
 {
     public Category(string categoryTitle, string categoryDescription)

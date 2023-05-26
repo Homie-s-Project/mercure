@@ -6,6 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Mercure.API.Models;
 
+/// <summary>
+/// User model
+/// </summary>
 public class User
 {
     public User(string serviceId, string lastName, string firstName, DateTime? birthDate, string email,

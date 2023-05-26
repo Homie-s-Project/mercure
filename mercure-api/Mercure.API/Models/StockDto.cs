@@ -1,5 +1,8 @@
 ﻿namespace Mercure.API.Models;
 
+/// <summary>
+/// Stock dto
+/// </summary>
 public class StockDto
 {
     public StockDto(Stock stock)

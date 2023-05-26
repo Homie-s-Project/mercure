@@ -1,5 +1,8 @@
 namespace Mercure.API.Models;
 
+/// <summary>
+/// Token dto
+/// </summary>
 public class TokenDto
 {
     public TokenDto(string token)

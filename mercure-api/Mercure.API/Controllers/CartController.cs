@@ -32,6 +32,9 @@ public class CartController : ApiNoSecurityController
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Cart))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public IActionResult GetCart(string randomId)
     {
         var userContext = (User) HttpContext.Items["User"];
@@ -69,6 +72,10 @@ public class CartController : ApiNoSecurityController
     /// <param name="quantity"></param>
     /// <returns></returns>
     [HttpPost("add/{productId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CartProduct))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> AddProductCart(string productId, string randomId, string quantity = "1")
     {
         var userContext = (User) HttpContext.Items["User"];
@@ -142,6 +149,10 @@ public class CartController : ApiNoSecurityController
     /// <param name="randomId"></param>
     /// <returns></returns>
     [HttpDelete("remove/{productId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> RemoveProductCart(string productId, string randomId)
     {
         var userContext = (User) HttpContext.Items["User"];

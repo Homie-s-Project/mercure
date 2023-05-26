@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Mercure.API.Controllers;
 
+/// <summary>
+/// Filter checking that it is a dev environment. Used for test routes
+/// </summary>
 public class DevOnlyActionFilter : ActionFilterAttribute
 {
     private IHostingEnvironment HostingEnv { get; }

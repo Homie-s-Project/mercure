@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Mercure.API.Models;
 
+/// <summary>
+/// Animal species
+/// </summary>
 public class Species
 {
     public Species(string speciesName)

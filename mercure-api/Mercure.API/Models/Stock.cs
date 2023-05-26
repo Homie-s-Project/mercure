@@ -5,6 +5,10 @@ namespace Mercure.API.Models;
 
 public class Stock
 {
+    /// <summary>
+    /// Stock model
+    /// </summary>
+    /// <param name="stockQuantityAvailable"></param>
     public Stock(int stockQuantityAvailable)
     {
         StockQuantityAvailable = stockQuantityAvailable;

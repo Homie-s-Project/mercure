@@ -2,7 +2,6 @@
 
 namespace Mercure.API.Controllers;
 
-
 /// <summary>
 /// All the routes for the api that don't need to be secured
 /// </summary>

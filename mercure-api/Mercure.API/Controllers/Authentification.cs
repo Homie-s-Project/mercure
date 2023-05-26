@@ -69,7 +69,7 @@ public class Authentification : BaseController
     }
 
     /// <summary>
-    /// Permet de se connecter à l'applicaation
+    /// Permet de se connecter à l'application
     /// </summary>
     /// <returns>La redirection sur le système d'authentification de Microsoft</returns>
     [HttpGet("login/microsoft")]
@@ -104,7 +104,7 @@ public class Authentification : BaseController
     }
 
     /// <summary>
-    /// Permet de se connecter à l'applicaation
+    /// Permet de se connecter à l'application
     /// </summary>
     /// <returns>La redirection sur le système d'authentification de Google (ou le service choisie)</returns>
     [HttpGet("login/google")]
@@ -141,7 +141,7 @@ public class Authentification : BaseController
     /// Reçois la requête de microsoft pour la connexion
     /// </summary>
     /// <param name="code">Le code de microsoft concernant la connexion</param>
-    /// <param name="state">Le code qu'on à générer qui permet de protéger contre les Man In The Middle</param>
+    /// <param name="state">Le code qu'on a généré qui permet de protéger contre les Man In The Middle</param>
     /// <param name="error">Le code erreur s'il y en a une</param>
     /// <param name="errorDescription">La description de l'erreur</param>
     /// <response code="200">Returns the token information</response>
@@ -295,9 +295,9 @@ public class Authentification : BaseController
     }
 
     /// <summary>
-    /// Reçois la requête de google pour la connexion
+    /// Reçoit la requête de google pour la connexion
     /// </summary>
-    /// <param name="code">Le code de microsoft concernant la connexion</param>
+    /// <param name="code">Le code de google concernant la connexion</param>
     /// <param name="state">Le code qu'on à générer qui permet de protéger contre les Man In The Middle</param>
     /// <param name="error">Le code erreur s'il y en a une</param>
     /// <response code="200">Returns the token information</response>
@@ -307,6 +307,10 @@ public class Authentification : BaseController
     /// <returns></returns>
     [HttpGet("callback/google")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status302Found, Type = typeof(RedirectResult))]
     public async Task<IActionResult> CallBackGoogle(string code, string state, string error)
     {
         // Si aucun code
@@ -350,7 +354,7 @@ public class Authentification : BaseController
         }
         catch
         {
-            // Si il y a une erreur on retourne une erreur 500
+            // Si il y a une erreur on retourne une erreur 401
             return Unauthorized(new ErrorMessage("Can't get your token, please try again.", StatusCodes.Status401Unauthorized));
         }
 
@@ -466,8 +470,9 @@ public class Authentification : BaseController
     /// <returns></returns>
     [HttpGet("logged")]
     [AllowAnonymous]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> GetLoggedUser(string state)
     {
         if (state == null)
