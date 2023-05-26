@@ -34,6 +34,7 @@ public class OrderController : ApiNoSecurityController
     /// <returns></returns>
     [HttpPost("buy")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status303SeeOther)]
     public async Task<IActionResult> BuyAction(string randomId)
     {
@@ -50,7 +51,7 @@ public class OrderController : ApiNoSecurityController
             if (RoleChecker.HasRole(authRole, RoleEnum.Admin))
             {
                 return Unauthorized(new ErrorMessage("You are an admin, you can't buy products.",
-                    StatusCodes.Status401Unauthorized));
+                    StatusCodes.Status403Forbidden));
             }
         }
 
@@ -74,6 +75,7 @@ public class OrderController : ApiNoSecurityController
 
         if (products == null || products.Products.Count == 0)
         {
+            await _distributedCache.RemoveAsync(cacheKey);
             return BadRequest(new ErrorMessage("The cart is empty.", StatusCodes.Status400BadRequest));
         }
 
@@ -99,6 +101,7 @@ public class OrderController : ApiNoSecurityController
 
         if (orderProducts.Count == 0)
         {
+            await _distributedCache.RemoveAsync(cacheKey);
             Logger.LogWarn("Somebody tried to buy an empty cart.");
             return BadRequest(new ErrorMessage("The cart is empty.", StatusCodes.Status400BadRequest));
         }
