@@ -21,7 +21,6 @@ namespace Mercure.API.Controllers;
 [Route("animals")]
 public class AnimalsController : ApiNoSecurityController
 {
-
     private readonly MercureContext _context;
 
     public AnimalsController(MercureContext context)
@@ -40,7 +39,6 @@ public class AnimalsController : ApiNoSecurityController
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     public async Task<IActionResult> AnimalGet(string animalId)
     {
-        #region Parameters validation
         if (string.IsNullOrEmpty(animalId))
         {
             return BadRequest(new ErrorMessage("Animal Id is required", StatusCodes.Status400BadRequest));
@@ -51,31 +49,23 @@ public class AnimalsController : ApiNoSecurityController
         {
             return BadRequest(new ErrorMessage("Animal Id is not a number", StatusCodes.Status400BadRequest));
         }
-#endregion
 
-        var AnimalSpeciesDb = await _context.AnimalSpecies
+        var animalSpeciesDb = await _context.AnimalSpecies
             .Include(a => a.Animal)
             .Include(a => a.Species)
             .FirstOrDefaultAsync(a => a.AnimalId == id);
 
-        if (AnimalDb == null)
-#endregion
-
-        var AnimalSpeciesDb = await _context.AnimalSpecies
-            .Include(a => a.Animal)
-            .Include(a => a.Species)
-            .FirstOrDefaultAsync(a => a.AnimalId == id);
-
-
-        if (AnimalSpeciesDb == null || AnimalSpeciesDb.Animal == null)
-
-        if (AnimalSpeciesDb == null || AnimalSpeciesDb.Animal == null)
+        if (animalSpeciesDb == null)
         {
             return NotFound(new ErrorMessage("Animal not found", StatusCodes.Status404NotFound));
         }
 
-        return Ok(new AnimalDto(AnimalSpeciesDb.Animal, true));
-        return Ok(new AnimalDto(AnimalSpeciesDb.Animal, true));
+        if (animalSpeciesDb == null || animalSpeciesDb.Animal == null)
+        {
+            return NotFound(new ErrorMessage("Animal not found", StatusCodes.Status404NotFound));
+        }
+
+        return Ok(new AnimalDto(animalSpeciesDb.Animal, true));
     }
 
     /// <summary>
@@ -97,9 +87,10 @@ public class AnimalsController : ApiNoSecurityController
         [FromForm] string animalColor,
         [FromForm] int animalPrice,
         [FromForm] List<int> speciesId
-        )
+    )
     {
         #region Parameters validation
+
         if (string.IsNullOrEmpty(animalName) || animalName.Length >= ConstantRules.MaxLengthName)
         {
             return BadRequest(new ErrorMessage("Your animal needs a name", StatusCodes.Status400BadRequest));
@@ -113,7 +104,8 @@ public class AnimalsController : ApiNoSecurityController
 
         if (animalPrice <= 0)
         {
-            return BadRequest(new ErrorMessage("Price is required to create an Animal", StatusCodes.Status400BadRequest));
+            return BadRequest(
+                new ErrorMessage("Price is required to create an Animal", StatusCodes.Status400BadRequest));
         }
 
         if (speciesId.Count == 0)
@@ -122,54 +114,22 @@ public class AnimalsController : ApiNoSecurityController
         }
 
         // On vérifie que l'utilisateur soit au moins un vendeur d'animaux
-        var userContext = (User)HttpContext.Items["User"];
+        var userContext = (User) HttpContext.Items["User"];
         if (userContext == null)
         {
             return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
         }
-        if (!RoleChecker.HasRole(userContext.Role, RoleEnum.AnimalSeller))
-        {
-            return Unauthorized(new ErrorMessage("You are not authorized, only people higher or equal as animal seller can access", StatusCodes.Status401Unauthorized));
-        }
-        #endregion
-        var animal = new Animal(animalName, dtAnimalBirthdate, animalColor, animalPrice, DateTime.Now, DateTime.Now);
-        animal.AnimalSpecies = new List<AnimalSpecies>();
 
-        if (speciesId.Count != 0)
-        {
-            foreach (var id in speciesId)
-            {
-                var speciesDb = await _context.Speciess.FirstOrDefaultAsync(c => c.SpeciesId == id);
-                if (speciesDb == null)
-                {
-                    return BadRequest(new ErrorMessage("We cannot find the species with this id: " + id, StatusCodes.Status400BadRequest));
-                }
-
-                var animalSpecies = new AnimalSpecies
-                {
-                    Animal = animal,
-                    Species = speciesDb
-                };
-
-                animal.AnimalSpecies.Add(animalSpecies);
-            }
-        }
-
-        await _context.Animals.AddAsync(animal);
-        await _context.SaveChangesAsync();
-
-        return Ok(new AnimalDto(animal, true));
         // On vérifie que l'utilisateur soit au moins un vendeur d'animaux
-        var userContext = (User)HttpContext.Items["User"];
-        if (userContext == null)
+        if (!RoleChecker.HasSuperiorRole(userContext.Role, RoleEnum.AnimalSeller))
         {
-            return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
+            return Unauthorized(new ErrorMessage(
+                "You are not authorized, only people higher or equal as animal seller can access",
+                StatusCodes.Status401Unauthorized));
         }
-        if (!RoleChecker.HasRole(userContext.Role, RoleEnum.AnimalSeller))
-        {
-            return Unauthorized(new ErrorMessage("You are not authorized, only people higher or equal as animal seller can access", StatusCodes.Status401Unauthorized));
-        }
+
         #endregion
+
         var animal = new Animal(animalName, dtAnimalBirthdate, animalColor, animalPrice, DateTime.Now, DateTime.Now);
         animal.AnimalSpecies = new List<AnimalSpecies>();
 
@@ -180,7 +140,8 @@ public class AnimalsController : ApiNoSecurityController
                 var speciesDb = await _context.Speciess.FirstOrDefaultAsync(c => c.SpeciesId == id);
                 if (speciesDb == null)
                 {
-                    return BadRequest(new ErrorMessage("We cannot find the species with this id: " + id, StatusCodes.Status400BadRequest));
+                    return BadRequest(new ErrorMessage("We cannot find the species with this id: " + id,
+                        StatusCodes.Status400BadRequest));
                 }
 
                 var animalSpecies = new AnimalSpecies
@@ -221,27 +182,34 @@ public class AnimalsController : ApiNoSecurityController
         [FromForm] string animalColor,
         [FromForm] int animalPrice,
         [FromForm] List<int> speciesId
-        )
+    )
     {
         #region Parameters validation
+
         if (string.IsNullOrEmpty(AnimalId))
         {
-            return BadRequest(new ErrorMessage("You need to provide an id for the animal you want to update", StatusCodes.Status400BadRequest));
+            return BadRequest(new ErrorMessage("You need to provide an id for the animal you want to update",
+                StatusCodes.Status400BadRequest));
         }
 
         if (animalName.Length >= ConstantRules.MaxLengthName)
         {
-            return BadRequest(new ErrorMessage("Your animal name is too long, max " + ConstantRules.MaxLengthName + " character", StatusCodes.Status400BadRequest));
+            return BadRequest(new ErrorMessage(
+                "Your animal name is too long, max " + ConstantRules.MaxLengthName + " character",
+                StatusCodes.Status400BadRequest));
         }
 
         if (animalColor.Length >= ConstantRules.MaxLengthName)
         {
-            return BadRequest(new ErrorMessage("Your color is too long, max " + ConstantRules.MaxLengthDescription + " character", StatusCodes.Status400BadRequest));
+            return BadRequest(new ErrorMessage(
+                "Your color is too long, max " + ConstantRules.MaxLengthDescription + " character",
+                StatusCodes.Status400BadRequest));
         }
 
         if (animalPrice <= 0)
         {
-            return BadRequest(new ErrorMessage("Price is required to update an animal", StatusCodes.Status400BadRequest));
+            return BadRequest(
+                new ErrorMessage("Price is required to update an animal", StatusCodes.Status400BadRequest));
         }
 
         DateTime dtAnimalBirthdate;
@@ -249,16 +217,19 @@ public class AnimalsController : ApiNoSecurityController
         {
             return BadRequest(new ErrorMessage("Wrong birthdate format", StatusCodes.Status400BadRequest));
         }
-        
+
         // On vérifie que l'utilisateur est au moins un vendeur d'animaux
-        var userContext = (User)HttpContext.Items["User"];
+        var userContext = (User) HttpContext.Items["User"];
         if (userContext == null)
         {
             return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
         }
+
         if (!RoleChecker.HasRole(userContext.Role, RoleEnum.AnimalSeller))
         {
-            return Unauthorized(new ErrorMessage("You are not authorized, only people higher or equal as animal seller can access", StatusCodes.Status401Unauthorized));
+            return Unauthorized(new ErrorMessage(
+                "You are not authorized, only people higher or equal as animal seller can access",
+                StatusCodes.Status401Unauthorized));
         }
 
         bool isAnimalIdParsed = int.TryParse(AnimalId, out int AnimalIdParsed);
@@ -267,11 +238,15 @@ public class AnimalsController : ApiNoSecurityController
             return BadRequest(new ErrorMessage("Your animal id is not an number", StatusCodes.Status400BadRequest));
         }
 
-        var AnimalUpdatedWanted = await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Animals, p => p.AnimalId == AnimalIdParsed);
+        var AnimalUpdatedWanted =
+            await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(_context.Animals,
+                p => p.AnimalId == AnimalIdParsed);
         if (AnimalUpdatedWanted == null)
         {
-            return BadRequest(new ErrorMessage("We cannot found the animal with this id: " + AnimalIdParsed, StatusCodes.Status400BadRequest));
+            return BadRequest(new ErrorMessage("We cannot found the animal with this id: " + AnimalIdParsed,
+                StatusCodes.Status400BadRequest));
         }
+
         #endregion
 
         if (speciesId.Count != 0)
@@ -283,7 +258,8 @@ public class AnimalsController : ApiNoSecurityController
                 var speciesDb = await _context.Speciess.FirstOrDefaultAsync(c => c.SpeciesId == id);
                 if (speciesDb == null)
                 {
-                    return BadRequest(new ErrorMessage("We cannot find the species with this id: " + id, StatusCodes.Status400BadRequest));
+                    return BadRequest(new ErrorMessage("We cannot find the species with this id: " + id,
+                        StatusCodes.Status400BadRequest));
                 }
 
                 var animalSpecies = new AnimalSpecies
@@ -314,20 +290,25 @@ public class AnimalsController : ApiNoSecurityController
     public async Task<IActionResult> AnimalDelete(string AnimalId)
     {
         #region Parameters validation
+
         if (string.IsNullOrEmpty(AnimalId))
         {
-            return BadRequest(new ErrorMessage("You need to provide an id for the animal you want to delete", StatusCodes.Status400BadRequest));
+            return BadRequest(new ErrorMessage("You need to provide an id for the animal you want to delete",
+                StatusCodes.Status400BadRequest));
         }
 
         // On vérifie que l'utilisateur est au moins un vendeur d'animaux
-        var userContext = (User)HttpContext.Items["User"];
+        var userContext = (User) HttpContext.Items["User"];
         if (userContext == null)
         {
             return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
         }
+
         if (!RoleChecker.HasRole(userContext.Role, RoleEnum.AnimalSeller))
         {
-            return Unauthorized(new ErrorMessage("You are not authorized, only people higher or equal as animal seller can access", StatusCodes.Status401Unauthorized));
+            return Unauthorized(new ErrorMessage(
+                "You are not authorized, only people higher or equal as animal seller can access",
+                StatusCodes.Status401Unauthorized));
         }
 
         bool isAnimalIdParsed = int.TryParse(AnimalId, out int AnimalIdParsed);
@@ -335,12 +316,14 @@ public class AnimalsController : ApiNoSecurityController
         {
             return BadRequest(new ErrorMessage("Your animal id is not an number", StatusCodes.Status400BadRequest));
         }
+
         #endregion
 
         var AnimalToDelete = await _context.Animals.FirstOrDefaultAsync(p => p.AnimalId == AnimalIdParsed);
         if (AnimalToDelete == null)
         {
-            return BadRequest(new ErrorMessage("We cannot found the Animal with this id: " + AnimalIdParsed, StatusCodes.Status400BadRequest));
+            return BadRequest(new ErrorMessage("We cannot found the Animal with this id: " + AnimalIdParsed,
+                StatusCodes.Status400BadRequest));
         }
 
         _context.Animals.Remove(AnimalToDelete);

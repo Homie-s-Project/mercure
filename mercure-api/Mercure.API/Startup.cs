@@ -207,7 +207,7 @@ namespace Mercure.API
             using (var context = new MercureContext(_contextOptions))
             {
                 Logger.Log(LogLevel.Info, LogTarget.EventLog, "Migration de la base de données si nécessaire");
-                context.Database.Migrate();
+                await context.Database.MigrateAsync();
 
                 // Concernant les rôles
                 var hasAlreadyRoles = context.Roles.Any();
@@ -216,13 +216,21 @@ namespace Mercure.API
                                ") rôles");
 
                 var roleEnum = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>().ToList();
-                if (!hasAlreadyRoles || countRoles != roleEnum.Count())
+                if (!hasAlreadyRoles || countRoles != roleEnum.Count)
                 {
                     // Suppression des rôles
                     if (hasAlreadyRoles)
                     {
+                        var orders = context.Orders.ToList();
+                        if (orders.Count > 0)
+                        {
+                            Logger.LogInfo("Changement du FK reliant les utilisateurs aux commandes, pour les mettre à null");
+                            orders.ForEach(order => order.UserId = null);
+                            await context.SaveChangesAsync();
+                        }
+                        
                         Logger.LogInfo("Suppression des rôles de la table Roles");
-                        context.Roles.ToList().ForEach(r => context.Remove(r));
+                        context.Roles.RemoveRange(context.Roles);
                         await context.SaveChangesAsync();
                     }
 
@@ -236,14 +244,14 @@ namespace Mercure.API
                         });
                     });
                     await context.SaveChangesAsync();
-                }
-
+                } 
+ 
                 // EN MODE DEV => Docker Débug ou lancer depuis l'IDE
                 if (env.IsDevelopment())
                 {
                     // Utilisateurs de tests
                     var devTestUser = context.Users.Where(u => u.ServiceId.StartsWith("DEV"));
-                    if (devTestUser.Count() > 0)
+                    if (devTestUser.Any())
                     {
                         Logger.LogInfo("Suppression des utilisateurs de dev de la table Users");
                         devTestUser.ToList().ForEach(u => context.Remove(u));
@@ -405,7 +413,7 @@ namespace Mercure.API
                     var devAnimalSpecies = await context.Speciess.ToListAsync();
                     Logger.LogInfo("Il y a '" + devAnimalSpecies.Count + "' laision(s) qui ont été trouvé entre les animaux et les races.");
                     
-                    if (devAnimalSpecies.Count() > 0)
+                    if (devAnimalSpecies.Any())
                     {
                         Logger.LogInfo("Suppression des relations animaux - espèces de dev de la table AnimalSpecies");
                         devAnimalSpecies.ForEach(a => context.Remove(a));

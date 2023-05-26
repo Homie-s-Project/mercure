@@ -27,5 +27,4 @@ public class Animal
     public DateTime AnimalCreationDate { get; set; }
     public DateTime AnimalLastUpdate { get; set; }
     public ICollection<AnimalSpecies> AnimalSpecies { get; set; }
-
 }
