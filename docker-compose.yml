@@ -54,9 +54,12 @@ services:
     ports:
       - 5000:5000
     environment:
+      - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=1
+      - DOTNET_WATCH_SUPPRESS_EMOJIS=1  
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://+:5000
       - RUN_IN_DOCKER=true
+    volumes:
+      - ./mercure-api:/app
     command:  dotnet run --project mercure.API
       
   mercure-web:
@@ -65,9 +68,12 @@ services:
     restart: unless-stopped
     build:
       context: mercure-web
-      dockerfile: ./Dockerfile
+      dockerfile: ./prod.Dockerfile
     environment:
       NODE_ENV: production
+    volumes:
+      - ./mercure-web:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - 4200:4200
 

@@ -26,7 +26,10 @@
           <span>Vous êtes en environnement de développement, c'est pour cela que vous pouvez modifier votre rôle.</span>
         </div>
         <p *ngIf="isUserLoading">Loading...</p>
-        <ng-container *ngIf="roles && !isUserLoading">
+        <ng-container *ngIf="!isUserLoading && !isDevEnv">
+          <p>{{currentUser.role.roleName}}</p>
+        </ng-container>
+        <ng-container *ngIf="roles && !isUserLoading && isDevEnv">
           <select id="roles" class="select-role" [(ngModel)]="selectedRole">
             <option *ngFor="let role of roles" [selected]="role.roleNumber === currentUser.role.roleNumber" [value]="role.roleNumber">{{role.roleName}}</option>
           </select>
