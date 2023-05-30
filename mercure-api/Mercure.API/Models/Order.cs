@@ -29,11 +29,13 @@ public class Order
     public string? SessionId { get; set; }
     public DateTime OrderDate { get; set; }
     // True = payé, False = non payé
+    /// <summary>
+    /// True = payé, False = non payé
+    /// </summary>
     public Boolean OrderStatus { get; set; }
     
     [ForeignKey("User")] public int? UserId { get; set; }
     public virtual User User { get; set; }
     
     public  ICollection<OrderProduct> Products { get; set; }
-    public  ICollection<Animal> Animals { get; set; }
 }

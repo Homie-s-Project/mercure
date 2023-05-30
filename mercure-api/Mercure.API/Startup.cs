@@ -207,7 +207,7 @@ namespace Mercure.API
             using (var context = new MercureContext(_contextOptions))
             {
                 Logger.Log(LogLevel.Info, LogTarget.EventLog, "Migration de la base de données si nécessaire");
-                context.Database.Migrate();
+                await context.Database.MigrateAsync();
 
                 // Concernant les rôles
                 var hasAlreadyRoles = context.Roles.Any();
@@ -216,13 +216,21 @@ namespace Mercure.API
                                ") rôles");
 
                 var roleEnum = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>().ToList();
-                if (!hasAlreadyRoles || countRoles != roleEnum.Count())
+                if (!hasAlreadyRoles || countRoles != roleEnum.Count)
                 {
                     // Suppression des rôles
                     if (hasAlreadyRoles)
                     {
+                        var orders = context.Orders.ToList();
+                        if (orders.Count > 0)
+                        {
+                            Logger.LogInfo("Changement du FK reliant les utilisateurs aux commandes, pour les mettre à null");
+                            orders.ForEach(order => order.UserId = null);
+                            await context.SaveChangesAsync();
+                        }
+                        
                         Logger.LogInfo("Suppression des rôles de la table Roles");
-                        context.Roles.ToList().ForEach(r => context.Remove(r));
+                        context.Roles.RemoveRange(context.Roles);
                         await context.SaveChangesAsync();
                     }
 
@@ -236,14 +244,14 @@ namespace Mercure.API
                         });
                     });
                     await context.SaveChangesAsync();
-                }
-
+                } 
+ 
                 // EN MODE DEV => Docker Débug ou lancer depuis l'IDE
                 if (env.IsDevelopment())
                 {
                     // Utilisateurs de tests
                     var devTestUser = context.Users.Where(u => u.ServiceId.StartsWith("DEV"));
-                    if (devTestUser.Count() > 0)
+                    if (devTestUser.Any())
                     {
                         Logger.LogInfo("Suppression des utilisateurs de dev de la table Users");
                         devTestUser.ToList().ForEach(u => context.Remove(u));
@@ -360,10 +368,72 @@ namespace Mercure.API
                     });
                     await context.SaveChangesAsync();
 
+
+                    // DEV Animals
+                    var devAnimals = context.Animals.ToList();
+                    if (devAnimals.Count() > 0)
+                    {
+                        Logger.LogInfo("Suppression des animaux de dev de la table Animals");
+                        devAnimals.ForEach(a => context.Remove(a));
+                        await context.SaveChangesAsync();
+                    }
+                    List<Animal> animals = new List<Animal> {
+                        new Animal("Pan-di", DateTime.Parse("2011-01-28T17:18:39.840229+02:00"), "White and grey", 1000000, DateTime.Now, DateTime.Now),
+                        new Animal("Noisette", DateTime.Parse("2011-05-12T17:18:39.840229+02:00"), "Red", 1000000, DateTime.Now, DateTime.Now),
+                        new Animal("Charlie", DateTime.Parse("2012-07-08T17:18:39.840229+02:00"), "Black", 1000000, DateTime.Now, DateTime.Now),
+                        new Animal("Ernesto", DateTime.Parse("2001-01-28T17:18:39.840229+02:00"), "Blue", 1000000, DateTime.Now, DateTime.Now),
+                        new Animal("Ulysse", DateTime.Parse("2010-02-14T17:18:39.840229+02:00"), "Yellow and purple", 1000000, DateTime.Now, DateTime.Now)
+                    };
+                    
+                    await context.Animals.AddRangeAsync(animals);
+                    await context.SaveChangesAsync();
+
+                    // DEV Species
+                    var devSpecies = context.Speciess.ToList();
+                    if (devSpecies.Any())
+                    {
+                        Logger.LogInfo("Suppression des espèces de dev de la table Species");
+                        devSpecies.ForEach(s => context.Remove(s));
+                        await context.SaveChangesAsync();
+                    }
+                    
+                    List<Species> species = new List<Species>
+                    {
+                        new Species("Labrador"),
+                        new Species("Terrier du tibet"),
+                        new Species("Berger allemand"),
+                        new Species("Bouledogue français"),
+                        new Species("Cocker"),
+                        new Species("Cavalier King Charles")
+                    };
+                    await context.Speciess.AddRangeAsync(species);
+                    await context.SaveChangesAsync();
+
+                    Logger.LogInfo("Début de la création des liaisons entre les animaux et races");
+                    
+                    var animalsList = context.Animals.ToList();
+                    animalsList.ForEach((a) =>
+                    {
+                        var animalSpecies = new List<AnimalSpecies>();
+                        var randomSpecies = new Random().Next(1, 3);
+
+                        for (int i = 0; i < randomSpecies; i++)
+                        {
+                            animalSpecies.Add(new AnimalSpecies(a.AnimalId, RandomSpecies(context)));
+                        }
+
+                        Logger.LogInfo(animalSpecies.Count.ToString() + " espèces pour l'animal " + a.AnimalName + " ajoutées");
+                        
+                        a.AnimalSpecies = new List<AnimalSpecies>();
+                        a.AnimalSpecies = animalSpecies;
+                    });
+                    await context.SaveChangesAsync();
+
                     Logger.LogInfo("Fin du remplissage de la base de données");
                 }
             }
         }
+
 
         private static void OpenBrowser(string url)
         {
@@ -498,13 +568,25 @@ namespace Mercure.API
                 .ToList();
         }
 
-        private Stock RandomStocks(MercureContext context)
+
+        private static Species RandomSpecies(MercureContext context)
+        {
+            Random rand = new Random();
+            int skipper = rand.Next(0, context.Speciess.Count());
+
+            return context.Speciess
+                .Skip(skipper)
+                .Take(1)
+                .FirstOrDefault();
+        }
+
+        private static Stock RandomStocks(MercureContext context)
         {
             var dbStocks = context.Stocks.ToList();
             return dbStocks[new Random().Next(0, dbStocks.Count)];
         }
 
-        private int ProductPrice()
+        private static int ProductPrice()
         {
             return new Random().Next(1, 100);
         }
