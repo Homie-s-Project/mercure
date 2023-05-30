@@ -117,7 +117,6 @@ public class TestController : BaseController
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
-
     public async Task<IActionResult> SetRole(string roleNumber)
     {
         if (string.IsNullOrEmpty(roleNumber))
