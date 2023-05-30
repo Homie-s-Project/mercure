@@ -15,7 +15,8 @@ export class CartService implements OnInit {
   // RandomId is generated if user is not logged to identify the cart
   private cartId?: string | null;
 
-  private cart: any;
+  public cart?: ICartModel;
+  public cartTotalPrice?: number;
 
   // Last time the cart was loaded
   private lastLoadedCart?: Date;
@@ -39,6 +40,7 @@ export class CartService implements OnInit {
     this.getCart()
       .then(r => {
         this.cart = r;
+        this.cartTotalPrice = this.cart.products.reduce((a, b) => a + (b.product.productPrice * b.quantity), 0);
       })
       .catch(e => {
         if (!environment.production) {
@@ -46,7 +48,7 @@ export class CartService implements OnInit {
         }
 
         if (e.status === 404) {
-          this.cart = [];
+          this.cart = undefined;
         }
       })
       .finally(() => {
@@ -64,7 +66,11 @@ export class CartService implements OnInit {
       }
 
       return new Promise((resolve, reject) => {
-        resolve(this.cart);
+        if (!this.cart) {
+          reject("Cart is not loaded");
+        } else {
+          resolve(this.cart);
+        }
       });
     }
 
@@ -83,6 +89,10 @@ export class CartService implements OnInit {
         )
         .subscribe((data) => {
           this.lastLoadedCart = new Date();
+          if (data) {
+            this.cartTotalPrice = data.products.reduce((a, b) => a + (b.product.productPrice * b.quantity), 0);
+          }
+
           resolve(data);
           return data;
         })
@@ -108,7 +118,12 @@ export class CartService implements OnInit {
       throw new Error("Quantity is not valid");
     }
 
-    let url = environment.apiUrl + this.router.createUrlTree(['/cart/add', productId], {queryParams: {quantity: quantity, randomId: !isLogged && hasCartId ? this.cartId : ''}}).toString();
+    let url = environment.apiUrl + this.router.createUrlTree(['/cart/add', productId], {
+      queryParams: {
+        quantity: quantity,
+        randomId: !isLogged && hasCartId ? this.cartId : ''
+      }
+    }).toString();
 
     return new Promise((resolve, reject) => {
       this.http.post(url, {})
@@ -159,9 +174,14 @@ export class CartService implements OnInit {
   getCheckoutUrl(): Promise<string> {
 
     return new Promise((resolve, reject) => {
-      this.http.post<string>(environment.apiUrl + '/order/buy', {randomId: this.cartId})
+      let isLogged = this.authService.isLogged();
+
+      this.http.post<string>(environment.apiUrl + `/order/buy${!isLogged ? `?randomId=${this.cartId}` : ''}`, {})
         .pipe(
           catchError((error) => {
+            if (!environment.production) {
+              console.error(error.error.message);
+            }
             reject(error);
             return throwError(error);
           })
@@ -183,6 +203,7 @@ export class CartService implements OnInit {
     this.getCart(true)
       .then(r => {
         this.cart = r;
+        this.cartTotalPrice = this.cart.products.reduce((a, b) => a + (b.product.productPrice * b.quantity), 0);
       })
       .catch(e => {
         if (!environment.production) {
@@ -190,7 +211,7 @@ export class CartService implements OnInit {
         }
 
         if (e.status === 404) {
-          this.cart = [];
+          this.cart = undefined;
         }
       })
       .finally(() => {

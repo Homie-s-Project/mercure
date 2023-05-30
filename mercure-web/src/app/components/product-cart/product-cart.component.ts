@@ -12,21 +12,14 @@ import {environment} from "../../../environments/environment";
 export class ProductCartComponent implements OnInit {
   faCreditCard = faCreditCard;
 
-  cartProducts: ICartProductModel[] = []
   isLoading: boolean = true;
-
   isCheckoutLoading: boolean = false;
-
-  totalPrice: number = 0.00;
 
   constructor(public cartService: CartService) {
   }
 
   ngOnInit(): void {
     this.cartService.getCart()
-      .then((data => {
-        this.cartProducts = data.products;
-      }))
       .catch(e => {
         if (!environment.production) {
           console.log(e);
@@ -34,15 +27,13 @@ export class ProductCartComponent implements OnInit {
       })
       .finally(() => {
         this.isLoading = false;
-
-        this.totalPrice = this.cartProducts.reduce((a, b) => a + (b.product.productPrice * b.quantity), 0);
       });
   }
 
   async checkout() {
-    if (this.cartProducts.length > 0) {
+    if (this.cartService.cart?.products && this.cartService.cart?.products.length > 0) {
       this.isCheckoutLoading = true;
-      
+
       await this.cartService.getCheckoutUrl()
         .then((data) => {
           window.location.href = data;

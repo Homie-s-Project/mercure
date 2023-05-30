@@ -3,11 +3,11 @@
     <div class="title-product-cart">
       <h2>Aperçu du panier</h2>
     </div>
-    <ng-container *ngIf="!isLoading && cartProducts.length === 0">
+    <ng-container *ngIf="!isLoading && (cartService.cart?.products?.length || 0) === 0">
       Aucun produit dans votre panier.
     </ng-container>
     <ng-container *ngIf="!isLoading">
-      <app-item-cart *ngFor="let product of cartProducts" [product]="product"></app-item-cart>
+      <app-item-cart *ngFor="let product of cartService.cart?.products" [product]="product"></app-item-cart>
     </ng-container>
     <ng-container *ngIf="isLoading">
       Chargement du panier...
@@ -16,9 +16,9 @@
   <div class="total">
     <div class="total-price">
       <p>Total :</p>
-      <p>{{totalPrice.toFixed(2)}} Fr</p>
+      <p>{{(cartService.cartTotalPrice || 0).toFixed(2)}} Fr</p>
     </div>
-    <div (click)="checkout()" [className]="cartProducts.length > 0 ? 'buy-cart' : 'buy-cart disable'">
+    <div (click)="checkout()" [className]="(cartService.cart?.products?.length || 0) > 0 ? 'buy-cart' : 'buy-cart disable'">
       <button>
         <fa-icon *ngIf="!isCheckoutLoading" [icon]="faCreditCard"></fa-icon>
         <ng-container *ngIf="isCheckoutLoading">
