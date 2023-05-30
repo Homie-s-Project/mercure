@@ -38,5 +38,4 @@ public class Order
     public virtual User User { get; set; }
     
     public  ICollection<OrderProduct> Products { get; set; }
-    public  ICollection<Animal> Animals { get; set; }
 }

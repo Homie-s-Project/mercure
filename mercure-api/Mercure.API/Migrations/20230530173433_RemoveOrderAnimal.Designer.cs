@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mercure.API.Migrations
 {
     [DbContext(typeof(MercureContext))]
-    [Migration("20230511090819_AnimalRemovedOrderId")]
-    partial class AnimalRemovedOrderId
+    [Migration("20230530173433_RemoveOrderAnimal")]
+    partial class RemoveOrderAnimal
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,29 @@ namespace Mercure.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("AnimalSpecies", b =>
+                {
+                    b.Property<int>("AnimalSpeciesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AnimalSpeciesId"));
+
+                    b.Property<int>("AnimalId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SpeciesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AnimalSpeciesId");
+
+                    b.HasIndex("AnimalId");
+
+                    b.HasIndex("SpeciesId");
+
+                    b.ToTable("AnimalSpecies");
+                });
 
             modelBuilder.Entity("CategoryProduct", b =>
                 {
@@ -68,29 +91,6 @@ namespace Mercure.API.Migrations
                     b.HasKey("AnimalId");
 
                     b.ToTable("Animals");
-                });
-
-            modelBuilder.Entity("Mercure.API.Models.AnimalSpecies", b =>
-                {
-                    b.Property<int>("AnimalSpeciesId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AnimalSpeciesId"));
-
-                    b.Property<int>("AnimalId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SpeciesId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("AnimalSpeciesId");
-
-                    b.HasIndex("AnimalId");
-
-                    b.HasIndex("SpeciesId");
-
-                    b.ToTable("AnimalSpecies");
                 });
 
             modelBuilder.Entity("Mercure.API.Models.Category", b =>
@@ -332,22 +332,7 @@ namespace Mercure.API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CategoryProduct", b =>
-                {
-                    b.HasOne("Mercure.API.Models.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Mercure.API.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Mercure.API.Models.AnimalSpecies", b =>
+            modelBuilder.Entity("AnimalSpecies", b =>
                 {
                     b.HasOne("Mercure.API.Models.Animal", "Animal")
                         .WithMany("AnimalSpecies")
@@ -364,6 +349,21 @@ namespace Mercure.API.Migrations
                     b.Navigation("Animal");
 
                     b.Navigation("Species");
+                });
+
+            modelBuilder.Entity("CategoryProduct", b =>
+                {
+                    b.HasOne("Mercure.API.Models.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoriesCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mercure.API.Models.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Mercure.API.Models.OAuth2Credentials", b =>
@@ -434,9 +434,6 @@ namespace Mercure.API.Migrations
 
             modelBuilder.Entity("Mercure.API.Models.Order", b =>
                 {
-                    // FIX: Navigation 'Mercure.API.Models.Order (Dictionary<string, object>).Animals' was not found. Please add the navigation to the entity type before configuring it.
-                    // b.Navigation("Animals");
-
                     b.Navigation("Products");
                 });
 
