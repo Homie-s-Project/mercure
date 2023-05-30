@@ -160,7 +160,7 @@ public class ProductController : ApiNoSecurityController
             return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
         }
         
-        if (userContext.Role.RoleNumber != (int) RoleEnum.Admin)
+        if (!RoleChecker.HasSuperiorRole(userContext.Role, RoleEnum.ProductManager))
         {
             return Unauthorized(new ErrorMessage("You cannot create an product", StatusCodes.Status401Unauthorized));
         }
@@ -252,7 +252,7 @@ public class ProductController : ApiNoSecurityController
             return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
         }
         
-        if (userContext.Role.RoleNumber != (int) RoleEnum.Admin)
+        if (!RoleChecker.HasSuperiorRole(userContext.Role, RoleEnum.ProductManager))
         {
             return Unauthorized(new ErrorMessage("You cannot create an product", StatusCodes.Status401Unauthorized));
         }
@@ -320,9 +320,9 @@ public class ProductController : ApiNoSecurityController
             return Unauthorized(new ErrorMessage("User is not authorized", StatusCodes.Status401Unauthorized));
         }
         
-        if (userContext.Role.RoleNumber != (int) RoleEnum.Admin)
+        if (!RoleChecker.HasSuperiorRole(userContext.Role, RoleEnum.ProductManager))
         {
-            return Unauthorized(new ErrorMessage("You cannot create an product", StatusCodes.Status401Unauthorized));
+            return Unauthorized(new ErrorMessage("You cannot delete a product", StatusCodes.Status401Unauthorized));
         }
         
         bool isProductIdParsed = int.TryParse(productId, out int productIdParsed);
