@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Threading.Tasks;
 using Mercure.API.Context;
 using Mercure.API.Models;
@@ -26,6 +27,37 @@ public class AnimalsController : ApiNoSecurityController
     public AnimalsController(MercureContext context)
     {
         _context = context;
+    }
+
+    
+    /// <summary>
+    /// Get the list of all the Animals
+    /// </summary>
+    /// <returns></returns>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<AnimalDto>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    [HttpGet()]
+    public async Task<IActionResult> AnimalList(int limit = 10)
+    {
+        if (limit < 10 || limit > 100)
+        {
+            return BadRequest(new ErrorMessage("Limit must be between 10 and 100", StatusCodes.Status400BadRequest));
+        }
+        
+        var animals = _context.Animals
+            .Take(limit)
+            .Include(a => a.AnimalSpecies)
+            .ThenInclude(animalSpecies => animalSpecies.Species)
+            .Select(a => new AnimalDto(a, true))
+            .ToList();
+        
+        if (animals.Count == 0)
+        {
+            return NotFound(new ErrorMessage("No animals found", StatusCodes.Status404NotFound));
+        }
+
+        return Ok(animals);
     }
 
     /// <summary>
@@ -60,7 +92,7 @@ public class AnimalsController : ApiNoSecurityController
             return NotFound(new ErrorMessage("Animal not found", StatusCodes.Status404NotFound));
         }
 
-        if (animalSpeciesDb == null || animalSpeciesDb.Animal == null)
+        if (animalSpeciesDb.Animal == null)
         {
             return NotFound(new ErrorMessage("Animal not found", StatusCodes.Status404NotFound));
         }

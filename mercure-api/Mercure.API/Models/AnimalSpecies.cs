@@ -5,16 +5,26 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 public class AnimalSpecies
 {
-    public AnimalSpecies(AnimalSpecies animalSpecies)
+    public AnimalSpecies(Animal animal, Species species)
     {
-        AnimalId = animalSpecies.AnimalId;
-        Animal = animalSpecies.Animal;
-        SpeciesId = animalSpecies.SpeciesId;
-        Species = animalSpecies.Species;
+        AnimalId = animal.AnimalId;
+        SpeciesId = species.SpeciesId;
     }
-
+    
+    public AnimalSpecies(int animalId, int speciesId)
+    {
+        AnimalId = animalId;
+        SpeciesId = speciesId;
+    }
+    
     public AnimalSpecies()
     {
+    }
+
+    public AnimalSpecies(int animalId, Species randomSpecies)
+    {
+        AnimalId = animalId;
+        SpeciesId = randomSpecies.SpeciesId;
     }
 
     [Key]

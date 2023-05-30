@@ -390,12 +390,13 @@ namespace Mercure.API
 
                     // DEV Species
                     var devSpecies = context.Speciess.ToList();
-                    if (devSpecies.Count() > 0)
+                    if (devSpecies.Any())
                     {
                         Logger.LogInfo("Suppression des espèces de dev de la table Species");
                         devSpecies.ForEach(s => context.Remove(s));
                         await context.SaveChangesAsync();
                     }
+                    
                     List<Species> species = new List<Species>
                     {
                         new Species("Labrador"),
@@ -405,30 +406,27 @@ namespace Mercure.API
                         new Species("Cocker"),
                         new Species("Cavalier King Charles")
                     };
-
                     await context.Speciess.AddRangeAsync(species);
                     await context.SaveChangesAsync();
 
-                    // DEV AnimalSpecies
-                    var devAnimalSpecies = await context.Speciess.ToListAsync();
-                    Logger.LogInfo("Il y a '" + devAnimalSpecies.Count + "' laision(s) qui ont été trouvé entre les animaux et les races.");
-                    
-                    if (devAnimalSpecies.Any())
-                    {
-                        Logger.LogInfo("Suppression des relations animaux - espèces de dev de la table AnimalSpecies");
-                        devAnimalSpecies.ForEach(a => context.Remove(a));
-                        await context.SaveChangesAsync();
-                    }
-
-
                     Logger.LogInfo("Début de la création des liaisons entre les animaux et races");
-                    var animalSpecies = await context.Animals.ToListAsync();
-                    animalSpecies.ForEach((speciesAnimal) => {
-                        var animalSpecies = new AnimalSpecies();
-                        animalSpecies.Animal = speciesAnimal;
-                        animalSpecies.Species = randomSpecies(context);
-                    });
+                    
+                    var animalsList = context.Animals.ToList();
+                    animalsList.ForEach((a) =>
+                    {
+                        var animalSpecies = new List<AnimalSpecies>();
+                        var randomSpecies = new Random().Next(1, 3);
 
+                        for (int i = 0; i < randomSpecies; i++)
+                        {
+                            animalSpecies.Add(new AnimalSpecies(a.AnimalId, RandomSpecies(context)));
+                        }
+
+                        Logger.LogInfo(animalSpecies.Count.ToString() + " espèces pour l'animal " + a.AnimalName + " ajoutées");
+                        
+                        a.AnimalSpecies = new List<AnimalSpecies>();
+                        a.AnimalSpecies = animalSpecies;
+                    });
                     await context.SaveChangesAsync();
 
                     Logger.LogInfo("Fin du remplissage de la base de données");
@@ -571,10 +569,10 @@ namespace Mercure.API
         }
 
 
-        private Species randomSpecies(MercureContext context)
+        private static Species RandomSpecies(MercureContext context)
         {
             Random rand = new Random();
-            int skipper = rand.Next(0, context.Categories.Count());
+            int skipper = rand.Next(0, context.Speciess.Count());
 
             return context.Speciess
                 .Skip(skipper)
@@ -582,13 +580,13 @@ namespace Mercure.API
                 .FirstOrDefault();
         }
 
-        private Stock RandomStocks(MercureContext context)
+        private static Stock RandomStocks(MercureContext context)
         {
             var dbStocks = context.Stocks.ToList();
             return dbStocks[new Random().Next(0, dbStocks.Count)];
         }
 
-        private int ProductPrice()
+        private static int ProductPrice()
         {
             return new Random().Next(1, 100);
         }
