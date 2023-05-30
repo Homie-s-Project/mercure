@@ -37,6 +37,8 @@ import {NgxSliderModule} from '@angular-slider/ngx-slider';
 import {FilterService} from "./services/filter/filter.service";
 import {SearchService} from "./services/search/search.service";
 import {RoleService} from "./services/role/role.service";
+import { OrderSuccessComponent } from './components/order-success/order-success.component';
+import { OrderCancelComponent } from './components/order-cancel/order-cancel.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,9 @@ import {RoleService} from "./services/role/role.service";
     ProductsPaginationComponent,
     SearchComponent,
     FilterComponent,
-    FilterGroupComponent
+    FilterGroupComponent,
+    OrderSuccessComponent,
+    OrderCancelComponent
   ],
   imports: [
     BrowserModule,

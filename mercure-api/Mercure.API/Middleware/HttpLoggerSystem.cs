@@ -18,7 +18,7 @@ public class HttpLoggerSystem
         var request = context.Request;
         var requestLog = $"[{request.Method}] {request.Path} {request.QueryString}";
         
-        Logger.Log(LogLevel.Info, LogTarget.EventLog, requestLog);
+        Logger.Log(LogLevel.Info, LogTarget.Middleware, requestLog);
         
         
         await _next(context);

@@ -128,6 +128,7 @@ public class Logger
 
     public static void LogInfo(string message) => Log(LogLevel.Info, LogTarget.File, message);
     public static void LogInfo(LogTarget logTarget, string message) => Log(LogLevel.Info, logTarget, message);
+    public static void LogSeed(string message) => Log(LogLevel.Info, LogTarget.Seed, message);
 
     public static void LogWarn(string message) => Log(LogLevel.Warn, LogTarget.File, message);
     public static void LogWarn(LogTarget logTarget, string message) => Log(LogLevel.Warn, logTarget, message);

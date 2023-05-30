@@ -1,0 +1,25 @@
+@use '/src/styles/variables.scss' as vars;
+
+.order-container {
+  height: 100vh;
+  width: 100%;
+  text-align: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .order-number {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  // Repris de la page de chargement
+  .back-button {
+    margin-top: 25px;
+    color: vars.$bole;
+    font-weight: bold;
+    text-decoration: none;
+  }
+}

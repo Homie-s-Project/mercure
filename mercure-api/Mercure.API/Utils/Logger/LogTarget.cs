@@ -4,5 +4,7 @@ public enum LogTarget
 {
     File,
     Database,
-    EventLog,
+    Middleware,
+    Console,
+    Seed
 }

@@ -1,36 +1,44 @@
 @use '/src/styles/variables.scss' as vars;
 
 .item {
+  width: 100%;
+  display: flex;
+  // justify-content: space-between;
+  align-items: center;
+  padding: 15px 0 15px 15px;
+  border-bottom: 1px solid vars.$bole;
+
+  .image-item {
+    height: 75px;
+    width: 75px;
+    // background: linear-gradient(160deg, vars.$dark-moss-green, vars.$cal-poly-green);
+  }
+
+  .quantity {
+    width: 45px;
+    text-align: right;
+    padding: 6px;
+  }
+
+  .item-data {
+    text-decoration: none;
+    color: vars.$dark-green;
     width: 100%;
-    display: flex;
-    // justify-content: space-between;
-    align-items: center;
-    padding: 15px 0 15px 15px;
-    border-bottom: 1px solid vars.$bole;
-    .image-item {
-        height: 75px;
-        width: 75px;
-        // background: linear-gradient(160deg, vars.$dark-moss-green, vars.$cal-poly-green);
+    display: inline-flex;
+    justify-content: space-between;
+
+    .item-name {
+      width: 50%;
+      padding: 6px;
+
+      .item-brand {
+        font-weight: bold;
+      }
     }
-    .quantity {
-        width: 45px;
-        text-align: right;
-        padding: 6px;
+
+    .shippment-status {
+      width: 50%;
+      padding: 6px;
     }
-    .item-data {
-        width: 100%;
-        display: inline-flex;
-        justify-content: space-between;
-        .item-name {
-            width: 50%;
-            padding: 6px;
-            .item-brand {
-                font-weight: bold;
-            }
-        }
-        .shippment-status {
-            width: 50%;
-            padding: 6px;   
-        }
-    }
+  }
 }

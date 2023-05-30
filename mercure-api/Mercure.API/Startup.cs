@@ -206,13 +206,13 @@ namespace Mercure.API
         {
             using (var context = new MercureContext(_contextOptions))
             {
-                Logger.Log(LogLevel.Info, LogTarget.EventLog, "Migration de la base de données si nécessaire");
+                Logger.Log(LogLevel.Info, LogTarget.Database, "Migration de la base de données si nécessaire");
                 await context.Database.MigrateAsync();
 
                 // Concernant les rôles
                 var hasAlreadyRoles = context.Roles.Any();
                 var countRoles = context.Roles.Count();
-                Logger.LogInfo("La table Roles contient déjà des données : " + hasAlreadyRoles + "(" + countRoles +
+                Logger.LogSeed("La table Roles contient déjà des données : " + hasAlreadyRoles + "(" + countRoles +
                                ") rôles");
 
                 var roleEnum = Enum.GetValues(typeof(RoleEnum)).Cast<RoleEnum>().ToList();
@@ -224,19 +224,20 @@ namespace Mercure.API
                         var orders = context.Orders.ToList();
                         if (orders.Count > 0)
                         {
-                            Logger.LogInfo("Changement du FK reliant les utilisateurs aux commandes, pour les mettre à null");
+                            Logger.LogSeed(
+                                "Changement du FK reliant les utilisateurs aux commandes, pour les mettre à null");
                             orders.ForEach(order => order.UserId = null);
                             await context.SaveChangesAsync();
                         }
-                        
-                        Logger.LogInfo("Suppression des rôles de la table Roles");
+
+                        Logger.LogSeed("Suppression des rôles de la table Roles");
                         context.Roles.RemoveRange(context.Roles);
                         await context.SaveChangesAsync();
                     }
 
                     roleEnum.ToList().ForEach(role =>
                     {
-                        Logger.LogInfo("Création du rôle " + role + " avec le numéro " + (int) role);
+                        Logger.LogSeed("Création du rôle " + role + " avec le numéro " + (int) role);
                         context.Roles.Add(new Role
                         {
                             RoleName = role.ToString(),
@@ -244,8 +245,8 @@ namespace Mercure.API
                         });
                     });
                     await context.SaveChangesAsync();
-                } 
- 
+                }
+
                 // EN MODE DEV => Docker Débug ou lancer depuis l'IDE
                 if (env.IsDevelopment())
                 {
@@ -253,7 +254,7 @@ namespace Mercure.API
                     var devTestUser = context.Users.Where(u => u.ServiceId.StartsWith("DEV"));
                     if (devTestUser.Any())
                     {
-                        Logger.LogInfo("Suppression des utilisateurs de dev de la table Users");
+                        Logger.LogSeed("Suppression des utilisateurs de dev de la table Users");
                         devTestUser.ToList().ForEach(u => context.Remove(u));
                         await context.SaveChangesAsync();
                     }
@@ -262,7 +263,7 @@ namespace Mercure.API
                     var allRoles = context.Roles.ToList();
                     allRoles.ForEach(r =>
                     {
-                        Logger.LogInfo("Création des utilisateurs de test pour le rôle " + r.RoleName);
+                        Logger.LogSeed("Création des utilisateurs de test pour le rôle " + r.RoleName);
                         User userRoleTest = new User
                         {
                             ServiceId = "DEV:" + r.RoleName + ":RandomDevServiceId",
@@ -282,7 +283,7 @@ namespace Mercure.API
                     var devUser = context.Users.FirstOrDefault(u =>
                         u.ServiceId.StartsWith("DEV") && u.Role.RoleNumber == (int) RoleEnum.Dev);
                     var tokenDevUser = JwtUtils.GenerateJsonWebToken(devUser);
-                    Logger.LogInfo("Token de l'utilisateur de dev : " + tokenDevUser);
+                    Logger.LogSeed("Token de l'utilisateur de dev : " + tokenDevUser);
 
                     string isRunningInDockerEnv = Environment.GetEnvironmentVariable("RUN_IN_DOCKER");
                     Boolean.TryParse(isRunningInDockerEnv, out bool isRunningInDockerEnvBoolean);
@@ -293,143 +294,171 @@ namespace Mercure.API
                         OpenBrowser(linkSwagger);
                     }
 
-                    // DEV STOCK
-                    var devStock = context.Stocks.Where(s => s.StockQuantityAvailable > 999_999_999).ToList();
-                    if (devStock.Count() > 0)
-                    {
-                        Logger.LogInfo("Suppression des stocks de dev de la table Stocks");
-                        devStock.ForEach(s => context.Remove(s));
-                        await context.SaveChangesAsync();
-                    }
-
-                    // Création des stocks de dev
-                    Logger.LogInfo("Création des stocks de dev...");
-                    var devStocks = new List<Stock>()
-                    {
-                        new Stock(1_999_999_999),
-                        new Stock(1_999_999_999),
-                        new Stock(1_999_999_999),
-                    };
-
-                    devStocks.ForEach(s => context.Stocks.Add(s));
-                    await context.SaveChangesAsync();
-
-                    // DEV CATEGORIES
-                    var devCategories = context.Categories.Where(c => c.CategoryTitle.StartsWith("DEV:")).ToList();
-                    if (devCategories.Count() > 0)
-                    {
-                        Logger.LogInfo("Suppression des catégories de dev de la table Categories");
-                        devCategories.ForEach(c => context.Remove(c));
-                        await context.SaveChangesAsync();
-                    }
-
-                    // Création des catégories de dev
-                    Logger.LogInfo("Création des catégories de dev...");
-                    var devCategoriesList = new List<Category>()
-                    {
-                        new Category("Chien", "pas de description: Chien"),
-                        new Category("Chat", "pas de description: Chat"),
-                        new Category("Rongeur", "pas de description: Rongeur"),
-                        new Category("Oiseau", "pas de description: Oiseau"),
-                        new Category("Poisson", "pas de description: Poisson"),
-                        new Category("Reptile", "pas de description: Reptile"),
-                        new Category("Autre", "pas de description: Autre"),
-                    };
-
-                    devCategoriesList.ForEach(c => context.Categories.Add(c));
-                    await context.SaveChangesAsync();
-
-
-                    // Si la base de données contient des produits commencant par DEV:, alors on supprime les données de la base de données et on les recréeq
-                    var devProducts = context.Products.ToList();
-                    if (devProducts.Any())
-                    {
-                        Logger.LogInfo("Suppression des produits commencant par 'DEV:' de la table Products");
-                        devProducts.ForEach(p => context.Remove(p));
-                        await context.SaveChangesAsync();
-                    }
-
-                    // Création des produits de dev
-                    Logger.LogInfo("Création des produits de dev...");
-                    var products = new List<Product>();
-                    for (var i = 0; i < 100; i++)
-                    {
-                        products.Add(GenerateProduct(context));
-                    }
-
-                    products.ForEach(p => context.Add(p));
-                    await context.SaveChangesAsync();
-
-                    var allDevproducts = context.Products.Where(p => p.ProductName.StartsWith("DEV:")).ToList();
-                    allDevproducts.ForEach(async p =>
-                    {
-                        p.Categories = new List<Category>();
-                        p.Categories = await RandomCategories(context);
-                    });
-                    await context.SaveChangesAsync();
-
-
-                    // DEV Animals
-                    var devAnimals = context.Animals.ToList();
-                    if (devAnimals.Count() > 0)
-                    {
-                        Logger.LogInfo("Suppression des animaux de dev de la table Animals");
-                        devAnimals.ForEach(a => context.Remove(a));
-                        await context.SaveChangesAsync();
-                    }
-                    List<Animal> animals = new List<Animal> {
-                        new Animal("Pan-di", DateTime.Parse("2011-01-28T17:18:39.840229+02:00"), "White and grey", 1000000, DateTime.Now, DateTime.Now),
-                        new Animal("Noisette", DateTime.Parse("2011-05-12T17:18:39.840229+02:00"), "Red", 1000000, DateTime.Now, DateTime.Now),
-                        new Animal("Charlie", DateTime.Parse("2012-07-08T17:18:39.840229+02:00"), "Black", 1000000, DateTime.Now, DateTime.Now),
-                        new Animal("Ernesto", DateTime.Parse("2001-01-28T17:18:39.840229+02:00"), "Blue", 1000000, DateTime.Now, DateTime.Now),
-                        new Animal("Ulysse", DateTime.Parse("2010-02-14T17:18:39.840229+02:00"), "Yellow and purple", 1000000, DateTime.Now, DateTime.Now)
-                    };
+                    var hasStocks = context.Stocks.Any();
+                    var hasCategories = context.Categories.Any();
+                    var hasProducts = context.Products.Any();
                     
-                    await context.Animals.AddRangeAsync(animals);
-                    await context.SaveChangesAsync();
+                    Logger.LogSeed(hasStocks ? "La table Stocks contient déjà des données" : "La table Stocks est vide");
+                    Logger.LogSeed(hasCategories ? "La table Categories contient déjà des données" : "La table Categories est vide");
+                    Logger.LogSeed(hasProducts ? "La table Products contient déjà des données" : "La table Products est vide");
 
-                    // DEV Species
-                    var devSpecies = context.Speciess.ToList();
-                    if (devSpecies.Any())
+                    if (!hasStocks || !hasCategories || !hasProducts)
                     {
-                        Logger.LogInfo("Suppression des espèces de dev de la table Species");
-                        devSpecies.ForEach(s => context.Remove(s));
-                        await context.SaveChangesAsync();
-                    }
-                    
-                    List<Species> species = new List<Species>
-                    {
-                        new Species("Labrador"),
-                        new Species("Terrier du tibet"),
-                        new Species("Berger allemand"),
-                        new Species("Bouledogue français"),
-                        new Species("Cocker"),
-                        new Species("Cavalier King Charles")
-                    };
-                    await context.Speciess.AddRangeAsync(species);
-                    await context.SaveChangesAsync();
-
-                    Logger.LogInfo("Début de la création des liaisons entre les animaux et races");
-                    
-                    var animalsList = context.Animals.ToList();
-                    animalsList.ForEach((a) =>
-                    {
-                        var animalSpecies = new List<AnimalSpecies>();
-                        var randomSpecies = new Random().Next(1, 3);
-
-                        for (int i = 0; i < randomSpecies; i++)
+                        // DEV STOCK
+                        var devStock = context.Stocks.Where(s => s.StockQuantityAvailable > 999_999_999).ToList();
+                        if (devStock.Count() > 0)
                         {
-                            animalSpecies.Add(new AnimalSpecies(a.AnimalId, RandomSpecies(context)));
+                            Logger.LogSeed("Suppression des stocks de dev de la table Stocks");
+                            devStock.ForEach(s => context.Remove(s));
+                            await context.SaveChangesAsync();
                         }
 
-                        Logger.LogInfo(animalSpecies.Count.ToString() + " espèces pour l'animal " + a.AnimalName + " ajoutées");
-                        
-                        a.AnimalSpecies = new List<AnimalSpecies>();
-                        a.AnimalSpecies = animalSpecies;
-                    });
-                    await context.SaveChangesAsync();
+                        // Création des stocks de dev
+                        Logger.LogSeed("Création des stocks de dev...");
+                        var devStocks = new List<Stock>()
+                        {
+                            new Stock(1_999_999_999),
+                            new Stock(1_999_999_999),
+                            new Stock(1_999_999_999),
+                        };
 
-                    Logger.LogInfo("Fin du remplissage de la base de données");
+                        devStocks.ForEach(s => context.Stocks.Add(s));
+                        await context.SaveChangesAsync();
+
+                        // DEV CATEGORIES
+                        var devCategories = context.Categories.Where(c => c.CategoryTitle.StartsWith("DEV:")).ToList();
+                        if (devCategories.Count() > 0)
+                        {
+                            Logger.LogSeed("Suppression des catégories de dev de la table Categories");
+                            devCategories.ForEach(c => context.Remove(c));
+                            await context.SaveChangesAsync();
+                        }
+
+                        // Création des catégories de dev
+                        Logger.LogSeed("Création des catégories de dev...");
+                        var devCategoriesList = new List<Category>()
+                        {
+                            new Category("Chien", "pas de description: Chien"),
+                            new Category("Chat", "pas de description: Chat"),
+                            new Category("Rongeur", "pas de description: Rongeur"),
+                            new Category("Oiseau", "pas de description: Oiseau"),
+                            new Category("Poisson", "pas de description: Poisson"),
+                            new Category("Reptile", "pas de description: Reptile"),
+                            new Category("Autre", "pas de description: Autre"),
+                        };
+
+                        devCategoriesList.ForEach(c => context.Categories.Add(c));
+                        await context.SaveChangesAsync();
+
+
+                        // Si la base de données contient des produits commencant par DEV:, alors on supprime les données de la base de données et on les recréeq
+                        var devProducts = context.Products.ToList();
+                        if (devProducts.Any())
+                        {
+                            Logger.LogSeed("Suppression des produits commencant par 'DEV:' de la table Products");
+                            devProducts.ForEach(p => context.Remove(p));
+                            await context.SaveChangesAsync();
+                        }
+
+                        // Création des produits de dev
+                        Logger.LogSeed("Création des produits de dev...");
+                        var products = new List<Product>();
+                        for (var i = 0; i < 100; i++)
+                        {
+                            products.Add(GenerateProduct(context));
+                        }
+
+                        products.ForEach(p => context.Add(p));
+                        await context.SaveChangesAsync();
+
+                        var allDevproducts = context.Products.Where(p => p.ProductName.StartsWith("DEV:")).ToList();
+                        allDevproducts.ForEach(async p =>
+                        {
+                            p.Categories = new List<Category>();
+                            p.Categories = await RandomCategories(context);
+                        });
+                        await context.SaveChangesAsync();
+                    }
+
+                    var hasAnimal = context.Animals.Any();
+                    var hasSpecies = context.Speciess.Any();
+                    
+                    Logger.LogSeed(hasAnimal ? "La base de données contient des animaux" : "La base de données ne contient pas d'animaux");
+                    Logger.LogSeed(hasSpecies ? "La base de données contient des espèces" : "La base de données ne contient pas d'espèces");
+
+                    if (!hasAnimal || !hasSpecies)
+                    {
+                        // DEV Animals
+                        var devAnimals = context.Animals.ToList();
+                        if (devAnimals.Count() > 0)
+                        {
+                            Logger.LogSeed("Suppression des animaux de dev de la table Animals");
+                            devAnimals.ForEach(a => context.Remove(a));
+                            await context.SaveChangesAsync();
+                        }
+
+                        List<Animal> animals = new List<Animal>
+                        {
+                            new Animal("Pan-di", DateTime.Parse("2011-01-28T17:18:39.840229+02:00"), "White and grey",
+                                1000000, DateTime.Now, DateTime.Now),
+                            new Animal("Noisette", DateTime.Parse("2011-05-12T17:18:39.840229+02:00"), "Red", 1000000,
+                                DateTime.Now, DateTime.Now),
+                            new Animal("Charlie", DateTime.Parse("2012-07-08T17:18:39.840229+02:00"), "Black", 1000000,
+                                DateTime.Now, DateTime.Now),
+                            new Animal("Ernesto", DateTime.Parse("2001-01-28T17:18:39.840229+02:00"), "Blue", 1000000,
+                                DateTime.Now, DateTime.Now),
+                            new Animal("Ulysse", DateTime.Parse("2010-02-14T17:18:39.840229+02:00"),
+                                "Yellow and purple",
+                                1000000, DateTime.Now, DateTime.Now)
+                        };
+
+                        await context.Animals.AddRangeAsync(animals);
+                        await context.SaveChangesAsync();
+
+                        // DEV Species
+                        var devSpecies = context.Speciess.ToList();
+                        if (devSpecies.Any())
+                        {
+                            Logger.LogSeed("Suppression des espèces de dev de la table Species");
+                            devSpecies.ForEach(s => context.Remove(s));
+                            await context.SaveChangesAsync();
+                        }
+
+                        List<Species> species = new List<Species>
+                        {
+                            new Species("Labrador"),
+                            new Species("Terrier du tibet"),
+                            new Species("Berger allemand"),
+                            new Species("Bouledogue français"),
+                            new Species("Cocker"),
+                            new Species("Cavalier King Charles")
+                        };
+                        await context.Speciess.AddRangeAsync(species);
+                        await context.SaveChangesAsync();
+
+                        Logger.LogSeed("Début de la création des liaisons entre les animaux et races");
+
+                        var animalsList = context.Animals.ToList();
+                        animalsList.ForEach((a) =>
+                        {
+                            var animalSpecies = new List<AnimalSpecies>();
+                            var randomSpecies = new Random().Next(1, 3);
+
+                            for (int i = 0; i < randomSpecies; i++)
+                            {
+                                animalSpecies.Add(new AnimalSpecies(a.AnimalId, RandomSpecies(context)));
+                            }
+
+                            Logger.LogSeed(animalSpecies.Count.ToString() + " espèces pour l'animal " + a.AnimalName +
+                                           " ajoutées");
+
+                            a.AnimalSpecies = new List<AnimalSpecies>();
+                            a.AnimalSpecies = animalSpecies;
+                        });
+                        await context.SaveChangesAsync();
+                    }
+
+                    Logger.LogSeed("Fin du remplissage de la base de données");
                 }
             }
         }
@@ -451,7 +480,7 @@ namespace Mercure.API
             }
             else
             {
-                Logger.LogInfo("Le navigateur par défaut n'a pas pu être ouvert");
+                Logger.LogSeed("Le navigateur par défaut n'a pas pu être ouvert");
             }
         }
 

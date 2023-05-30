@@ -143,8 +143,11 @@ public class OrderController : ApiNoSecurityController
             OrderDate = session.Created,
             OrderStatus = false,
             SessionId = session.Id,
-            Products = orderProducts
+            Products = new List<OrderProduct>()
         };
+
+        order.Products = orderProducts;
+        
         await _context.Orders.AddAsync(order);
         await _context.SaveChangesAsync();
 
@@ -463,6 +466,120 @@ public class OrderController : ApiNoSecurityController
         });
 
         return result;
+    }
+
+    /// <summary>
+    /// Get the order
+    /// </summary>
+    /// <param name="orderNumber"></param>
+    /// <returns></returns>
+    [HttpGet("{orderNumber}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    public async Task<IActionResult> GetOrder(string orderNumber)
+    {
+        var userContext = (User) HttpContext.Items["User"];
+        if (userContext == null)
+        {
+            return BadRequest(new ErrorMessage("The user is not authenticated.", StatusCodes.Status400BadRequest));
+        }
+
+        if (string.IsNullOrEmpty(orderNumber))
+        {
+            return BadRequest(new ErrorMessage("The order number is empty.", StatusCodes.Status400BadRequest));
+        }
+
+        var isOrderNumberParsed = int.TryParse(orderNumber, out var orderNumberParsed);
+        if (!isOrderNumberParsed)
+        {
+            return BadRequest(new ErrorMessage("The order number is not a valid number.",
+                StatusCodes.Status400BadRequest));
+        }
+
+        var order = await _context.Orders.Include(o => o.Products)
+            .FirstOrDefaultAsync(o => o.OrderId == orderNumberParsed);
+        if (order == null)
+        {
+            return NotFound(new ErrorMessage("No order found with this number.", StatusCodes.Status400BadRequest));
+        }
+
+        if (order.UserId != userContext.UserId)
+        {
+            return BadRequest(new ErrorMessage("The user is not the owner of the order.",
+                StatusCodes.Status400BadRequest));
+        }
+
+        return Ok(new OrderDto(order));
+    }
+
+    /// <summary>
+    /// Get the status of an order
+    /// </summary>
+    /// <param name="orderNumber"></param>
+    /// <returns></returns>
+    [HttpGet("status/{orderNumber}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    public async Task<IActionResult> GetStatusOrder(string orderNumber)
+    {
+        if (string.IsNullOrEmpty(orderNumber))
+        {
+            return BadRequest(new ErrorMessage("The order number is empty.", StatusCodes.Status400BadRequest));
+        }
+
+        var isOrderNumberParsed = int.TryParse(orderNumber, out var orderNumberParsed);
+        if (!isOrderNumberParsed)
+        {
+            return BadRequest(new ErrorMessage("The order number is not a valid number.",
+                StatusCodes.Status400BadRequest));
+        }
+
+        var order = await _context.Orders.Include(o => o.Products)
+            .FirstOrDefaultAsync(o => o.OrderId == orderNumberParsed);
+        if (order == null)
+        {
+            return NotFound(new ErrorMessage("No order found with this number.", StatusCodes.Status400BadRequest));
+        }
+
+        return Ok(order.OrderStatus);
+    }
+
+    /// <summary>
+    /// Get the history of the user
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("history")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<OrderDto>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ErrorMessage))]
+    public async Task<IActionResult> GetHistoryUser()
+    {
+        var userContext = (User) HttpContext.Items["User"];
+        if (userContext == null)
+        {
+            return BadRequest(new ErrorMessage("The user is not authenticated.", StatusCodes.Status400BadRequest));
+        }
+
+        var orders = _context.OrderProducts
+            .Include(op => op.Product)
+            .Include(op => op.Order)
+            .Where(op => op.Order.UserId == userContext.UserId)
+            .ToList();
+
+        var ordersDto = new List<OrderDto>();
+        orders.ForEach(o => ordersDto.Add(new OrderDto(orders, o.Order)));
+        
+        // BUG: Duplique N fois selon le nombre de produit => fix rapide distinct => pas très propre mais fonctionnel
+        ordersDto = ordersDto.DistinctBy(o => o.OrderNumber).ToList();
+
+        if (ordersDto.Count == 0)
+        {
+            return NotFound(new ErrorMessage("No order found for this user.", StatusCodes.Status404NotFound));
+        }
+        
+        return Ok(ordersDto);
     }
 
     /// <summary>
