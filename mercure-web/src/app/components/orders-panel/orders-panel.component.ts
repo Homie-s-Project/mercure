@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component , OnInit} from '@angular/core';
 import {OrderService} from "../../services/order/order.service";
 import {IOrderModel} from "../../models/IOrderModel";
 import {environment} from "../../../environments/environment";

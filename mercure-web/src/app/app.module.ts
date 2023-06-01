@@ -39,6 +39,7 @@ import {SearchService} from "./services/search/search.service";
 import {RoleService} from "./services/role/role.service";
 import { OrderSuccessComponent } from './components/order-success/order-success.component';
 import { OrderCancelComponent } from './components/order-cancel/order-cancel.component';
+import {OrderService} from "./services/order/order.service";
 
 @NgModule({
   declarations: [
@@ -46,7 +47,6 @@ import { OrderCancelComponent } from './components/order-cancel/order-cancel.com
     NavbarComponent,
     HomeComponent,
     ProfileComponent,
-    OrdersPanelComponent,
     OrderItemComponent,
     ItemCardComponent,
     LandingComponent,
@@ -60,7 +60,8 @@ import { OrderCancelComponent } from './components/order-cancel/order-cancel.com
     FilterComponent,
     FilterGroupComponent,
     OrderSuccessComponent,
-    OrderCancelComponent
+    OrderCancelComponent,
+    OrdersPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -79,6 +80,7 @@ import { OrderCancelComponent } from './components/order-cancel/order-cancel.com
     UserService,
     FilterService,
     SearchService,
+    OrderService,
     {
       provide: APP_INITIALIZER,
       useFactory: (roleService: RoleService,) => () => roleService.ngOnInit(),
