@@ -37,6 +37,9 @@ import {NgxSliderModule} from '@angular-slider/ngx-slider';
 import {FilterService} from "./services/filter/filter.service";
 import {SearchService} from "./services/search/search.service";
 import {RoleService} from "./services/role/role.service";
+import { OrderSuccessComponent } from './components/order-success/order-success.component';
+import { OrderCancelComponent } from './components/order-cancel/order-cancel.component';
+import {OrderService} from "./services/order/order.service";
 
 @NgModule({
   declarations: [
@@ -44,7 +47,6 @@ import {RoleService} from "./services/role/role.service";
     NavbarComponent,
     HomeComponent,
     ProfileComponent,
-    OrdersPanelComponent,
     OrderItemComponent,
     ItemCardComponent,
     LandingComponent,
@@ -56,7 +58,10 @@ import {RoleService} from "./services/role/role.service";
     ProductsPaginationComponent,
     SearchComponent,
     FilterComponent,
-    FilterGroupComponent
+    FilterGroupComponent,
+    OrderSuccessComponent,
+    OrderCancelComponent,
+    OrdersPanelComponent
   ],
   imports: [
     BrowserModule,
@@ -75,6 +80,7 @@ import {RoleService} from "./services/role/role.service";
     UserService,
     FilterService,
     SearchService,
+    OrderService,
     {
       provide: APP_INITIALIZER,
       useFactory: (roleService: RoleService,) => () => roleService.ngOnInit(),

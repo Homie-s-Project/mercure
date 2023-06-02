@@ -8,6 +8,8 @@ import {LoadingComponent} from './components/loading/loading.component';
 import {SearchComponent} from "./components/search/search.component";
 import {AuthentifiedGuard} from "./guard/authentified/authentified.guard";
 import {UnauthentifiedGuard} from "./guard/unauthentified/unauthentified.guard";
+import {OrderSuccessComponent} from "./components/order-success/order-success.component";
+import {OrderCancelComponent} from "./components/order-cancel/order-cancel.component";
 
 
 const routes: Routes = [
@@ -45,6 +47,19 @@ const routes: Routes = [
   {
     path: 'search',
     component: SearchComponent
+  },
+  {
+    path: 'order',
+    children: [
+      {
+        path: 'success',
+        component: OrderSuccessComponent
+      },
+      {
+        path: 'cancel',
+        component: OrderCancelComponent
+      }
+    ]
   },
   {
     path: '**',

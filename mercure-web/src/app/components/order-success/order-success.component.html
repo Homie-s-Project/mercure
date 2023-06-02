@@ -1,0 +1,8 @@
+<ng-container *ngIf="!isLoading">
+  <div class="order-container" *ngIf="orderNumber !== 0">
+    <div><span class="order-number">#{{ orderNumber }}</span>
+      <div>Votre commande a bien été prise en compte.</div>
+      <a class="back-button" routerLink="/">Retour à l'accueil</a>
+    </div>
+  </div>
+</ng-container>
