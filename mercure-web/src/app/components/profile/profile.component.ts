@@ -27,8 +27,10 @@ export class ProfileComponent implements OnInit {
   }
 
   roles?: IRoleModel[];
+  users?: UserModel[];
 
   isUserLoading: boolean = true;
+  isAllUsersLoading: boolean = false;
   isParametersLoading: boolean = false;
   isDevEnv: boolean = false;
   orderIsShow: boolean = false;
@@ -57,6 +59,18 @@ export class ProfileComponent implements OnInit {
     this.orderIsShow = false;
     this.parameterIsShow = false;
     this.roleIsShown = true;
+
+    this.userService.getAllUsers()
+      .then(u => {
+        // Permet de ne pas afficher l'utilisateur courant dans la liste des utilisateurs
+        this.users = u.filter(u => u.userId !== this.currentUser.userId);
+      })
+      .catch(e => {
+        if (!environment.production) {
+          console.log(e);
+        }
+      })
+      .finally(() => this.isAllUsersLoading = false);
   }
 
   parameterShow() {
@@ -106,6 +120,19 @@ export class ProfileComponent implements OnInit {
           console.log(e);
         });
     }
+  }
+
+  updateUserRole(user: UserModel) {
+    let roleNumber = user.role.roleNumber;
+    let userId = user.userId;
+
+    this.roleService.setRoleToUser(userId, roleNumber)
+      .catch(e => {
+        if (!environment.production) {
+          console.log(e);
+        }
+      })
+      .finally(() => console.log("Role updated for user " + userId));
   }
 }
 

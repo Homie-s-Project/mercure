@@ -61,6 +61,27 @@
   </div>
   <app-orders-panel *ngIf="orderIsShow"></app-orders-panel>
   <div *ngIf="roleIsShown && isAdmin">
-    ROLE
+    <ng-container *ngIf="isAllUsersLoading">
+      <p>Chargement de tous les utilisateurs...</p>
+    </ng-container>
+    <ng-container *ngIf="!isAllUsersLoading && !users">
+      <p>Aucun utilisateurs trouvé.</p>
+    </ng-container>
+    <ng-container style="display: grid; gap: 15px" *ngIf="!isAllUsersLoading && users">
+      <div class="users-list" style="display: grid;gap: 26px;">
+        <div class="user" *ngFor="let user of users">
+          <div class="user-info">
+            <h3 class="user-name"><span style="font-style: italic; margin-right: 15px;">#{{user.userId}}</span>{{user.firstName}} {{user.lastName}}</h3>
+            <p class="user-email">{{user.email}}</p>
+          </div>
+          <div class="user-role">
+            <select class="select-role" [(ngModel)]="user.role.roleNumber">
+              <option *ngFor="let role of roles" [selected]="role.roleNumber === user.role.roleNumber" [value]="role.roleNumber">{{role.roleName}}</option>
+            </select>
+            <button class="btn-save" (click)="updateUserRole(user)">Changer le rôle</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </div>
