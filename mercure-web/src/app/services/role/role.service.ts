@@ -54,4 +54,20 @@ export class RoleService implements OnInit {
         })
     });
   }
+
+  setRoleToUser(userId: number, roleId: number) {
+    return new Promise((resolve, reject) => {
+      this.http.post(environment.apiUrl + `/roles/${userId}/${roleId}`, null)
+        .pipe(
+          catchError((error) => {
+            reject(error);
+            return throwError(error);
+          })
+        )
+        .subscribe((data) => {
+          resolve(data);
+          return data;
+        })
+    });
+  }
 }

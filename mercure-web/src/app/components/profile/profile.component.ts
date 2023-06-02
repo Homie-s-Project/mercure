@@ -32,6 +32,8 @@ export class ProfileComponent implements OnInit {
   isParametersLoading: boolean = false;
   isDevEnv: boolean = false;
   orderIsShow: boolean = false;
+  isAdmin: boolean = false;
+  roleIsShown: boolean = false;
   parameterIsShow: boolean = false;
   selectedRole: any;
 
@@ -42,13 +44,22 @@ export class ProfileComponent implements OnInit {
   profilShow() {
     this.orderIsShow = false;
     this.parameterIsShow = false;
+    this.roleIsShown = false;
   }
 
   orderShow() {
     this.orderIsShow = true;
     this.parameterIsShow = false;
+    this.roleIsShown = false;
   }
-  parameterShow(){
+
+  roleShow() {
+    this.orderIsShow = false;
+    this.parameterIsShow = false;
+    this.roleIsShown = true;
+  }
+
+  parameterShow() {
     this.orderIsShow = false;
     this.parameterIsShow = true;
   }
@@ -58,6 +69,8 @@ export class ProfileComponent implements OnInit {
       .then(u => {
         this.currentUser = u;
         this.selectedRole = u.role.roleNumber;
+        // ROLE 100 = ADMIN
+        this.isAdmin = u.role.roleNumber === 100;
       })
       .finally(() => this.isUserLoading = false);
 
@@ -83,6 +96,7 @@ export class ProfileComponent implements OnInit {
             .then(u => {
               this.currentUser = u;
               this.selectedRole = u.role.roleNumber;
+              this.isAdmin = u.role.roleNumber === 100;
             })
             .finally(() => this.isUserLoading = false);
 
