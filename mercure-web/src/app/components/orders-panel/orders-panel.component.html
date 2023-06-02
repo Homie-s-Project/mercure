@@ -9,7 +9,7 @@
   <div class="orders-panel">
     <div class="order-container" *ngFor="let order of orders">
       <header class="order-header">
-        <h2 class="order-title">Commande #<span style="font-weight: bold">{{order.orderNumber}}</span> du {{order.orderDate | date: "YYYY/mm/dd hh:mm"}}</h2>
+        <h2 class="order-title">Commande #<span style="font-weight: bold">{{order.orderNumber}}</span> du {{order.orderDate | date: "dd/MM/YYYY hh:mm"}}</h2>
         <div class="order-details">
           <div class="order-detail order-status">
             Status de paiement : <span class="status">{{order.orderStatus ? 'payé' : 'non payé'}}</span>
