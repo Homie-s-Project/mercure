@@ -3,18 +3,19 @@
   - [Installation](#installation)
   - [Deployment](#deployment)
   - [API Docs Tests](#api-docs-tests)
+  - [Pentest](#pentest)
   - [Test Credit Card](#test-credit-card)
   - [Nommage](#nommage)
     - [Branche](#branche)
   - [Routes](#routes)
   - [Image Docker](#image-docker)
   - [Environment Variables](#environment-variables)
-    - [Postgres](#postgres)
-    - [pgAdmin4](#pgadmin4)
-    - [Mercure API](#mercure-api)
-    - [Mercure WEB](#mercure-web)
-    - [Mercure Grafana](#mercure-grafana)
-  - [Connect Database](#connect-database)
+    - [**Postgres**](#postgres)
+    - [**pgAdmin4**](#pgadmin4)
+    - [**mercure-api**](#mercure-api)
+    - [**mercure-web**](#mercure-web)
+    - [**mercure-grafana**](#mercure-grafana)
+  - [ Connect Database](#-connect-database)
   - [Color Reference](#color-reference)
   - [Authors](#authors)
 
@@ -81,6 +82,10 @@ docker compose -f "docker-compose.yml" up -d --build
 ## <a name='APIDocsTests'></a>API Docs Tests
 
 Il vous faudra vous rendre sur ce fichier, où les explications y sont. --> [ICI](TEST_BACK.md) <--
+
+## <a name='Pentest'></a>Pentest
+
+Concernant les pentests, nous avons créé [un script en python](./pentest/pentest.py) qui permet d'extraire toute notre API et d'écrire un fichier de résultat avec le [résultat](./pentest/result.txt) de chaque rôle sur l'API.
 
 ## <a name='TestCreditCard'></a>Test Credit Card
 
