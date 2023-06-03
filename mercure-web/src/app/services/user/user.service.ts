@@ -59,4 +59,20 @@ export class UserService implements OnInit {
         })
     });
   }
+
+  getAllUsers() : Promise<UserModel[]> {
+    return new Promise<UserModel[]>((resolve, reject) => {
+      this.http.get<UserModel[]>(environment.apiUrl + "/user/all")
+        .pipe(
+          catchError((error) =>  {
+            reject(error);
+            return throwError(error);
+          })
+        )
+        .subscribe((data) => {
+          resolve(data);
+          return data;
+        });
+    });
+  }
 }

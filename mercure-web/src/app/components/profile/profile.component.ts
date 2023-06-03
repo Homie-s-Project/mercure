@@ -27,11 +27,15 @@ export class ProfileComponent implements OnInit {
   }
 
   roles?: IRoleModel[];
+  users?: UserModel[];
 
   isUserLoading: boolean = true;
+  isAllUsersLoading: boolean = false;
   isParametersLoading: boolean = false;
   isDevEnv: boolean = false;
   orderIsShow: boolean = false;
+  isAdmin: boolean = false;
+  roleIsShown: boolean = false;
   parameterIsShow: boolean = false;
   selectedRole: any;
 
@@ -42,13 +46,34 @@ export class ProfileComponent implements OnInit {
   profilShow() {
     this.orderIsShow = false;
     this.parameterIsShow = false;
+    this.roleIsShown = false;
   }
 
   orderShow() {
     this.orderIsShow = true;
     this.parameterIsShow = false;
+    this.roleIsShown = false;
   }
-  parameterShow(){
+
+  roleShow() {
+    this.orderIsShow = false;
+    this.parameterIsShow = false;
+    this.roleIsShown = true;
+
+    this.userService.getAllUsers()
+      .then(u => {
+        // Permet de ne pas afficher l'utilisateur courant dans la liste des utilisateurs
+        this.users = u.filter(u => u.userId !== this.currentUser.userId);
+      })
+      .catch(e => {
+        if (!environment.production) {
+          console.log(e);
+        }
+      })
+      .finally(() => this.isAllUsersLoading = false);
+  }
+
+  parameterShow() {
     this.orderIsShow = false;
     this.parameterIsShow = true;
   }
@@ -58,6 +83,8 @@ export class ProfileComponent implements OnInit {
       .then(u => {
         this.currentUser = u;
         this.selectedRole = u.role.roleNumber;
+        // ROLE 100 = ADMIN
+        this.isAdmin = u.role.roleNumber === 100;
       })
       .finally(() => this.isUserLoading = false);
 
@@ -83,6 +110,7 @@ export class ProfileComponent implements OnInit {
             .then(u => {
               this.currentUser = u;
               this.selectedRole = u.role.roleNumber;
+              this.isAdmin = u.role.roleNumber === 100;
             })
             .finally(() => this.isUserLoading = false);
 
@@ -92,6 +120,19 @@ export class ProfileComponent implements OnInit {
           console.log(e);
         });
     }
+  }
+
+  updateUserRole(user: UserModel) {
+    let roleNumber = user.role.roleNumber;
+    let userId = user.userId;
+
+    this.roleService.setRoleToUser(userId, roleNumber)
+      .catch(e => {
+        if (!environment.production) {
+          console.log(e);
+        }
+      })
+      .finally(() => console.log("Role updated for user " + userId));
   }
 }
 
