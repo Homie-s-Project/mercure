@@ -87,7 +87,9 @@ Il vous faudra vous rendre sur ce fichier, où les explications y sont. --> [ICI
 
 Concernant les pentests, nous avons créé [un script en python](./pentest/pentest.py) qui permet d'extraire toute notre API et d'écrire un fichier de résultat avec le [résultat](./pentest/result.txt) de chaque rôle sur l'API.
 
-Il écrit aussi un fichier markdown, qui permet l'affichage sur GitHub avec une version plus simple à lire. [Résultat Pentest](./pentest/RESULT_PENTEST.md)
+Il écrit aussi un fichier markdown, qui permet l'affichage sur GitHub avec une version plus simple à lire. [Résultat Pentest](./pentest/RESULT_PENTEST.md).
+
+Pour l'instant, le script n'arrive pas à tester toutes les requêtes qui nécessitent des paramètres. Mais en lisant le JSON de swagger il y a moyen de récupérer les paramètres et de pouvoir les simuler, ce qui pourrait être à faire dans le futur.
 
 ## <a name='TestCreditCard'></a>Test Credit Card
 
