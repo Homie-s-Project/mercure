@@ -87,6 +87,8 @@ Il vous faudra vous rendre sur ce fichier, où les explications y sont. --> [ICI
 
 Concernant les pentests, nous avons créé [un script en python](./pentest/pentest.py) qui permet d'extraire toute notre API et d'écrire un fichier de résultat avec le [résultat](./pentest/result.txt) de chaque rôle sur l'API.
 
+Il écrit aussi un fichier markdown, qui permet l'affichage sur GitHub avec une version plus simple à lire. [Résultat Pentest](./pentest/RESULT_PENTEST.md)
+
 ## <a name='TestCreditCard'></a>Test Credit Card
 
 Selon la page de docs de Stripe, https://stripe.com/docs/testing#cards
