@@ -172,13 +172,13 @@ public class RoleController : ApiSecurityController
     /// Change the role of another user, only admin can do that
     /// </summary>
     /// <param name="userId"></param>
-    /// <param name="roleId"></param>
+    /// <param name="roleNumber"></param>
     /// <returns></returns>
-    [HttpPost("update/{userId}/{roleId}")]
+    [HttpPost("update/{userId}/{roleNumber}")]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ErrorMessage))]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ErrorMessage))]
-    public async Task<IActionResult> UpdateRoleUser(string userId, string roleId)
+    public async Task<IActionResult> UpdateRoleUser(string userId, string roleNumber)
     {
         var userContext = (User) HttpContext.Items["User"];
         if (userContext == null)
@@ -192,7 +192,7 @@ public class RoleController : ApiSecurityController
                 StatusCodes.Status401Unauthorized));
         }
         
-        bool isRoleIdParsed = int.TryParse(roleId, out int roleIdParsed);
+        bool isRoleIdParsed = int.TryParse(roleNumber, out int roleIdParsed);
         if (!isRoleIdParsed)
         {
             return BadRequest(new ErrorMessage("You have to give us a valid role id", StatusCodes.Status400BadRequest));
@@ -204,7 +204,7 @@ public class RoleController : ApiSecurityController
             return NotFound(new ErrorMessage("No role found", StatusCodes.Status404NotFound));
         }
         
-        bool isUserIdParsed = int.TryParse(roleId, out int userIdParsed);
+        bool isUserIdParsed = int.TryParse(userId, out int userIdParsed);
         if (!isUserIdParsed)
         {
             return BadRequest(new ErrorMessage("You have to give us a valid user id", StatusCodes.Status400BadRequest));
