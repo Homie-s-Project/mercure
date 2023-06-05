@@ -6,6 +6,7 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { LandingComponent } from './components/landing/landing.component';
 import { LoadingComponent } from './components/loading/loading.component';
 import {SearchComponent} from "./components/search/search.component";
+import {ConfirmationComponent} from "./components/confirmation/confirmation.component";
 
 
 const routes: Routes = [
@@ -37,6 +38,10 @@ const routes: Routes = [
   {
     path: 'search',
     component: SearchComponent
+  },
+  {
+    path: 'confirmation',
+    component: ConfirmationComponent
   },
   {
     path: '**',
