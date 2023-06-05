@@ -1,0 +1,29 @@
+@use '/src/styles/variables.scss' as vars;
+
+.confirmation-container{
+  width: 70%;
+  margin: 20px auto;
+  .confirmation-title{
+    text-align: center;
+    margin-bottom: 5%;
+  }
+  .total-price{
+    margin-top: 2%;
+    text-align: right;
+    font-size: 25px;
+  }
+  .confirmation-button {
+    width: 30%;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    border-radius: 6px;
+    background-color: vars.$dark-moss-green;
+    cursor: pointer;
+    fa-icon {
+      font-size: 21px;
+      line-height: 45px;
+    }
+  }
+}

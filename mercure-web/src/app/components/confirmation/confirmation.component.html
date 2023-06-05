@@ -1,0 +1,12 @@
+<div class="confirmation-container">
+  <h1 class="confirmation-title">Confirmation d'achat</h1>
+    <app-item-cart *ngFor="let product of cartProducts" [product]="product"></app-item-cart>
+  <div class="total-price">
+    <p>Total : {{totalPrice.toFixed(2)}} Chf</p>
+  </div>
+  <div class="confirmation-button" (click)="checkout()" >
+    <button>
+      <fa-icon [icon]="faCreditCard"></fa-icon>
+    </button>
+  </div>
+</div>
