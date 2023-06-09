@@ -1,8 +1,9 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {faCartShopping, faMagnifyingGlass, faUser, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {faArrowRightFromBracket, faCartShopping, faMagnifyingGlass, faUser, faXmark} from '@fortawesome/free-solid-svg-icons';
 import {SearchService} from "../../services/search/search.service";
 import {debounceTime, Subject, Subscription} from "rxjs";
 import {ActivatedRoute, Router} from "@angular/router";
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,8 +15,9 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   faCartShopping = faCartShopping
   faUser = faUser;
   faXmark = faXmark;
-  actualIcone = this.faCartShopping;
   faMagnifyingGlass = faMagnifyingGlass;
+  faArrowRightFromBracket = faArrowRightFromBracket; 
+  actualIcone = this.faCartShopping;
   @Output() toggleHide = new EventEmitter<boolean>();
   hideCart: boolean = true
   isRedirecting: boolean = false;
@@ -30,7 +32,10 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   private autocompleteDelay: number = 750;
   private autocompleteSubscription?: Subscription;
 
-  constructor(private searchService: SearchService, private router: Router, private route: ActivatedRoute) {
+  constructor(private searchService: SearchService,
+    private authService: AuthService, 
+    private router: Router, 
+    private route: ActivatedRoute) {
     router.events.subscribe((val) => {
       // Permet de cacher le panier lorsqu'on change de page
       this.hideCart = true;
@@ -46,7 +51,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.isLoggedIn = sessionStorage.getItem("token") !== null;
+    this.isLoggedIn = this.authService.isLogged();
   }
 
   ngAfterViewInit(): void {
@@ -102,5 +107,10 @@ export class NavbarComponent implements OnInit, AfterViewInit {
       this.isRedirecting = true;
       this.router.navigate(['/search'], {queryParams: {q: this.searchValue.trim()}});
     }
+  }
+
+  disconnect() {
+    this.authService.logOut();
+    this.isLoggedIn = this.authService.isLogged();
   }
 }
